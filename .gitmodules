@@ -1,0 +1,6 @@
+[submodule "FoxyFaceVRCFTInterface/VRCFaceTracking"]
+	path = FoxyFaceVRCFTInterface/VRCFaceTracking
+	url = https://github.com/benaclejames/VRCFaceTracking.git
+[submodule "FoxyFace/Baballonia"]
+	path = FoxyFace/Baballonia
+	url = https://github.com/Jeka8833/Baballonia-Copy.git
