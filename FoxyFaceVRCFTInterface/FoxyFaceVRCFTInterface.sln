@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxyFaceVRCFTInterface", "FoxyFaceVRCFTInterface\FoxyFaceVRCFTInterface.csproj", "{BC8E8DB4-BB73-4B45-BBEF-29FF4A13A0B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCFaceTracking.Core", "VRCFaceTracking\VRCFaceTracking.Core\VRCFaceTracking.Core.csproj", "{0F63552B-7180-4AF3-B873-A2FE3B490B34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VRCFaceTracking.SDK", "VRCFaceTracking\VRCFaceTracking.SDK\VRCFaceTracking.SDK.csproj", "{BE7FC96F-67B1-41C8-9992-004E6978BDBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC8E8DB4-BB73-4B45-BBEF-29FF4A13A0B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC8E8DB4-BB73-4B45-BBEF-29FF4A13A0B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F63552B-7180-4AF3-B873-A2FE3B490B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F63552B-7180-4AF3-B873-A2FE3B490B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7FC96F-67B1-41C8-9992-004E6978BDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7FC96F-67B1-41C8-9992-004E6978BDBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

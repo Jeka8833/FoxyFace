@@ -1,0 +1,2 @@
+".venv/Scripts/pyinstaller.exe" --add-data="Assets:Assets" --add-data="Baballonia\\src\\Baballonia\\faceModel.onnx:Baballonia\\src\\Baballonia\\" --noconfirm --icon="Assets\\icon.png" --clean --hide-console="hide-early" Main.py
+pause

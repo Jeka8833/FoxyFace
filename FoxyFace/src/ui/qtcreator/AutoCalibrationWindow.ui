@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AutoCalibrationWindow</class>
+ <widget class="QMainWindow" name="AutoCalibrationWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>306</width>
+    <height>397</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Auto Calibration</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabs">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="normal_pose_tab">
+       <attribute name="title">
+        <string>Calibrate Neutral Pose</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="normal_pose_hint_sp">
+          <property name="text">
+           <string>To calibrate, select the desired parameters, find a comfortable position, press the “Start Calibration” button, do not move and look exactly at the center of the VRChat window for a few seconds after the beep.</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignJustify|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="normal_pose_selected_list">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::WheelFocus</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>BrowDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowInnerUp</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowOuterUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowOuterUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuff</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuffLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuffRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSquintLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSquintRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSuckLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSuckRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeBlinkLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeBlinkRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeSquintLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeSquintRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeWideLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeWideRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeXLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeXRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeYLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeYRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadRotation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadX</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadY</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadZ</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawForward</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawOpen</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthClosed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthDimpleLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthDimpleRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFrownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFrownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFunnel</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLowerDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLowerDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPressLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPressRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPucker</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRaiserLower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRaiserUpper</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRollLower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRollUpper</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthSmileLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthSmileRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthStretchLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthStretchRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthUpperUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthUpperUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NoseSneerLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NoseSneerRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueBendDown</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueCurlUp</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueDown</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueFlat</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueOut</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueRoll</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueSquish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueTwistLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueTwistRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueUp</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="normal_pose_delay_lb">
+            <property name="text">
+             <string>Delay Start (Seconds):</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="normal_pose_delay_sp">
+            <property name="maximum">
+             <number>60</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="normal_pose_start_btn">
+            <property name="text">
+             <string>Start Calibration</string>
+            </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="max_pose_tab">
+       <attribute name="title">
+        <string>Calibrate Max Pose</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="max_pose_hint_lb">
+          <property name="text">
+           <string>To calibrate, select the desired parameters and press the &quot;Start Calibration&quot; button. After that, tense the selected muscles (or what you have selected) in any order. It is not necessary to tense the muscles too much (you need to find a force that is comfortable for you).</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="max_pose_selected_list">
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::WheelFocus</enum>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>BrowDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowInnerUp</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowOuterUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>BrowOuterUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuff</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuffLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekPuffRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSquintLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSquintRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSuckLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>CheekSuckRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeBlinkLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeBlinkRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeSquintLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeSquintRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeWideLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeWideRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeXLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeXRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeYLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeYRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadX</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadY</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>HeadZ</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawForward</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawOpen</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>JawRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthClosed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthDimpleLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthDimpleRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFrownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFrownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthFunnel</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLowerDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthLowerDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPressLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPressRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthPucker</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRaiserLower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRaiserUpper</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRollLower</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthRollUpper</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthSmileLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthSmileRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthStretchLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthStretchRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthUpperUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>MouthUpperUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NoseSneerLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>NoseSneerRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueBendDown</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueCurlUp</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueDown</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueFlat</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueOut</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueRoll</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueSquish</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueTwistLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueTwistRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>TongueUp</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="max_pose_start_btn">
+            <property name="text">
+             <string>Start Calibration</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
