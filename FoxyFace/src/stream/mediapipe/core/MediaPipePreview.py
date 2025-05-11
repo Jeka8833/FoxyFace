@@ -2,8 +2,7 @@ import logging
 import threading
 
 import cv2
-from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QImage
 
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
@@ -57,21 +56,31 @@ class MediaPipePreview:
                 image = frame.camera_frame.frame.copy()
 
                 if frame.face_landmarker_result.face_landmarks:
+                    z_values = [point.z for point in frame.face_landmarker_result.face_landmarks[0]]
+
+                    z_max_val = max(z_values)
+                    z_min_val = min(z_values)
+
                     for points in frame.face_landmarker_result.face_landmarks[0]:
-                        if points.x > 1.0 or points.y > 1.0 or points.x < 0.0 or points.y < 0.0:
+                        x = round(points.x * image.shape[1])
+                        y = round(points.y * image.shape[0])
+
+                        if x >= image.shape[1] or y >= image.shape[0] or x < 0 or y < 0:
                             continue
 
-                        x = int(points.x * image.shape[1])
-                        y = int(points.y * image.shape[0])
-                        size = max(0, min(4, int(4 + points.z * -10)))
+                        if abs(z_min_val - z_max_val) < 0.0001:
+                            size = 2
+                        else:
+                            size = round(1 + (points.z - z_max_val) / (z_min_val - z_max_val) * 2)
 
                         cv2.circle(image, (x, y), size, (0, 255, 0), -1)
 
+                # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_RGB888)
 
-                self.__window.image_event.emit(QPixmap.fromImage(im))
+                self.__window.set_image_event.emit(im)
             except TimeoutError:
-                self.__window.noimage_event.emit()
+                self.__window.set_image_event.emit(None)
             except InterruptedError:
                 self.close()
 

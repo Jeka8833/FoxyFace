@@ -56,7 +56,7 @@ class AutoCalibration:
                     average_time - (time.perf_counter_ns() - start_time) / 1_000_000_000)
 
                 for key, value in frame.blend_shapes.items():
-                    if not key.value.disable_neutral_auto_calibration and key in calibration_list:
+                    if not key.value.disable_calibration and key in calibration_list:
                         record_list.setdefault(key, []).append(value)
         except TimeoutError:
             pass

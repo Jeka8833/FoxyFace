@@ -7,7 +7,6 @@ from src.config.schemas.Config import Config
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
-from src.stream.babble.BabbleModelLoaderOptions import BabbleModelLoaderOptions
 from src.stream.babble.BabbleStream import BabbleStream
 from src.stream.babble.imageprocessing.BabbleImageProcessing import BabbleImageProcessing
 from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
@@ -34,8 +33,7 @@ class BabblePipeline:
 
         self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
 
-        self.__babble_loader_options = BabbleModelLoaderOptions()
-        self.__babble_loader = BabbleModelLoader(self.__babble_loader_options)
+        self.__babble_loader = BabbleModelLoader()
         self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
 
         processed_stream = BabbleImageProcessing(self.__buffer, self.__processing_options, self.__babble_loader)
@@ -92,7 +90,6 @@ class BabblePipeline:
         self.__filter_processing_options_listener.unregister()
 
         self.__stream.close()
-        self.__babble_loader.close()
 
     def __enter__(self):
         return self
@@ -142,9 +139,7 @@ class BabblePipeline:
         return self.__config_manager.create_update_listener(self.__update_babble_loader_options, watch_array, True)
 
     def __update_babble_loader_options(self, config_manager: ConfigManager):
-        self.__babble_loader_options.model_path = config_manager.config.babble.model_path
-        self.__babble_loader_options.use_gpu = config_manager.config.babble.try_use_gpu
-        self.__babble_loader_options.intra_op_num_threads = config_manager.config.babble.intra_op_num_threads
-        self.__babble_loader_options.allow_spinning = config_manager.config.babble.allow_spinning
-
-        self.__babble_loader.recreate()
+        self.__babble_loader.start_new_session(config_manager.config.babble.model_path,
+                                               config_manager.config.babble.try_use_gpu,
+                                               config_manager.config.babble.intra_op_num_threads,
+                                               config_manager.config.babble.allow_spinning)

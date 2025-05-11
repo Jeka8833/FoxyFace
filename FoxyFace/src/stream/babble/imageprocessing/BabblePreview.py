@@ -1,7 +1,7 @@
 import logging
 import threading
 
-from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtGui import QImage
 
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
@@ -65,11 +65,12 @@ class BabblePreview:
             try:
                 image = self.__image_stream.poll(self.__frame_timeout).processed_frame
 
+                # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_Grayscale8)
 
-                self.__window.image_event.emit(QPixmap.fromImage(im))
+                self.__window.set_image_event.emit(im)
             except TimeoutError:
-                self.__window.noimage_event.emit()
+                self.__window.set_image_event.emit(None)
             except InterruptedError:
                 self.close()
 

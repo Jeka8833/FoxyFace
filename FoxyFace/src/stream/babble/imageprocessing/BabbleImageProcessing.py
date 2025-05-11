@@ -22,14 +22,6 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         self.__model_loader: BabbleModelLoader = model_loader
 
     def poll(self, timeout: float | None = None) -> BabbleImageFrame:
-        model = self.__model_loader.model
-        if model is None:
-            time.sleep(timeout)
-            model = self.__model_loader.model
-
-        if model is None:
-            raise TimeoutError("Model not loaded")
-
         start_time = time.perf_counter_ns()
 
         while True:
@@ -39,36 +31,37 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
                 mediapipe_frame = self.__stream.poll(timeout - (time.perf_counter_ns() - start_time) / 1_000_000_000)
 
             if self.__validate_rotation(mediapipe_frame):
-                break
+                model = self.__model_loader.model
+                if model is not None:
+                    break
 
         img_gray = cv2.cvtColor(mediapipe_frame.camera_frame.frame, cv2.COLOR_RGB2GRAY)
         height, width = img_gray.shape[:2]
 
-        point_234 = mediapipe_frame.face_landmarker_result.face_landmarks[0][234]  # 234 or 93
-        point_454 = mediapipe_frame.face_landmarker_result.face_landmarks[0][454]  # 454 or 323
-        point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][195]
-        point_152 = mediapipe_frame.face_landmarker_result.face_landmarks[0][152]
-
         # Center Top
+        point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][5]  # 195 or 5
         point_5_x = point_5.x * width
         point_5_y = point_5.y * height
+        # cv2.circle(img_gray, (int(point_5_x), int(point_5_y)), 3, (255, 255, 255), -1)
 
         # Left
+        point_234 = mediapipe_frame.face_landmarker_result.face_landmarks[0][234]  # 234 or 93
         point_234_x = point_234.x * width
         point_234_y = point_234.y * height
+        # cv2.circle(img_gray, (int(point_234_x), int(point_234_y)), 3, (255, 255, 255), -1)
 
         # Right
+        point_454 = mediapipe_frame.face_landmarker_result.face_landmarks[0][454]  # 454 or 323
         point_454_x = point_454.x * width
         point_454_y = point_454.y * height
+        # cv2.circle(img_gray, (int(point_454_x), int(point_454_y)), 3, (255, 255, 255), -1)
 
         # Center Bottom
+        point_152 = mediapipe_frame.face_landmarker_result.face_landmarks[0][152]
         point_152_x = point_152.x * width
         point_152_y = point_152.y * height
-
-        # cv2.circle(img_gray, (int(point_5_x), int(point_5_y)), 3, (255, 255, 255), -1)
-        # cv2.circle(img_gray, (int(point_234_x), int(point_234_y)), 3, (255, 255, 255), -1)
-        # cv2.circle(img_gray, (int(point_454_x), int(point_454_y)), 3, (255, 255, 255), -1)
         # cv2.circle(img_gray, (int(point_152_x), int(point_152_y)), 3, (255, 255, 255), -1)
+
 
         point_a, point_b = BabbleImageProcessing.__scale_ab_points((point_234_x, point_234_y),
                                                                    (point_454_x, point_454_y), 1.0)
@@ -77,7 +70,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
                                                                               1.0)
 
         point_d, point_e = BabbleImageProcessing.__calculate_rectangle_points(point_a, point_b,
-                                                                              (point_152_x, point_152_y), 1.2)
+                                                                              (point_152_x, point_152_y), 1.0)
 
         # Flix X for Babble Image
         pts1 = numpy.float32(
@@ -96,6 +89,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
     def __validate_rotation(self, frame: MediaPipeFrame):
         rotation_matrix = frame.face_landmarker_result.facial_transformation_matrixes[0][0:3, 0:3]
 
+        # noinspection PyArgumentList
         euler = Rotation.from_matrix(rotation_matrix).as_euler('zyx', degrees=False)
 
         return abs(euler[1]) <= self.__options.max_head_rotation_x and abs(

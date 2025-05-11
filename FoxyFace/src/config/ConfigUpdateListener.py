@@ -21,7 +21,10 @@ class ConfigUpdateListener:
         self.__update_previous_values()
 
         if call_on_create:
-            self.__update_callback(self.__config_manager)
+            try:
+                self.__update_callback(self.__config_manager)
+            except Exception:
+                _logger.warning("Failed to call update", exc_info=True, stack_info=True)
 
     def __update_previous_values(self):
         if self.__watched_elements is None:

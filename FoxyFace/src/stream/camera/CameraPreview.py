@@ -1,8 +1,7 @@
 import logging
 import threading
 
-from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QWidget
+from PySide6.QtGui import QImage
 
 from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraProcessing import CameraProcessing
@@ -59,11 +58,12 @@ class CameraPreview:
             try:
                 image = self.__image_stream.poll(self.__frame_timeout).frame
 
+                # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_RGB888)
 
-                self.__window.image_event.emit(QPixmap.fromImage(im))
+                self.__window.set_image_event.emit(im)
             except TimeoutError:
-                self.__window.noimage_event.emit()
+                self.__window.set_image_event.emit(None)
             except InterruptedError:
                 self.close()
 

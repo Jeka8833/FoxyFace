@@ -12,7 +12,7 @@ class BabbleConfig:
     allow_spinning: bool = False
 
     max_head_rotation_x: float = 30
-    max_head_rotation_y: float = 30
+    max_head_rotation_y: float = 50
 
     mincutoff: float = 3.0
     beta: float = 0.9

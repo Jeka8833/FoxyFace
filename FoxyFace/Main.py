@@ -39,7 +39,7 @@ _logger = logging.getLogger(__name__)
 
 
 class RunMainStream:
-    def __init__(self):
+    def __init__(self, splash_screen: QSplashScreen = None):
         self.__config_manager: ConfigManager = ConfigManager(Path("config.json"))
         self.__config_manager.load(wait=True)
 
@@ -54,10 +54,13 @@ class RunMainStream:
                                                                                             self.__media_pipe_pipeline,
                                                                                             self.__processing_pipeline)
 
-        self.main_window: MainWindow = MainWindow(self.__config_manager, self.__camera_pipeline,
-                                                  self.__media_pipe_pipeline, self.__babble_pipeline,
-                                                  self.__processing_pipeline, self.__udp_pipeline,
-                                                  self.__auto_calibration_endpoint)
+        self.__main_window: MainWindow = MainWindow(self.__config_manager, self.__camera_pipeline,
+                                                    self.__media_pipe_pipeline, self.__babble_pipeline,
+                                                    self.__processing_pipeline, self.__udp_pipeline,
+                                                    self.__auto_calibration_endpoint)
+
+        if splash_screen is not None:
+            splash_screen.finish(self.__main_window)
 
     def __enter__(self):
         return self
@@ -76,7 +79,5 @@ class RunMainStream:
 UiImageUtil.allow_change_windows_icon()
 __app.setStyle('Fusion')
 
-with RunMainStream() as main_stream:
-    if __splash is not None:
-        __splash.finish(main_stream.main_window)
+with RunMainStream(__splash):
     sys.exit(__app.exec())

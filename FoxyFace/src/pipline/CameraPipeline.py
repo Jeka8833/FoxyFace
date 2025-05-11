@@ -84,11 +84,8 @@ class CameraPipeline:
         return self.__config_manager.create_update_listener(self.__update_camera_options, watch_array, True)
 
     def __update_camera_options(self, config_manager: ConfigManager):
-        self.__stream.width = config_manager.config.camera.width
-        self.__stream.height = config_manager.config.camera.height
-        self.__stream.camera_id = config_manager.config.camera.camera_id
-
         try:
-            self.__stream.recreate_camera()
+            self.__stream.start_new_camera(config_manager.config.camera.camera_id, config_manager.config.camera.width,
+                                           config_manager.config.camera.height)
         except Exception:
             _logger.warning("Failed to recreate camera", exc_info=True, stack_info=True)

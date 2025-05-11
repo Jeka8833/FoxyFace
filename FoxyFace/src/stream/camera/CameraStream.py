@@ -1,6 +1,7 @@
 import logging
-import threading
+import platform
 import time
+from threading import Event, Thread
 
 import cv2
 
@@ -12,34 +13,43 @@ _logger = logging.getLogger(__name__)
 
 
 class CameraStream:
-    def __init__(self, camera_id: int = 0, width: int = 640, height: int = 480):
-        self.camera_id: int = camera_id
-        self.width: int = width
-        self.height: int = height
-
+    def __init__(self):
         self.__stream_root = WriteStreamSplitter[CameraFrame]()
 
-        self.__camera = cv2.VideoCapture()
-        self.recreate_camera()
+        self.__camera: cv2.VideoCapture | None = None
 
-        self.__close_event = threading.Event()
-        self.__thread = threading.Thread(target=self.__start_loop, daemon=True, name="Camera Stream")
+        self.__close_event = Event()
+        self.__thread = Thread(target=self.__start_loop, daemon=True, name="Camera Stream")
         self.__thread.start()
 
-    def recreate_camera(self):
-        if not isinstance(self.camera_id, int) or self.camera_id < 0:
+    def start_new_camera(self, camera_id: int, width: int, height: int):
+        if self.__close_event.is_set():
+            raise RuntimeError("CameraStream is closed")
+
+        if not isinstance(camera_id, int) or camera_id < 0:
             raise ValueError("Invalid camera id")
 
-        if not isinstance(self.width, int) or self.width <= 0:
+        if not isinstance(width, int) or width <= 0:
             raise ValueError("Invalid width")
 
-        if not isinstance(self.height, int) or self.height <= 0:
+        if not isinstance(height, int) or height <= 0:
             raise ValueError("Invalid height")
 
-        self.__camera.release()
-        self.__camera.open(self.camera_id)
-        self.__camera.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.__camera.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        camera = self.__camera
+        if camera is not None:
+            camera.release()
+
+        if platform.system() == "Windows":
+            camera = cv2.VideoCapture(camera_id, cv2.CAP_DSHOW)
+        else:
+            camera = cv2.VideoCapture(camera_id)
+
+        camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
+        self.__camera = camera
+
+        _logger.info("Camera started")
 
     def register_stream(self, stream: StreamWriteOnly[CameraFrame]) -> None:
         self.__stream_root.register_stream(stream)
@@ -50,7 +60,8 @@ class CameraStream:
     def close(self) -> None:
         self.__close_event.set()
 
-        self.__camera.release()
+        if self.__camera is not None:
+            self.__camera.release()
 
         self.__thread.join()
 
@@ -65,7 +76,7 @@ class CameraStream:
     def __start_loop(self):
         while not self.__close_event.is_set():
             try:
-                if self.__camera.isOpened():
+                if self.__camera is not None and self.__camera.isOpened():
                     success, numpy_frame_from_opencv = self.__camera.read()  # fast close not guaranteed
                     if success:
                         current_time = time.perf_counter_ns()
@@ -77,4 +88,4 @@ class CameraStream:
             except Exception:
                 _logger.warning("Exception", exc_info=True, stack_info=True)
 
-            self.__close_event.wait(0.001)
+            self.__close_event.wait(0.01)
