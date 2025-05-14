@@ -12,16 +12,9 @@ FoxyFace allows you to use your real face to control your avatar's face in VRCha
 
 ## Installation
 
-1. Download [FoxyFace.zip](https://github.com/Jeka8833/FoxyFace/releases/latest/download/FoxyFace.zip) and [FoxyFaceVRCFTInterface.zip](https://github.com/Jeka8833/FoxyFace/releases/latest/download/FoxyFaceVRCFTInterface.zip).
-2. Unzip FoxyFace.zip to wherever you like.
-3. Start the FoxyFace.exe program from the archive you unzipped.
-4. Start the VRCFaceTracking program.
-5. Click the "Module Registry" tab.
-6. Click on the "+" button.
-7. Select the "FoxyFaceVRCFTInterface.zip" file you downloaded at the 1-st step.
-
-> [!NOTE]
-> This is a simplified instruction, a more complete instruction will be released in a while.
+Perform the installation in this order:
+1. Install FoxyFace, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-FoxyFace).
+2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-.zip-archive).
 
 ## Camera setup
 
