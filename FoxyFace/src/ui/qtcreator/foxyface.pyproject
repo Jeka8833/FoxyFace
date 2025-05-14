@@ -8,6 +8,7 @@
         "VrcftSettings.ui",
         "AutoCalibrationWindow.ui",
         "CalibrationSettings.ui",
-        "CalibrationSettingsItem.ui"
+        "CalibrationSettingsItem.ui",
+        "HasUpdateWindow.ui"
     ]
 }

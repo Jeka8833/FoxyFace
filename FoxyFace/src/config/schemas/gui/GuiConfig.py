@@ -5,4 +5,6 @@ from src.config.schemas.gui.GuiAutoCalibrationWindowConfig import GuiAutoCalibra
 
 @dataclass(slots=True)
 class GuiConfig:
-    auto_calibration_window : GuiAutoCalibrationWindowConfig = field(default_factory=GuiAutoCalibrationWindowConfig)
+    auto_updater_version_skip: str = ""
+
+    auto_calibration_window: GuiAutoCalibrationWindowConfig = field(default_factory=GuiAutoCalibrationWindowConfig)

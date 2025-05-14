@@ -26,6 +26,8 @@ else:
 # Do time-consuming things
 
 from pathlib import Path
+from AppConstants import AppConstants
+from src.UpdateChecker import UpdateChecker
 from src.ui.windows.MainWindow import MainWindow
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.pipline.BabblePipeline import BabblePipeline
@@ -40,6 +42,8 @@ _logger = logging.getLogger(__name__)
 
 class RunMainStream:
     def __init__(self, splash_screen: QSplashScreen = None):
+        _logger.info(f"Hello, I'm FoxyFace {str(AppConstants.VERSION)}")
+
         self.__config_manager: ConfigManager = ConfigManager(Path("config.json"))
         self.__config_manager.load(wait=True)
 
@@ -62,6 +66,9 @@ class RunMainStream:
         if splash_screen is not None:
             splash_screen.finish(self.__main_window)
 
+        self.__update_checker = UpdateChecker(self.__config_manager, self.__main_window)
+        self.__update_checker.startup_check()
+
     def __enter__(self):
         return self
 
@@ -74,6 +81,7 @@ class RunMainStream:
         self.__processing_pipeline.close()
         self.__udp_pipeline.close()
         self.__auto_calibration_endpoint.close()
+        self.__update_checker.close()
 
 
 UiImageUtil.allow_change_windows_icon()

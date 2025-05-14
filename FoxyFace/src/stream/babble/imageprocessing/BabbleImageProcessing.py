@@ -12,8 +12,6 @@ from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
 
 
-# May be useful
-# https://stackoverflow.com/questions/9187387/3d-rotation-on-image
 class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
     def __init__(self, stream: StreamReadOnly[MediaPipeFrame], options: BabbleImageProcessingOptions,
                  model_loader: BabbleModelLoader):
@@ -42,32 +40,25 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][5]  # 195 or 5
         point_5_x = point_5.x * width
         point_5_y = point_5.y * height
-        # cv2.circle(img_gray, (int(point_5_x), int(point_5_y)), 3, (255, 255, 255), -1)
 
         # Left
         point_234 = mediapipe_frame.face_landmarker_result.face_landmarks[0][234]  # 234 or 93
         point_234_x = point_234.x * width
         point_234_y = point_234.y * height
-        # cv2.circle(img_gray, (int(point_234_x), int(point_234_y)), 3, (255, 255, 255), -1)
 
         # Right
         point_454 = mediapipe_frame.face_landmarker_result.face_landmarks[0][454]  # 454 or 323
         point_454_x = point_454.x * width
         point_454_y = point_454.y * height
-        # cv2.circle(img_gray, (int(point_454_x), int(point_454_y)), 3, (255, 255, 255), -1)
 
         # Center Bottom
         point_152 = mediapipe_frame.face_landmarker_result.face_landmarks[0][152]
         point_152_x = point_152.x * width
         point_152_y = point_152.y * height
-        # cv2.circle(img_gray, (int(point_152_x), int(point_152_y)), 3, (255, 255, 255), -1)
 
-
-        point_a, point_b = BabbleImageProcessing.__scale_ab_points((point_234_x, point_234_y),
-                                                                   (point_454_x, point_454_y), 1.0)
-
-        point_a, point_b = BabbleImageProcessing.__calculate_rectangle_points(point_a, point_b, (point_5_x, point_5_y),
-                                                                              1.0)
+        point_a, point_b = BabbleImageProcessing.__calculate_rectangle_points((point_234_x, point_234_y),
+                                                                              (point_454_x, point_454_y),
+                                                                              (point_5_x, point_5_y), 1.0)
 
         point_d, point_e = BabbleImageProcessing.__calculate_rectangle_points(point_a, point_b,
                                                                               (point_152_x, point_152_y), 1.0)
@@ -80,9 +71,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
 
         M = cv2.getPerspectiveTransform(pts1, pts2)
 
-        img_gray = cv2.warpPerspective(img_gray, M, (model.input_size_x, model.input_size_y)
-                                       # , borderMode=cv2.BORDER_CONSTANT, borderValue=(255, 255, 255)
-                                       )
+        img_gray = cv2.warpPerspective(img_gray, M, (model.input_size_x, model.input_size_y))
 
         return BabbleImageFrame(img_gray, mediapipe_frame.camera_frame.timestamp_ns)
 
@@ -95,33 +84,28 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         return abs(euler[1]) <= self.__options.max_head_rotation_x and abs(
             euler[2]) <= self.__options.max_head_rotation_y
 
-    @staticmethod
-    def __scale_ab_points(point_a: (float, float), point_b: (float, float), scale_ab: float) -> ((float, float),
-                                                                                                 (float, float)):
-        ab = (point_b[0] - point_a[0], point_b[1] - point_a[1])
-        scale = scale_ab - 1.0
-
-        return (point_a[0] + ab[0] * -scale, point_a[1] + ab[1] * -scale), (point_b[0] + ab[0] * scale,
-                                                                            point_b[1] + ab[1] * scale)
-
     # A-----B
     # |     |
     # |     |
     # D--C--E
     # https://stackoverflow.com/questions/56440433/how-to-get-the-4-coordinates-of-a-rectangle-from-3-coordinates
     @staticmethod
-    def __calculate_rectangle_points(point_a: (float, float), point_b: (float, float), point_c: (float, float),
-                                     scale_point_c: float = 1.0) -> ((float, float), (float, float)):
-        denominator = ((point_b[1] - point_a[1]) ** 2) + ((point_b[0] - point_a[0]) ** 2)
+    def __calculate_rectangle_points(point_a: tuple[float, float], point_b: tuple[float, float],
+                                     point_c: tuple[float, float], scale_point_c: float = 1.0) -> tuple[
+        tuple[float, float], tuple[float, float]]:
+        delta_x_ab = point_b[0] - point_a[0]
+        delta_y_ab = point_b[1] - point_a[1]
+
+        denominator = (delta_x_ab ** 2) + (delta_y_ab ** 2)
         if math.fabs(denominator) == 0.0:
             return point_c, point_c
 
-        signed_numerator = (point_b[1] - point_a[1]) * point_c[0] - (point_b[0] - point_a[0]) * point_c[1] + point_b[
-            0] * point_a[1] - point_b[1] * point_a[0]
+        signed_numerator = delta_y_ab * point_c[0] - delta_x_ab * point_c[1] + point_b[0] * point_a[1] - point_b[1] * \
+                           point_a[0]
 
         value = (scale_point_c * signed_numerator) / denominator
 
-        side_vector = ((point_b[1] - point_a[1]) * value, (point_a[0] - point_b[0]) * value)
+        side_vector = (delta_y_ab * value, -delta_x_ab * value)
 
         point_d = (point_a[0] + side_vector[0], point_a[1] + side_vector[1])
         point_e = (point_b[0] + side_vector[0], point_b[1] + side_vector[1])

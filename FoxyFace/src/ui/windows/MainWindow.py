@@ -3,7 +3,8 @@ import threading
 
 from PySide6.QtCore import QTimer, Qt, Signal
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication
+from packaging.version import Version
 
 from AppConstants import AppConstants
 from src.config.ConfigManager import ConfigManager
@@ -14,18 +15,20 @@ from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.UdpPipeline import UdpPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.ui import UiImageUtil
+from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_mainwindow import Ui_MainWindow
 from src.ui.windows.AutoCalibrationWindow import AutoCalibrationWindow
 from src.ui.windows.BabbleSettingsWindow import BabbleSettingsWindow
 from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
+from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
 from src.ui.windows.VrcftSettingsWindow import VrcftSettingsWindow
 
 _logger = logging.getLogger(__name__)
 
 
-class MainWindow(QMainWindow):
+class MainWindow(FoxyWindow):
     camera_fps_signal = Signal(str)
     mediapipe_fps_signal = Signal(str)
     mediapipe_latency_signal = Signal(str)
@@ -33,6 +36,7 @@ class MainWindow(QMainWindow):
     babble_latency_signal = Signal(str)
     udp_pps_signal = Signal(str)
     udp_status_signal = Signal(str)
+    has_update_signal = Signal(object)
 
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
                  mediapipe_pipeline: MediaPipePipeline, babble_pipeline: BabblePipeline,
@@ -60,10 +64,6 @@ class MainWindow(QMainWindow):
         self.__timer.timeout.connect(self.__update_thread)
         self.__timer.start()
 
-        icon = UiImageUtil.get_window_icon()
-        if icon is not None:
-            self.setWindowIcon(icon)
-
         self.setWindowTitle("FoxyFace v" + str(AppConstants.VERSION) + " #StandWithUkraine")
 
         self.__camera_settings_window: CameraSettingsWindow | None = None
@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
         self.__vrcft_settings_window: VrcftSettingsWindow | None = None
         self.__auto_calibration_window: AutoCalibrationWindow | None = None
         self.__calibration_window: CalibrationWindow | None = None
+        self.__has_update_window: HasUpdateWindow | None = None
 
         self.show()
 
@@ -117,6 +118,7 @@ class MainWindow(QMainWindow):
         self.babble_latency_signal.connect(self.__ui.babble_latency_lbl.setText)
         self.udp_pps_signal.connect(self.__ui.vrcft_pps_lbl.setText)
         self.udp_status_signal.connect(self.__ui.vrcft_status_lbl.setText)
+        self.has_update_signal.connect(self.__has_update)
 
     def __unregister_signals(self):
         self.camera_fps_signal.disconnect(self.__ui.camera_fps_lbl.setText)
@@ -126,6 +128,7 @@ class MainWindow(QMainWindow):
         self.babble_latency_signal.disconnect(self.__ui.babble_latency_lbl.setText)
         self.udp_pps_signal.disconnect(self.__ui.vrcft_pps_lbl.setText)
         self.udp_status_signal.disconnect(self.__ui.vrcft_status_lbl.setText)
+        self.has_update_signal.disconnect(self.__has_update)
 
     def __register_events(self):
         self.__ui.open_camera_preview_btn.clicked.connect(self.__open_camera_preview)
@@ -215,3 +218,10 @@ class MainWindow(QMainWindow):
                 self.__vrcft_settings_window.close_event.emit()
         except Exception:
             _logger.warning("Failed to open vrcft settings", exc_info=True, stack_info=True)
+
+    def __has_update(self, founded_version: Version):
+        try:
+            if self.__has_update_window is None or self.__has_update_window.is_closed.is_set():
+                self.__has_update_window = HasUpdateWindow(self.__config_manager, founded_version)
+        except Exception:
+            _logger.warning("Failed to open has update window", exc_info=True, stack_info=True)
