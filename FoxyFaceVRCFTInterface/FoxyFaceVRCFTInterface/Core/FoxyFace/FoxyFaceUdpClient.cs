@@ -76,6 +76,8 @@ public class FoxyFaceUdpClient : IDisposable
 
                 if (currentPacket != null && currentPacket.PingPacket)
                 {
+                    _foxyFaceUdpAutoConnect?.TryStopBroadcasting();
+                    
                     return currentPacket;
                 }
 
