@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'camerasettings.ui'
+## Form generated from reading UI file 'CameraSettings.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.9.0
 ##

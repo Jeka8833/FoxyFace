@@ -23,11 +23,17 @@ class Ui_VrcftSettings(object):
     def setupUi(self, VrcftSettings):
         if not VrcftSettings.objectName():
             VrcftSettings.setObjectName(u"VrcftSettings")
-        VrcftSettings.resize(213, 230)
+        VrcftSettings.resize(213, 258)
         self.centralwidget = QWidget(VrcftSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.auto_connect_cb = QCheckBox(self.centralwidget)
+        self.auto_connect_cb.setObjectName(u"auto_connect_cb")
+        self.auto_connect_cb.setChecked(True)
+
+        self.verticalLayout.addWidget(self.auto_connect_cb)
+
         self.ip_lb = QLabel(self.centralwidget)
         self.ip_lb.setObjectName(u"ip_lb")
 
@@ -35,6 +41,7 @@ class Ui_VrcftSettings(object):
 
         self.ip_le = QLineEdit(self.centralwidget)
         self.ip_le.setObjectName(u"ip_le")
+        self.ip_le.setEnabled(False)
         self.ip_le.setMaxLength(256)
 
         self.verticalLayout.addWidget(self.ip_le)
@@ -46,6 +53,7 @@ class Ui_VrcftSettings(object):
 
         self.port_sp = QSpinBox(self.centralwidget)
         self.port_sp.setObjectName(u"port_sp")
+        self.port_sp.setEnabled(False)
         self.port_sp.setMaximum(65535)
         self.port_sp.setValue(54321)
 
@@ -87,12 +95,15 @@ class Ui_VrcftSettings(object):
         VrcftSettings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(VrcftSettings)
+        self.auto_connect_cb.toggled.connect(self.ip_le.setDisabled)
+        self.auto_connect_cb.toggled.connect(self.port_sp.setDisabled)
 
         QMetaObject.connectSlotsByName(VrcftSettings)
     # setupUi
 
     def retranslateUi(self, VrcftSettings):
         VrcftSettings.setWindowTitle(QCoreApplication.translate("VrcftSettings", u"VRCFT Settings", None))
+        self.auto_connect_cb.setText(QCoreApplication.translate("VrcftSettings", u"Find IP and Port Automaticly", None))
         self.ip_lb.setText(QCoreApplication.translate("VrcftSettings", u"IP:", None))
         self.ip_le.setText(QCoreApplication.translate("VrcftSettings", u"localhost", None))
         self.port_lb.setText(QCoreApplication.translate("VrcftSettings", u"Port:", None))

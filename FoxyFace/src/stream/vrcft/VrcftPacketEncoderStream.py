@@ -174,21 +174,21 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
                     UnifiedExpressionEnum.HeadYaw: media_pipe_dict.get(GeneralBlendShapeEnum.HeadYaw),
                     UnifiedExpressionEnum.HeadRoll: media_pipe_dict.get(GeneralBlendShapeEnum.HeadRoll),
 
-                    UnifiedExpressionEnum.CheekSuckLeft:media_pipe_dict.get(GeneralBlendShapeEnum.CheekSuckLeft),
-                    UnifiedExpressionEnum.CheekSuckRight:media_pipe_dict.get(GeneralBlendShapeEnum.CheekSuckRight),
+                    UnifiedExpressionEnum.CheekSuckLeft: media_pipe_dict.get(GeneralBlendShapeEnum.CheekSuckLeft),
+                    UnifiedExpressionEnum.CheekSuckRight: media_pipe_dict.get(GeneralBlendShapeEnum.CheekSuckRight),
 
-                    UnifiedExpressionEnum.TongueOut:media_pipe_dict.get(GeneralBlendShapeEnum.TongueOut),
-                    UnifiedExpressionEnum.TongueUp:media_pipe_dict.get(GeneralBlendShapeEnum.TongueUp),
-                    UnifiedExpressionEnum.TongueDown:media_pipe_dict.get(GeneralBlendShapeEnum.TongueDown),
-                    UnifiedExpressionEnum.TongueLeft:media_pipe_dict.get(GeneralBlendShapeEnum.TongueLeft),
-                    UnifiedExpressionEnum.TongueRight:media_pipe_dict.get(GeneralBlendShapeEnum.TongueRight),
-                    UnifiedExpressionEnum.TongueRoll:media_pipe_dict.get(GeneralBlendShapeEnum.TongueRoll),
-                    UnifiedExpressionEnum.TongueBendDown:media_pipe_dict.get(GeneralBlendShapeEnum.TongueBendDown),
-                    UnifiedExpressionEnum.TongueCurlUp:media_pipe_dict.get(GeneralBlendShapeEnum.TongueCurlUp),
-                    UnifiedExpressionEnum.TongueSquish:media_pipe_dict.get(GeneralBlendShapeEnum.TongueSquish),
-                    UnifiedExpressionEnum.TongueFlat:media_pipe_dict.get(GeneralBlendShapeEnum.TongueFlat),
-                    UnifiedExpressionEnum.TongueTwistLeft:media_pipe_dict.get(GeneralBlendShapeEnum.TongueTwistLeft),
-                    UnifiedExpressionEnum.TongueTwistRight:media_pipe_dict.get(GeneralBlendShapeEnum.TongueTwistRight)
+                    UnifiedExpressionEnum.TongueOut: media_pipe_dict.get(GeneralBlendShapeEnum.TongueOut),
+                    UnifiedExpressionEnum.TongueUp: media_pipe_dict.get(GeneralBlendShapeEnum.TongueUp),
+                    UnifiedExpressionEnum.TongueDown: media_pipe_dict.get(GeneralBlendShapeEnum.TongueDown),
+                    UnifiedExpressionEnum.TongueLeft: media_pipe_dict.get(GeneralBlendShapeEnum.TongueLeft),
+                    UnifiedExpressionEnum.TongueRight: media_pipe_dict.get(GeneralBlendShapeEnum.TongueRight),
+                    UnifiedExpressionEnum.TongueRoll: media_pipe_dict.get(GeneralBlendShapeEnum.TongueRoll),
+                    UnifiedExpressionEnum.TongueBendDown: media_pipe_dict.get(GeneralBlendShapeEnum.TongueBendDown),
+                    UnifiedExpressionEnum.TongueCurlUp: media_pipe_dict.get(GeneralBlendShapeEnum.TongueCurlUp),
+                    UnifiedExpressionEnum.TongueSquish: media_pipe_dict.get(GeneralBlendShapeEnum.TongueSquish),
+                    UnifiedExpressionEnum.TongueFlat: media_pipe_dict.get(GeneralBlendShapeEnum.TongueFlat),
+                    UnifiedExpressionEnum.TongueTwistLeft: media_pipe_dict.get(GeneralBlendShapeEnum.TongueTwistLeft),
+                    UnifiedExpressionEnum.TongueTwistRight: media_pipe_dict.get(GeneralBlendShapeEnum.TongueTwistRight)
                     }
         # @formatter:on
 

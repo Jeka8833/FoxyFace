@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>213</width>
-    <height>230</height>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,16 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QCheckBox" name="auto_connect_cb">
+      <property name="text">
+       <string>Find IP and Port Automaticly</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QLabel" name="ip_lb">
       <property name="text">
@@ -24,6 +34,9 @@
     </item>
     <item>
      <widget class="QLineEdit" name="ip_le">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="text">
        <string>localhost</string>
       </property>
@@ -41,6 +54,9 @@
     </item>
     <item>
      <widget class="QSpinBox" name="port_sp">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="maximum">
        <number>65535</number>
       </property>
@@ -107,5 +123,38 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>auto_connect_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>ip_le</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>103</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>103</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>auto_connect_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>port_sp</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>160</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
