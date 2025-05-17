@@ -1,6 +1,6 @@
 # FoxyFace
 
-FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it]. 
+FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it](https://github.com/Jeka8833/FoxyFace/wiki/Using-another-device-as-a-camera).
 
 FoxyFace uses the [MediaPipe Face landmark detection](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker) neural network bundle and the neural network from [Project Babble](https://github.com/Project-Babble).
 
