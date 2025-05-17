@@ -91,35 +91,40 @@ public class FoxyFacePacketProcessor
 
         if (_headRotationAllowed)
         {
-            if (foxyFaceValues.TryGetValue(HeadX, out float headXValue))
-            {
-                UnifiedTracking.Data.Head.HeadPosX = headXValue;
-            }
+            UpdateHeadPositionAndRotation(foxyFaceValues);
+        }
+    }
 
-            if (foxyFaceValues.TryGetValue(HeadY, out float headYValue))
-            {
-                UnifiedTracking.Data.Head.HeadPosY = headYValue;
-            }
+    private void UpdateHeadPositionAndRotation(Dictionary<string, float> foxyFaceValues)
+    {
+        if (foxyFaceValues.TryGetValue(HeadX, out float headXValue))
+        {
+            UnifiedTracking.Data.Head.HeadPosX = headXValue;
+        }
 
-            if (foxyFaceValues.TryGetValue(HeadZ, out float headZValue))
-            {
-                UnifiedTracking.Data.Head.HeadPosZ = headZValue;
-            }
+        if (foxyFaceValues.TryGetValue(HeadY, out float headYValue))
+        {
+            UnifiedTracking.Data.Head.HeadPosY = headYValue;
+        }
 
-            if (foxyFaceValues.TryGetValue(HeadPitch, out float headPitchValue))
-            {
-                UnifiedTracking.Data.Head.HeadPitch = headPitchValue;
-            }
+        if (foxyFaceValues.TryGetValue(HeadZ, out float headZValue))
+        {
+            UnifiedTracking.Data.Head.HeadPosZ = headZValue;
+        }
 
-            if (foxyFaceValues.TryGetValue(HeadYaw, out float headYawValue))
-            {
-                UnifiedTracking.Data.Head.HeadYaw = headYawValue;
-            }
+        if (foxyFaceValues.TryGetValue(HeadPitch, out float headPitchValue))
+        {
+            UnifiedTracking.Data.Head.HeadPitch = headPitchValue;
+        }
 
-            if (foxyFaceValues.TryGetValue(HeadRoll, out float headRollValue))
-            {
-                UnifiedTracking.Data.Head.HeadRoll = headRollValue;
-            }
+        if (foxyFaceValues.TryGetValue(HeadYaw, out float headYawValue))
+        {
+            UnifiedTracking.Data.Head.HeadYaw = headYawValue;
+        }
+
+        if (foxyFaceValues.TryGetValue(HeadRoll, out float headRollValue))
+        {
+            UnifiedTracking.Data.Head.HeadRoll = headRollValue;
         }
     }
 
