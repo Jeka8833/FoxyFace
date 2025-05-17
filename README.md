@@ -1,6 +1,27 @@
 # FoxyFace
 
-FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. FoxyFace is a good starting point as it doesn't require you to invest any money.
+FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it]. 
+
+FoxyFace uses the [MediaPipe Face landmark detection](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker) neural network bundle and the neural network from [Project Babble](https://github.com/Project-Babble).
+
+FoxyFace is a good starting point as it doesn't require you to invest any money if you have a computer and a camera on "any" of your devices.
+<br/><br/>
+
+## Almost complete facial tracking
+
+The FoxyFace is currently tracking 83 parameters out of 102 parameters supported by VRCFT, which is 81%. That's taking into account the [Blended Shapes](https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendshapes).
+
+<details>
+  <summary>Supported parameters</summary>
+  <br/>
+  BrowInnerUpLeft, BrowInnerUpRight, BrowLowererLeft, BrowLowererRight, BrowOuterUpLeft, BrowOuterUpRight, BrowPinchLeft, BrowPinchRight, CheekPuffLeft, CheekPuffRight, CheekSquintLeft, CheekSquintRight, CheekSuckLeft, CheekSuckRight, EyeOpennessLeft, EyeOpennessRight, EyeSquintLeft, EyeSquintRight, EyeWideLeft, EyeWideRight, EyeXLeft, EyeXRight, EyeYLeft, EyeYRight, HeadPitch, HeadRoll, HeadX, HeadY, HeadYaw, HeadZ, JawForward, JawLeft, JawOpen, JawRight, LipFunnelLowerLeft, LipFunnelLowerRight, LipFunnelUpperLeft, LipFunnelUpperRight, LipPuckerLowerLeft, LipPuckerLowerRight, LipPuckerUpperLeft, LipPuckerUpperRight, LipSuckLowerLeft, LipSuckLowerRight, LipSuckUpperLeft, LipSuckUpperRight, MouthClosed, MouthCornerPullLeft, MouthCornerPullRight, MouthCornerSlantLeft, MouthCornerSlantRight, MouthDimpleLeft, MouthDimpleRight, MouthFrownLeft, MouthFrownRight, MouthLowerDownLeft, MouthLowerDownRight, MouthLowerLeft, MouthLowerRight, MouthPressLeft, MouthPressRight, MouthRaiserLower, MouthRaiserUpper, MouthStretchLeft, MouthStretchRight, MouthUpperLeft, MouthUpperRight, MouthUpperUpLeft, MouthUpperUpRight, NoseSneerLeft, NoseSneerRight, TongueBendDown, TongueCurlUp, TongueDown, TongueFlat, TongueLeft, TongueOut, TongueRight, TongueRoll, TongueSquish, TongueTwistLeft, TongueTwistRight, TongueUp
+</details><br/>
+
+<details>
+  <summary>Unsupported parameters</summary>
+  <br/>
+EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMandibleRaise, LipSuckCornerLeft, LipSuckCornerRight, MouthTightenerLeft, MouthTightenerRight, MouthUpperDeepenLeft, MouthUpperDeepenRight, NasalConstrictLeft, NasalConstrictRight, NasalDilationLeft, NasalDilationRight, NeckFlexLeft, NeckFlexRight, SoftPalateClose, ThroatSwallow
+</details>
 <br/><br/>
 
 ## Step 0
@@ -16,16 +37,15 @@ Perform the installation in this order:
 1. Install FoxyFace, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-FoxyFace).
 2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-.zip-archive).
 
+<br/><br/>
+
 ## Camera setup
 
-Basic notes that may help you:
-1. Try to keep the original aspect ratio of your image from the camera. If the aspect ratio is incorrect, your face will **not be recognized** or the mask (You can see the mask in the MediaPipe -> Preview) will **not be correctly applied** to your face.
-2. If you have a weak computer and see that the FPS when tracking your face is low, reduce the resolution of the camera image. You can also disable the neural network from Project Babble if you don't need cheeks and tongue.
-3. If you are far away from the camera, increase the output resolution of the image from your camera so that your face occupies at least 256 pixels in the image.
-4. In low light, the neural network from Project Babble will have quite a bit of noise in the output.
+Instructions on how to set up the camera can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Camera-Settings).
 
-> [!NOTE]
-> This is a simplified instruction, a more complete instruction will be released in a while.
+Instructions on how to use another device as a webcam can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Using-another-device-as-a-camera).
+
+<br/><br/>
 
 ## Updating the Project Babble neural network
 

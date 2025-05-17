@@ -103,7 +103,7 @@ class Ui_VrcftSettings(object):
 
     def retranslateUi(self, VrcftSettings):
         VrcftSettings.setWindowTitle(QCoreApplication.translate("VrcftSettings", u"VRCFT Settings", None))
-        self.auto_connect_cb.setText(QCoreApplication.translate("VrcftSettings", u"Find IP and Port Automaticly", None))
+        self.auto_connect_cb.setText(QCoreApplication.translate("VrcftSettings", u"Find IP and Port Automatically", None))
         self.ip_lb.setText(QCoreApplication.translate("VrcftSettings", u"IP:", None))
         self.ip_le.setText(QCoreApplication.translate("VrcftSettings", u"localhost", None))
         self.port_lb.setText(QCoreApplication.translate("VrcftSettings", u"Port:", None))

@@ -18,7 +18,7 @@
     <item>
      <widget class="QCheckBox" name="auto_connect_cb">
       <property name="text">
-       <string>Find IP and Port Automaticly</string>
+       <string>Find IP and Port Automatically</string>
       </property>
       <property name="checked">
        <bool>true</bool>
