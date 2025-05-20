@@ -15,29 +15,27 @@ The FoxyFace is currently tracking 83 parameters out of 102 parameters supported
   <summary>Supported parameters</summary>
   <br/>
   BrowInnerUpLeft, BrowInnerUpRight, BrowLowererLeft, BrowLowererRight, BrowOuterUpLeft, BrowOuterUpRight, BrowPinchLeft, BrowPinchRight, CheekPuffLeft, CheekPuffRight, CheekSquintLeft, CheekSquintRight, CheekSuckLeft, CheekSuckRight, EyeOpennessLeft, EyeOpennessRight, EyeSquintLeft, EyeSquintRight, EyeWideLeft, EyeWideRight, EyeXLeft, EyeXRight, EyeYLeft, EyeYRight, HeadPitch, HeadRoll, HeadX, HeadY, HeadYaw, HeadZ, JawForward, JawLeft, JawOpen, JawRight, LipFunnelLowerLeft, LipFunnelLowerRight, LipFunnelUpperLeft, LipFunnelUpperRight, LipPuckerLowerLeft, LipPuckerLowerRight, LipPuckerUpperLeft, LipPuckerUpperRight, LipSuckLowerLeft, LipSuckLowerRight, LipSuckUpperLeft, LipSuckUpperRight, MouthClosed, MouthCornerPullLeft, MouthCornerPullRight, MouthCornerSlantLeft, MouthCornerSlantRight, MouthDimpleLeft, MouthDimpleRight, MouthFrownLeft, MouthFrownRight, MouthLowerDownLeft, MouthLowerDownRight, MouthLowerLeft, MouthLowerRight, MouthPressLeft, MouthPressRight, MouthRaiserLower, MouthRaiserUpper, MouthStretchLeft, MouthStretchRight, MouthUpperLeft, MouthUpperRight, MouthUpperUpLeft, MouthUpperUpRight, NoseSneerLeft, NoseSneerRight, TongueBendDown, TongueCurlUp, TongueDown, TongueFlat, TongueLeft, TongueOut, TongueRight, TongueRoll, TongueSquish, TongueTwistLeft, TongueTwistRight, TongueUp
-</details><br/>
+</details>
 
 <details>
   <summary>Unsupported parameters</summary>
   <br/>
 EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMandibleRaise, LipSuckCornerLeft, LipSuckCornerRight, MouthTightenerLeft, MouthTightenerRight, MouthUpperDeepenLeft, MouthUpperDeepenRight, NasalConstrictLeft, NasalConstrictRight, NasalDilationLeft, NasalDilationRight, NeckFlexLeft, NeckFlexRight, SoftPalateClose, ThroatSwallow
-</details>
-<br/><br/>
+</details><br/>
 
 ## Step 0
 
 1. Make sure you've installed [VRCFaceTracking](https://docs.vrcft.io).
 2. Make sure you find an avatar that supports face tracking or head movement. You **won't be able** to check if it works without this/third-party module enabled. Here's a video tutorial: [link](https://youtu.be/aitYy5H9YTM)
 3. The **most important step** is to make sure that you have enabled [OSC](https://docs.vrcft.io/docs/intro/getting-started#3%EF%B8%8F-enable-osc-in-vrchat) in the avatar settings and enabled tracking of individual parts of the face/head; by default, this is all turned off.
-<br/><br/>
+<br/>
 
 ## Installation
 
 Perform the installation in this order:
 1. Install FoxyFace, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-FoxyFace).
 2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-.zip-archive).
-
-<br/><br/>
+<br/>
 
 ## Camera setup
 
@@ -45,7 +43,7 @@ Instructions on how to set up the camera can be found [here](https://github.com/
 
 Instructions on how to use another device as a webcam can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Using-another-device-as-a-camera).
 
-<br/><br/>
+<br/>
 
 ## Updating the Project Babble neural network
 
@@ -58,6 +56,8 @@ Necessary for better tracking of cheeks and tongue.
 
 > [!NOTE]
 > This is a simplified instruction, a more complete instruction will be released in a while.
+
+<br/>
 
 ## Build
 
