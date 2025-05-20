@@ -98,7 +98,7 @@ class CalibrationWindow(FoxyWindow):
         self.update_statistic_event.disconnect(self.__update_statistic_value)
 
     def __reset_head_center(self):
-        self.__config_manager.config.media_pipe.center_point_matrix = []
+        self.__config_manager.config.media_pipe.head_rotation_transformation = []
 
     def __full_reset(self):
         self.__config_manager.config.processing = ProcessingConfig()

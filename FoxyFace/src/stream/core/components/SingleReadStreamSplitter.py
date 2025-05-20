@@ -11,6 +11,9 @@ class SingleReadStreamSplitter[T](StreamReadOnly[T]):
         return self.__single_buffer_stream
 
     def poll(self, timeout: float | None = None) -> T:
+        if timeout is not None and timeout <= 0.0:
+            raise TimeoutError()
+
         value = self.__stream.poll(timeout)
         self.__single_buffer_stream.put(value)
 

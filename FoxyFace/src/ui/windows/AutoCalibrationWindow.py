@@ -35,6 +35,7 @@ class AutoCalibrationWindow(FoxyWindow):
         self.__update_global_state_signal.connect(self.__update_global_state)
         self.__set_default_selection()
 
+        self.__ui.normal_pose_delay_sp.valueChanged.connect(self.__changed_delay_normal_pose)
         self.__ui.normal_pose_selected_list.itemSelectionChanged.connect(self.__list_changed_normal_pose)
         self.__ui.max_pose_selected_list.itemSelectionChanged.connect(self.__list_changed_max_pose)
 
@@ -54,6 +55,7 @@ class AutoCalibrationWindow(FoxyWindow):
         self.__ui.normal_pose_selected_list.itemSelectionChanged.disconnect(self.__list_changed_normal_pose)
         self.__ui.max_pose_selected_list.itemSelectionChanged.disconnect(self.__list_changed_max_pose)
 
+        self.__ui.normal_pose_delay_sp.valueChanged.disconnect(self.__changed_delay_normal_pose)
         self.__ui.normal_pose_start_btn.clicked.disconnect(self.__start_normal_pose_delayed)
         self.__ui.max_pose_start_btn.toggled.disconnect(self.__toggle_max_pose)
 

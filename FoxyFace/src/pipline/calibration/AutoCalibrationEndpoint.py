@@ -17,8 +17,7 @@ class AutoCalibrationEndpoint:
         self.__media_pipe_pipeline.register_stream(self.__buffer)
 
         self.auto_calibration = AutoCalibration(self.__config_manager,
-                                                self.__processing_pipeline.get_auto_calibration_stream(), self.__buffer,
-                                                self.__media_pipe_pipeline.get_processing_options())
+                                                self.__processing_pipeline.get_auto_calibration_stream(), self.__buffer)
 
     def close(self):
         self.__buffer.close()

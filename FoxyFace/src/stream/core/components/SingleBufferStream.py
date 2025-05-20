@@ -21,6 +21,9 @@ class SingleBufferStream[T](StreamReadOnly[T], StreamWriteOnly[T]):
         return True
 
     def poll(self, timeout: float | None = None) -> T:
+        if timeout is not None and timeout <= 0.0:
+            raise TimeoutError()
+
         with self.__condition:
             while self.__value is None and not self.__closed:
                 if not self.__condition.wait(timeout):

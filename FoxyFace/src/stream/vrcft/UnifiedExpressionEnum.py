@@ -109,9 +109,9 @@ class UnifiedExpressionEnum(StrEnum):
 
     # Based on SRanipal tracking standard's tongue tracking.
     TongueUp = "TongueUp"  # Tongue points in an upward direction.
-    TongueDown = "TongueDown"  # Tongue points in an downward direction.
-    TongueRight = "TongueRight"  # Tongue points in an rightward direction.
-    TongueLeft = "TongueLeft"  # Tongue points in an leftward direction.
+    TongueDown = "TongueDown"  # Tongue points in a downward direction.
+    TongueRight = "TongueRight"  # Tongue points in a rightward direction.
+    TongueLeft = "TongueLeft"  # Tongue points in a leftward direction.
 
     # Based on https://www.naun.org/main/NAUN/computers/2018/a042007-060.pdf
     TongueRoll = "TongueRoll"  # Rolls up the sides of the tongue into a 'hotdog bun' shape.

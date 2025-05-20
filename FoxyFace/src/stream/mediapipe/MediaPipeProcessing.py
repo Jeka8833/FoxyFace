@@ -15,25 +15,29 @@ _logger = logging.getLogger(__name__)
 
 
 class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
-    def __init__(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]], options: MediaPipeProcessingOptions):
+    def __init__(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]],
+                 options: MediaPipeProcessingOptions):
         self.__stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]] = stream
         self.__options: MediaPipeProcessingOptions = options
 
     def put(self, value: MediaPipeFrame) -> bool:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
+        transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
         shapes = {MediaPipeBlendShapeEnum.HeadX: bottom_point.x, MediaPipeBlendShapeEnum.HeadY: 1.0 - bottom_point.y,
-                  MediaPipeBlendShapeEnum.HeadZ: value.face_landmarker_result.facial_transformation_matrixes[0][2, 3],
-                  MediaPipeBlendShapeEnum.EyeXLeft: 0.0, MediaPipeBlendShapeEnum.EyeXRight: 0.0,
-                  MediaPipeBlendShapeEnum.EyeYLeft: 0.0, MediaPipeBlendShapeEnum.EyeYRight: 0.0}
+                  MediaPipeBlendShapeEnum.HeadZ: transformation_matrix[2, 3], MediaPipeBlendShapeEnum.EyeXLeft: 0.0,
+                  MediaPipeBlendShapeEnum.EyeXRight: 0.0, MediaPipeBlendShapeEnum.EyeYLeft: 0.0,
+                  MediaPipeBlendShapeEnum.EyeYRight: 0.0}
 
-        rotation = self.__rotation_matrix_to_euler_zxy(value.face_landmarker_result.facial_transformation_matrixes[0])
+        rotation = self.__transformed_normalized_euler_zxy_rotation(transformation_matrix)
+
         if rotation is not None:
-            shapes[MediaPipeBlendShapeEnum.HeadPitch] = rotation[1] / (math.pi / 2.0)
-            shapes[MediaPipeBlendShapeEnum.HeadYaw] = rotation[2] / (math.pi / 2.0)
-            shapes[MediaPipeBlendShapeEnum.HeadRoll] = rotation[0] / (math.pi / 2.0)
+            shapes[MediaPipeBlendShapeEnum.HeadPitch] = rotation[1]
+            shapes[MediaPipeBlendShapeEnum.HeadYaw] = rotation[2]
+            shapes[MediaPipeBlendShapeEnum.HeadRoll] = rotation[0]
 
         for shape in value.face_landmarker_result.face_blendshapes[0]:
+            # noinspection PyUnreachableCode
             match shape.category_name:
                 case "_neutral":
                     pass
@@ -42,9 +46,9 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
                 case "eyeLookOutLeft":
                     shapes[MediaPipeBlendShapeEnum.EyeXRight] -= shape.score
                 case "eyeLookInRight":
-                    shapes[MediaPipeBlendShapeEnum.EyeXLeft] += shape.score
-                case "eyeLookOutRight":
                     shapes[MediaPipeBlendShapeEnum.EyeXLeft] -= shape.score
+                case "eyeLookOutRight":
+                    shapes[MediaPipeBlendShapeEnum.EyeXLeft] += shape.score
                 case "eyeLookDownLeft":
                     shapes[MediaPipeBlendShapeEnum.EyeYLeft] -= shape.score
                 case "eyeLookUpLeft":
@@ -63,17 +67,18 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
     def close(self) -> None:
         self.__stream.close()
 
-    def __rotation_matrix_to_euler_zxy(self, rotation_matrix: ndarray):
+    # https://docs.unity3d.com/ScriptReference/Quaternion-eulerAngles.html
+    # Scipy coordinates order doesn't match Unity!
+    def __transformed_normalized_euler_zxy_rotation(self, rotation_matrix: ndarray) -> list[float] | None:
+        # noinspection PyBroadException
         try:
-            if self.__options.center_point_matrix is None:
-                centered_matrix = rotation_matrix[0:3, 0:3]
-            else:
-                centered_matrix = numpy.dot(self.__options.center_point_matrix, rotation_matrix[0:3, 0:3])
+            mirror_matrix = numpy.diag([-1, 1, 1])
 
-            # https://docs.unity3d.com/ScriptReference/Quaternion-eulerAngles.html
-            # Method has slight error compared with Wolfram Mathematica, and it doesn't look like a rounding error.
-            # Scipy coordinates doesn't match Unity!
-            return Rotation.from_matrix(centered_matrix).as_euler('zxy', degrees=False)
+            transformed_rotation = mirror_matrix @ (
+                        rotation_matrix[0:3, 0:3] @ self.__options.initial_rotation) @ mirror_matrix
+
+            # noinspection PyArgumentList
+            return Rotation.from_matrix(transformed_rotation).as_euler('zxy', degrees=False) / (math.pi / 2.0)
         except Exception:
             _logger.warning("Rotation matrix", exc_info=True, stack_info=True)
 

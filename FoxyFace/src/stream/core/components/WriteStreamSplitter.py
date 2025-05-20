@@ -1,52 +1,53 @@
+from threading import Lock
+
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 
 
 class WriteStreamSplitter[T](StreamWriteOnly[T]):
     def __init__(self):
         self.__streams: set[StreamWriteOnly[T]] | None = set[StreamWriteOnly[T]]()
+        self.__lock: Lock = Lock()
 
     def put(self, value: T) -> bool:
-        streams = self.__streams
-
-        if streams is None:
-            raise InterruptedError()
-
         not_closed = False
 
-        for stream in streams:
-            if not stream.put(value):
-                self.unregister_stream(stream)
-            else:
-                not_closed = True
+        with self.__lock:
+            if self.__streams is None:
+                raise InterruptedError()
+
+            for stream in self.__streams:
+                if not stream.put(value):
+                    self.unregister_stream(stream)
+                else:
+                    not_closed = True
 
         return not_closed
 
     def register_stream(self, stream: StreamWriteOnly[T]) -> None:
         if self is stream:
-            raise ValueError()
+            raise ValueError("Cannot register splitter from itself")
 
-        streams = self.__streams
+        with self.__lock:
+            if self.__streams is None:
+                raise InterruptedError()
 
-        if streams is None:
-            raise InterruptedError()
-
-        streams.add(stream)
+            self.__streams.add(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[T]) -> None:
         if self is stream:
-            raise ValueError()
+            raise ValueError("Cannot unregister splitter from itself")
 
-        streams = self.__streams
-
-        if streams is not None:
-            try:
-                streams.remove(stream)
-            except KeyError:
-                pass
+        with self.__lock:
+            if self.__streams is not None:
+                try:
+                    self.__streams.remove(stream)
+                except KeyError:
+                    pass
 
     def close(self) -> None:
-        streams = self.__streams
-        self.__streams = None
+        with self.__lock:
+            streams = self.__streams
+            self.__streams = None
 
         if streams is not None:
             for stream in streams:

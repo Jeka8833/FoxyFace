@@ -37,7 +37,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         height, width = img_gray.shape[:2]
 
         # Center Top
-        point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][5]  # 195 or 5
+        point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][4]  # 195 or 5 or 4
         point_5_x = point_5.x * width
         point_5_y = point_5.y * height
 
@@ -63,15 +63,14 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         point_d, point_e = BabbleImageProcessing.__calculate_rectangle_points(point_a, point_b,
                                                                               (point_152_x, point_152_y), 1.0)
 
-        # Flix X for Babble Image
         pts1 = numpy.float32(
             [[point_a[0], point_a[1]], [point_b[0], point_b[1]], [point_d[0], point_d[1]], [point_e[0], point_e[1]]])
         pts2 = numpy.float32(
-            [[model.input_size_x, 0], [0, 0], [model.input_size_x, model.input_size_y], [0, model.input_size_y]])
+            [[0, 0], [model.input_size_x, 0], [0, model.input_size_y], [model.input_size_x, model.input_size_y]])
 
-        M = cv2.getPerspectiveTransform(pts1, pts2)
+        matrix = cv2.getPerspectiveTransform(pts1, pts2)
 
-        img_gray = cv2.warpPerspective(img_gray, M, (model.input_size_x, model.input_size_y))
+        img_gray = cv2.warpPerspective(img_gray, matrix, (model.input_size_x, model.input_size_y))
 
         return BabbleImageFrame(img_gray, mediapipe_frame.camera_frame.timestamp_ns)
 

@@ -45,8 +45,10 @@ class MixerProcessingTest(unittest.TestCase):
         single_buffer = BufferStream[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
         single_buffer.put(blend_shape_frame)
 
-        with self.assertRaises(TimeoutError):
-            MixerProcessing(single_buffer, options).poll(1)
+        result = MixerProcessing(single_buffer, options).poll(1)
+
+        self.assertTrue(len(result.blend_shapes) == 0)
+        self.assertTrue(result.timestamp_ns == 0)
 
     def test_auto(self):
         blend_shape_frame = BlendShapesFrame(

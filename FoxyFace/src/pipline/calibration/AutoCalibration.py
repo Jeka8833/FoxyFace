@@ -7,7 +7,6 @@ from threading import Event
 from src.config.ConfigManager import ConfigManager
 from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.mediapipe.MediaPipeProcessingOptions import MediaPipeProcessingOptions
 from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
@@ -17,12 +16,11 @@ from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOpt
 class AutoCalibration:
     def __init__(self, config_manager: ConfigManager,
                  general_blend_shapes_stream: StreamReadOnly[BlendShapesFrame[GeneralBlendShapeEnum]],
-                 media_pipe_stream: StreamReadOnly[MediaPipeFrame], media_pipe_options: MediaPipeProcessingOptions):
+                 media_pipe_stream: StreamReadOnly[MediaPipeFrame]):
         self.__config_manager: ConfigManager = config_manager
         self.__general_blend_shapes_stream: StreamReadOnly[
             BlendShapesFrame[GeneralBlendShapeEnum]] = general_blend_shapes_stream
         self.__media_pipe_stream: StreamReadOnly[MediaPipeFrame] = media_pipe_stream
-        self.__media_pipe_options: MediaPipeProcessingOptions = media_pipe_options
 
         self.__thread_pool = ThreadPoolExecutor(max_workers=1)
 
@@ -70,7 +68,8 @@ class AutoCalibration:
                 transformation_matrix = \
                     self.__media_pipe_stream.poll(average_time).face_landmarker_result.facial_transformation_matrixes[0]
 
-                self.__media_pipe_options.center_point_matrix = transformation_matrix[0:3, 0:3].transpose()
+                self.__config_manager.config.media_pipe.head_rotation_transformation = transformation_matrix[0:3,
+                                                                                       0:3].transpose().tolist()
             except TimeoutError:
                 return False
             except InterruptedError:

@@ -2,6 +2,7 @@ import logging
 from typing import Any, Callable
 
 import numpy
+from scipy.spatial.transform import Rotation
 
 from AppConstants import AppConstants
 from src.config.ConfigManager import ConfigManager
@@ -92,23 +93,17 @@ class MediaPipePipeline:
         self.close()
 
     def __register_change_processing_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe.center_point_matrix]
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe.head_rotation_transformation]
 
         return self.__config_manager.create_update_listener(self.__update_processing_options, watch_array, True)
 
     def __update_processing_options(self, config_manager: ConfigManager):
         try:
-            # TODO: Validate determinant, must be -1?
-            matrix = config_manager.config.media_pipe.center_point_matrix
-            if not matrix:
-                self.__processing_options.center_point_matrix = None
-                return
+            matrix = config_manager.config.media_pipe.head_rotation_transformation
 
-            matrix = numpy.array(matrix)
+            # noinspection PyArgumentList
+            Rotation.from_matrix(matrix)    # Crash if matrix is not valid
 
-            if matrix.shape != (3, 3):
-                raise ValueError("Matrix must be 3x3")
-
-            self.__processing_options.center_point_matrix = matrix
+            self.__processing_options.initial_rotation = matrix
         except Exception:
             _logger.warning("Failed to update post processing options", exc_info=True, stack_info=True)

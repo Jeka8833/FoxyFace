@@ -55,9 +55,6 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
         eye_close_right = media_pipe_dict.get(GeneralBlendShapeEnum.EyeBlinkRight)
         eye_open_right = 1 - eye_close_right if eye_close_right is not None else None
 
-        eye_x_right_opt = media_pipe_dict.get(GeneralBlendShapeEnum.EyeXRight)
-        eye_x_right = -eye_x_right_opt if eye_x_right_opt is not None else None
-
         # @formatter:off
         new_dict = {UnifiedExpressionEnum.BrowLowererLeft: media_pipe_dict.get(GeneralBlendShapeEnum.BrowDownLeft),
                     UnifiedExpressionEnum.BrowPinchLeft: media_pipe_dict.get(GeneralBlendShapeEnum.BrowDownLeft),
@@ -84,7 +81,7 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
                     UnifiedExpressionEnum.EyeOpennessRight: eye_open_right,
 
                     UnifiedExpressionEnum.EyeXLeft: media_pipe_dict.get(GeneralBlendShapeEnum.EyeXLeft),
-                    UnifiedExpressionEnum.EyeXRight: eye_x_right,
+                    UnifiedExpressionEnum.EyeXRight: media_pipe_dict.get(GeneralBlendShapeEnum.EyeXRight),
                     UnifiedExpressionEnum.EyeYLeft: media_pipe_dict.get(GeneralBlendShapeEnum.EyeYLeft),
                     UnifiedExpressionEnum.EyeYRight: media_pipe_dict.get(GeneralBlendShapeEnum.EyeYRight),
 
