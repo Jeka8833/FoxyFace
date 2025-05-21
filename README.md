@@ -34,7 +34,7 @@ EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMand
 
 Perform the installation in this order:
 1. Install FoxyFace, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-FoxyFace).
-2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-.zip-archive).
+2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-Module).
 <br/>
 
 ## Camera setup
