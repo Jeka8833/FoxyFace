@@ -36,8 +36,8 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
         self.__last_timestamp = packet_timestamp
 
         return self.__encode_object_to_json(
-                {"Timestamp": packet_timestamp, "Config": self.__options.to_packet_format_dict(),
-                 "Values": self.__mediapipe_to_vrcft_name(timed_blend_shapes.blend_shapes)})
+            {"Timestamp": packet_timestamp, "Config": self.__options.to_packet_format_dict(),
+             "Values": self.__mediapipe_to_vrcft_name(timed_blend_shapes.blend_shapes)})
 
     def generate_ping_packet(self) -> bytes:
         return self.__encode_object_to_json({"PingPacket": True, "Config": self.__options.to_packet_format_dict()})

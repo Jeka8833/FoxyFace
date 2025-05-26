@@ -1,5 +1,5 @@
 import logging
-import threading
+from threading import Event, Thread
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
@@ -18,12 +18,12 @@ class BabbleStream:
         self.__frame_timeout: float | None = frame_timeout
         self.__model = model
 
-        self.__close_event = threading.Event()
-
-        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="Babble Thread")
-        self.__thread.start()
+        self.__close_event = Event()
 
         self.__stream_root = WriteStreamSplitter[BlendShapesFrame[BabbleBlendShapeEnum]]()
+
+        self.__thread = Thread(target=self.__loop, daemon=True, name="Babble Thread")
+        self.__thread.start()
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
@@ -34,6 +34,8 @@ class BabbleStream:
     def close(self):
         self.__close_event.set()
         self.__stream_root.close()
+
+        self.__thread.join()
 
     def __enter__(self):
         return self

@@ -1,6 +1,6 @@
 import logging
-import threading
 import time
+from threading import Condition, Event, Lock, Thread
 
 import mediapipe
 from mediapipe.tasks.python import BaseOptions
@@ -32,24 +32,36 @@ class MediaPipeStream:
         self.__landmarker = self.__create_landmarker(model_asset_path, min_face_detection_confidence,
                                                      min_face_presence_confidence, min_tracking_confidence, try_use_gpu)
 
-        self.__close_event = threading.Event()
-        self.__condition_lock = threading.Condition(threading.Lock())
-        self.__callback_lock = threading.Lock()
+        self.__close_event = Event()
+        self.__condition_lock = Condition(Lock())
+        self.__callback_lock = Lock()
 
         self.__last_frame: CameraFrame | None = None
         self.__last_packet_time_ms: int = time.perf_counter_ns() // 1_000_000
         self.__last_callback_time_ms: int = time.perf_counter_ns() // 1_000_000
 
-        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="MediaPipe Thread")
-        self.__thread.start()
-
         self.__stream_root = WriteStreamSplitter[MediaPipeFrame]()
+
+        self.__fps_limiter_time: int = time.perf_counter_ns()
+        self.__fps_limit_ns: int | None = None
+
+        self.__thread = Thread(target=self.__loop, daemon=True, name="MediaPipe Thread")
+        self.__thread.start()
 
     def register_stream(self, stream: StreamWriteOnly[MediaPipeFrame]) -> None:
         self.__stream_root.register_stream(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[MediaPipeFrame]) -> None:
         self.__stream_root.unregister_stream(stream)
+
+    def set_fps_limit(self, fps_limit: int | None):
+        if fps_limit is None:
+            self.__fps_limit_ns = None
+        else:
+            if fps_limit <= 0:
+                raise ValueError("fps_limit must be positive")
+
+            self.__fps_limit_ns = 1_000_000_000 // fps_limit
 
     def close(self):
         self.__close_event.set()
@@ -83,6 +95,17 @@ class MediaPipeStream:
 
                 with self.__condition_lock:  # not ideal back-pressure, we can load more to achieve more FPS, but latency will increase
                     self.__condition_lock.wait(self.__frame_lost_timeout)
+
+                fps_limit = self.__fps_limit_ns
+                if fps_limit is not None:
+                    target_frame_completion_time_ns = self.__fps_limiter_time + fps_limit
+                    current_actual_time_ns = time.perf_counter_ns()
+                    sleep_duration_ns = target_frame_completion_time_ns - current_actual_time_ns
+                    if sleep_duration_ns > 0:
+                        self.__close_event.wait(sleep_duration_ns / 1_000_000_000)
+                        self.__fps_limiter_time = target_frame_completion_time_ns
+                    else:
+                        self.__fps_limiter_time = current_actual_time_ns
 
                 self.__last_packet_time_ms = packet_time_ms
             except TimeoutError:

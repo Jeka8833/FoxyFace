@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>189</width>
-    <height>313</height>
+    <height>417</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,40 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QCheckBox" name="enable_fps_limit_cb">
+      <property name="text">
+       <string>Enable FPS Limit</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="max_fps_lb">
+      <property name="text">
+       <string>Max FPS Limit:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QSpinBox" name="max_fps_sp">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLabel" name="warning_lbl">
       <property name="font">
        <font>
@@ -23,7 +57,7 @@
        </font>
       </property>
       <property name="text">
-       <string>All settings are applied only after restarting the FoxyFace software!</string>
+       <string>All settings below will be applied only after restarting FoxyFace application!</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -165,5 +199,22 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>enable_fps_limit_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>max_fps_sp</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>115</x>
+     <y>27</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>102</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

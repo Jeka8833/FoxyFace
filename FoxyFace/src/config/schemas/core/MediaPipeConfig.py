@@ -6,6 +6,9 @@ class MediaPipeConfig:
     head_rotation_transformation: list[list[float]] = field(
         default_factory=lambda: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
 
+    enable_fps_limit: bool = False
+    fps_limit: int = 25
+
     try_use_gpu: bool = True
     min_face_detection_confidence: float = 0.5
     min_face_presence_confidence: float = 0.5

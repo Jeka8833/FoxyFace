@@ -19,6 +19,7 @@ class CameraStream:
         self.__camera: cv2.VideoCapture | None = None
 
         self.__close_event = Event()
+
         self.__thread = Thread(target=self.__start_loop, daemon=True, name="Camera Stream")
         self.__thread.start()
 

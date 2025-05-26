@@ -1,7 +1,6 @@
 import logging
 from typing import Any, Callable
 
-import numpy
 from scipy.spatial.transform import Rotation
 
 from AppConstants import AppConstants
@@ -43,6 +42,7 @@ class MediaPipePipeline:
 
         self.__processing_options = MediaPipeProcessingOptions()
         self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
+        self.__fps_limit_listener: ConfigUpdateListener = self.__register_change_fps_limit()
 
         self.__fps_counter = WriteCpsCounter()
         self.__stream.register_stream(self.__fps_counter)
@@ -82,6 +82,7 @@ class MediaPipePipeline:
         self.__stream.unregister_stream(self.__fps_counter)
         self.__stream.unregister_stream(self.__latency_counter)
 
+        self.__fps_limit_listener.unregister()
         self.__processing_options_listener.unregister()
 
         self.__stream.close()
@@ -102,8 +103,20 @@ class MediaPipePipeline:
             matrix = config_manager.config.media_pipe.head_rotation_transformation
 
             # noinspection PyArgumentList
-            Rotation.from_matrix(matrix)    # Crash if matrix is not valid
+            Rotation.from_matrix(matrix)  # Crash if matrix is not valid
 
             self.__processing_options.initial_rotation = matrix
         except Exception:
             _logger.warning("Failed to update post processing options", exc_info=True, stack_info=True)
+
+    def __register_change_fps_limit(self) -> ConfigUpdateListener:
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe.enable_fps_limit,
+                                                      lambda config: config.media_pipe.fps_limit]
+
+        return self.__config_manager.create_update_listener(self.__update_fps_limit, watch_array, True)
+
+    def __update_fps_limit(self, config_manager: ConfigManager):
+        if config_manager.config.media_pipe.enable_fps_limit:
+            self.__stream.set_fps_limit(config_manager.config.media_pipe.fps_limit)
+        else:
+            self.__stream.set_fps_limit(None)

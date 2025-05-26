@@ -27,15 +27,19 @@ class MediaPipeSettingsWindow(FoxyWindow):
         if not (platform.system() in ['Linux', 'Darwin']):
             self.__ui.try_gpu_cb.hide()
 
+        self.__ui.enable_fps_limit_cb.setChecked(self.__config_manager.config.media_pipe.enable_fps_limit)
+        self.__ui.max_fps_sp.setValue(self.__config_manager.config.media_pipe.fps_limit)
+
         self.__ui.try_gpu_cb.setChecked(self.__config_manager.config.media_pipe.try_use_gpu)
         self.__ui.mtc_sp.setValue(self.__config_manager.config.media_pipe.min_tracking_confidence)
         self.__ui.mfdc_sp.setValue(self.__config_manager.config.media_pipe.min_face_detection_confidence)
         self.__ui.mfpc_sp.setValue(self.__config_manager.config.media_pipe.min_face_presence_confidence)
 
-
-
     def __save(self):
         try:
+            self.__config_manager.config.media_pipe.enable_fps_limit = self.__ui.enable_fps_limit_cb.isChecked()
+            self.__config_manager.config.media_pipe.fps_limit = self.__ui.max_fps_sp.value()
+
             self.__config_manager.config.media_pipe.try_use_gpu = self.__ui.try_gpu_cb.isChecked()
             self.__config_manager.config.media_pipe.min_tracking_confidence = self.__ui.mtc_sp.value()
             self.__config_manager.config.media_pipe.min_face_detection_confidence = self.__ui.mfdc_sp.value()

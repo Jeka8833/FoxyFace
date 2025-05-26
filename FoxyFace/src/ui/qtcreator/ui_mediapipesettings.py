@@ -15,19 +15,45 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QHBoxLayout,
-    QLabel, QMainWindow, QPushButton, QSizePolicy,
-    QSpacerItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
+    QHBoxLayout, QLabel, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QVBoxLayout,
+    QWidget)
 
 class Ui_MediaPipeSettings(object):
     def setupUi(self, MediaPipeSettings):
         if not MediaPipeSettings.objectName():
             MediaPipeSettings.setObjectName(u"MediaPipeSettings")
-        MediaPipeSettings.resize(189, 313)
+        MediaPipeSettings.resize(189, 417)
         self.centralwidget = QWidget(MediaPipeSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.enable_fps_limit_cb = QCheckBox(self.centralwidget)
+        self.enable_fps_limit_cb.setObjectName(u"enable_fps_limit_cb")
+
+        self.verticalLayout.addWidget(self.enable_fps_limit_cb)
+
+        self.max_fps_lb = QLabel(self.centralwidget)
+        self.max_fps_lb.setObjectName(u"max_fps_lb")
+
+        self.verticalLayout.addWidget(self.max_fps_lb)
+
+        self.max_fps_sp = QSpinBox(self.centralwidget)
+        self.max_fps_sp.setObjectName(u"max_fps_sp")
+        self.max_fps_sp.setEnabled(False)
+        self.max_fps_sp.setMinimum(1)
+        self.max_fps_sp.setMaximum(1000)
+
+        self.verticalLayout.addWidget(self.max_fps_sp)
+
+        self.line = QFrame(self.centralwidget)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout.addWidget(self.line)
+
         self.warning_lbl = QLabel(self.centralwidget)
         self.warning_lbl.setObjectName(u"warning_lbl")
         font = QFont()
@@ -104,13 +130,16 @@ class Ui_MediaPipeSettings(object):
         MediaPipeSettings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MediaPipeSettings)
+        self.enable_fps_limit_cb.toggled.connect(self.max_fps_sp.setEnabled)
 
         QMetaObject.connectSlotsByName(MediaPipeSettings)
     # setupUi
 
     def retranslateUi(self, MediaPipeSettings):
         MediaPipeSettings.setWindowTitle(QCoreApplication.translate("MediaPipeSettings", u"MediaPipe Settings", None))
-        self.warning_lbl.setText(QCoreApplication.translate("MediaPipeSettings", u"All settings are applied only after restarting the FoxyFace software!", None))
+        self.enable_fps_limit_cb.setText(QCoreApplication.translate("MediaPipeSettings", u"Enable FPS Limit", None))
+        self.max_fps_lb.setText(QCoreApplication.translate("MediaPipeSettings", u"Max FPS Limit:", None))
+        self.warning_lbl.setText(QCoreApplication.translate("MediaPipeSettings", u"All settings below will be applied only after restarting FoxyFace application!", None))
 #if QT_CONFIG(tooltip)
         self.try_gpu_cb.setToolTip("")
 #endif // QT_CONFIG(tooltip)
