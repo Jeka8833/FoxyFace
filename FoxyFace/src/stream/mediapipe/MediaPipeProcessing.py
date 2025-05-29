@@ -75,7 +75,7 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
             mirror_matrix = numpy.diag([-1, 1, 1])
 
             transformed_rotation = mirror_matrix @ (
-                        rotation_matrix[0:3, 0:3] @ self.__options.initial_rotation) @ mirror_matrix
+                    rotation_matrix[0:3, 0:3] @ self.__options.initial_rotation) @ mirror_matrix
 
             # noinspection PyArgumentList
             return Rotation.from_matrix(transformed_rotation).as_euler('zxy', degrees=False) / (math.pi / 2.0)

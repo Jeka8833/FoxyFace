@@ -37,6 +37,7 @@ def get_no_image_icon() -> QPixmap | None:
 
         return None
 
+
 @cache
 def get_warning_icon() -> QPixmap | None:
     try:

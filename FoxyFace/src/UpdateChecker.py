@@ -18,7 +18,7 @@ class UpdateChecker:
     __VERSION_FILE_URL = "https://raw.githubusercontent.com/Jeka8833/FoxyFace/refs/heads/main/FoxyFace/current_release.json"
     __HEADERS = {"User-Agent": f"FoxyFace-{str(AppConstants.VERSION)}"}
 
-    def __init__(self, config_manager: ConfigManager, main_window : MainWindow):
+    def __init__(self, config_manager: ConfigManager, main_window: MainWindow):
         self.__config_manager = config_manager
         self.__main_window = main_window
 

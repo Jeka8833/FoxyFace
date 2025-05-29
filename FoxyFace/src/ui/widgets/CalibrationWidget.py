@@ -82,7 +82,7 @@ class CalibrationWidget(QWidget):
         if collision is not None:
             warning_list.append(f"Collision with {collision.name}")
 
-        if  self.__ui.negative_sp.value() > self.__ui.neutral_sp.value() and  self.__ui.negative_sp_frame.isVisible():
+        if self.__ui.negative_sp.value() > self.__ui.neutral_sp.value() and self.__ui.negative_sp_frame.isVisible():
             warning_list.append("Negative > Neutral")
 
         if self.__ui.positive_sp.value() < self.__ui.neutral_sp.value() and self.__ui.positive_sp_frame.isVisible():

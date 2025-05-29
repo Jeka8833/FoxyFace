@@ -23,7 +23,7 @@ class Ui_VrcftSettings(object):
     def setupUi(self, VrcftSettings):
         if not VrcftSettings.objectName():
             VrcftSettings.setObjectName(u"VrcftSettings")
-        VrcftSettings.resize(213, 258)
+        VrcftSettings.resize(290, 264)
         self.centralwidget = QWidget(VrcftSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -69,7 +69,7 @@ class Ui_VrcftSettings(object):
         self.read_timeout_sp.setMinimum(10)
         self.read_timeout_sp.setMaximum(60000)
         self.read_timeout_sp.setSingleStep(100)
-        self.read_timeout_sp.setValue(5000)
+        self.read_timeout_sp.setValue(2500)
 
         self.verticalLayout.addWidget(self.read_timeout_sp)
 
@@ -103,12 +103,12 @@ class Ui_VrcftSettings(object):
 
     def retranslateUi(self, VrcftSettings):
         VrcftSettings.setWindowTitle(QCoreApplication.translate("VrcftSettings", u"VRCFT Settings", None))
-        self.auto_connect_cb.setText(QCoreApplication.translate("VrcftSettings", u"Find IP and Port Automatically", None))
+        self.auto_connect_cb.setText(QCoreApplication.translate("VrcftSettings", u"Find IP and Port automatically", None))
         self.ip_lb.setText(QCoreApplication.translate("VrcftSettings", u"IP:", None))
         self.ip_le.setText(QCoreApplication.translate("VrcftSettings", u"localhost", None))
         self.port_lb.setText(QCoreApplication.translate("VrcftSettings", u"Port:", None))
-        self.read_timeout_lb.setText(QCoreApplication.translate("VrcftSettings", u"Vrcft Read Timeout (Ms):", None))
-        self.bypass_cb.setText(QCoreApplication.translate("VrcftSettings", u"Bypass other vrcft module block", None))
+        self.read_timeout_lb.setText(QCoreApplication.translate("VrcftSettings", u"VRCFT Read Timeout (milliseconds):", None))
+        self.bypass_cb.setText(QCoreApplication.translate("VrcftSettings", u"Allow initialization of other VRCFT modules", None))
         self.save_btn.setText(QCoreApplication.translate("VrcftSettings", u"Apply and Save", None))
     # retranslateUi
 

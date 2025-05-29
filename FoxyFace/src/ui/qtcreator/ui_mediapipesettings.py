@@ -165,6 +165,6 @@ class Ui_MediaPipeSettings(object):
 #if QT_CONFIG(tooltip)
         self.mtc_sp.setToolTip(QCoreApplication.translate("MediaPipeSettings", u"The minimum confidence score for the face tracking to be considered successful.", None))
 #endif // QT_CONFIG(tooltip)
-        self.save_btn.setText(QCoreApplication.translate("MediaPipeSettings", u"Save", None))
+        self.save_btn.setText(QCoreApplication.translate("MediaPipeSettings", u"Apply and Save", None))
     # retranslateUi
 

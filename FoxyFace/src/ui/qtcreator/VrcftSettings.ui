@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>213</width>
-    <height>258</height>
+    <width>290</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QCheckBox" name="auto_connect_cb">
       <property name="text">
-       <string>Find IP and Port Automatically</string>
+       <string>Find IP and Port automatically</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -68,7 +68,7 @@
     <item>
      <widget class="QLabel" name="read_timeout_lb">
       <property name="text">
-       <string>Vrcft Read Timeout (Ms):</string>
+       <string>VRCFT Read Timeout (milliseconds):</string>
       </property>
      </widget>
     </item>
@@ -84,14 +84,14 @@
        <number>100</number>
       </property>
       <property name="value">
-       <number>5000</number>
+       <number>2500</number>
       </property>
      </widget>
     </item>
     <item>
      <widget class="QCheckBox" name="bypass_cb">
       <property name="text">
-       <string>Bypass other vrcft module block</string>
+       <string>Allow initialization of other VRCFT modules</string>
       </property>
      </widget>
     </item>

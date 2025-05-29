@@ -35,7 +35,7 @@ class BufferStream[T](StreamReadOnly[T], StreamWriteOnly[T]):
 
             return self.__values.popleft()
 
-    def flush(self, timeout: float | None = None)-> list[T]:
+    def flush(self, timeout: float | None = None) -> list[T]:
         with self.__condition:
             while not self.__values and not self.__closed:
                 if not self.__condition.wait(timeout):
