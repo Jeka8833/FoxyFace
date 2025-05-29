@@ -47,15 +47,7 @@ Instructions on how to use another device as a webcam can be found [here](https:
 
 ## Updating the Project Babble neural network
 
-Necessary for better tracking of cheeks and tongue.
-
-1. Download: [model.onnx]( https://raw.githubusercontent.com/Project-Babble/ProjectBabble/50d03cec35ac43b6fad7507c2dbbfc0e5012b70d/BabbleApp/Models/EFFB0E11BS128V7.5/onnx/model.onnx)
-2. Start the FoxyFace program
-3. Click on the Settings button in the Babble category
-4. In the "Custom Babble Model Path:" section, select (Click the “...” button) the downloaded file from step 1.
-
-> [!NOTE]
-> This is a simplified instruction, a more complete instruction will be released in a while.
+Instructions on how to update the neural network from Project Babble can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Update-Babble-Model).
 
 <br/>
 
