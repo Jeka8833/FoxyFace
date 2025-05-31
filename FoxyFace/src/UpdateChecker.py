@@ -1,6 +1,4 @@
 import logging
-import os
-import sys
 from concurrent.futures import Future, ThreadPoolExecutor
 
 import requests
@@ -21,9 +19,6 @@ class UpdateChecker:
     def __init__(self, config_manager: ConfigManager, main_window: MainWindow):
         self.__config_manager = config_manager
         self.__main_window = main_window
-
-        if sys.platform == 'darwin':
-            os.environ["no_proxy"] = "*"
 
         self.__thread_pool: ThreadPoolExecutor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="Update Checker")
 

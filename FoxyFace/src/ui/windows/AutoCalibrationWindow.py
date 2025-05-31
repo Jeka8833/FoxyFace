@@ -79,7 +79,7 @@ class AutoCalibrationWindow(FoxyWindow):
                 self.__to_general_blend_shape(self.__ui.max_pose_selected_list), self.__max_thread_stop_event,
                 timeout=3.0)
 
-            self.__max_pose_calibration_future.add_done_callback(self.__normal_pose_calibration_end)
+            self.__max_pose_calibration_future.add_done_callback(self.__pose_calibration_end)
         else:
             self.__max_thread_stop_event.set()
 
@@ -139,9 +139,9 @@ class AutoCalibrationWindow(FoxyWindow):
             self.__to_general_blend_shape(self.__ui.normal_pose_selected_list),
             self.__has_rotation(self.__ui.normal_pose_selected_list), average_time=3.0)
 
-        self.__normal_pose_calibration_future.add_done_callback(self.__normal_pose_calibration_end)
+        self.__normal_pose_calibration_future.add_done_callback(self.__pose_calibration_end)
 
-    def __normal_pose_calibration_end(self, future: Future[bool]):
+    def __pose_calibration_end(self, future: Future[bool]):
         try:
             if future.result():
                 UiSoundUtil.play_good_sound()
