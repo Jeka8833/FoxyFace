@@ -1,0 +1,2 @@
+FoxyFace.exe --debug
+pause

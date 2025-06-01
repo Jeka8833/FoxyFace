@@ -1,0 +1,9 @@
+Version: VERSION.txt
+CompanyName: Jeka8833
+FileDescription: An application that allows you to control your avatar\'s face in VRChat using your real face.
+InternalName: FoxyFace
+OriginalFilename: FoxyFace.exe
+ProductName: FoxyFace
+Translation:
+  - langID: 1033
+    charsetID: 1252
