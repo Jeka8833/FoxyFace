@@ -92,6 +92,9 @@ class CalibrationWindow(FoxyWindow):
     def closeEvent(self, event, /):
         super().closeEvent(event)
 
+        for widget in self.__calibration_widgets.values():
+            widget.close()
+
         self.__ui.full_reset_btn.clicked.disconnect(self.__full_reset)
         self.__ui.save_btn.clicked.disconnect(self.__save)
 

@@ -27,13 +27,11 @@ class MediaPipePipeline:
         self.__config_manager = config_manager
         self.__camera_pipeline = camera_pipeline
 
-        media_pipe_model_asset_path = str(AppConstants.get_application_root() / 'Assets' / 'face_landmarker.task')
-
         self.__buffer = SingleBufferStream[CameraFrame]()
         self.__camera_pipeline.register_stream(self.__buffer)
         processed_stream = CameraProcessing(self.__buffer, self.__camera_pipeline.get_processing_options())
 
-        self.__stream: MediaPipeStream = MediaPipeStream(processed_stream, media_pipe_model_asset_path,
+        self.__stream: MediaPipeStream = MediaPipeStream(processed_stream, MediaPipePipeline.__read_media_pipe_model(),
                                                          min_face_detection_confidence=self.__config_manager.config.media_pipe.min_face_detection_confidence,
                                                          min_face_presence_confidence=self.__config_manager.config.media_pipe.min_face_presence_confidence,
                                                          min_tracking_confidence=self.__config_manager.config.media_pipe.min_tracking_confidence,
@@ -120,3 +118,7 @@ class MediaPipePipeline:
             self.__stream.set_fps_limit(config_manager.config.media_pipe.fps_limit)
         else:
             self.__stream.set_fps_limit(None)
+
+    @staticmethod
+    def __read_media_pipe_model() -> bytes:
+        return (AppConstants.get_application_root() / 'Assets' / 'face_landmarker.task').read_bytes()

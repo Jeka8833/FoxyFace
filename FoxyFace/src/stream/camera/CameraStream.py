@@ -30,10 +30,10 @@ class CameraStream:
         if not isinstance(camera_id, int) or camera_id < 0:
             raise ValueError("Invalid camera id")
 
-        if not isinstance(width, int) or width <= 0:
+        if not isinstance(width, int) or width <= 0 or width % 2 != 0:
             raise ValueError("Invalid width")
 
-        if not isinstance(height, int) or height <= 0:
+        if not isinstance(height, int) or height <= 0 or height % 2 != 0:
             raise ValueError("Invalid height")
 
         camera = self.__camera

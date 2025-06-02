@@ -47,6 +47,7 @@ class Ui_CameraSettings(object):
         self.width_sp.setObjectName(u"width_sp")
         self.width_sp.setMinimum(100)
         self.width_sp.setMaximum(100000)
+        self.width_sp.setSingleStep(2)
         self.width_sp.setValue(640)
 
         self.verticalLayout.addWidget(self.width_sp)
@@ -60,6 +61,7 @@ class Ui_CameraSettings(object):
         self.height_sp.setObjectName(u"height_sp")
         self.height_sp.setMinimum(100)
         self.height_sp.setMaximum(100000)
+        self.height_sp.setSingleStep(2)
         self.height_sp.setValue(480)
 
         self.verticalLayout.addWidget(self.height_sp)

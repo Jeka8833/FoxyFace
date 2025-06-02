@@ -21,7 +21,7 @@ class MediaPipeStream:
     Unstable when recreated, try to avoid any reinitialization
     """
 
-    def __init__(self, image_stream: StreamReadOnly[CameraFrame], model_asset_path: str,
+    def __init__(self, image_stream: StreamReadOnly[CameraFrame], model_asset_data: bytes,
                  frame_timeout: float | None = 1.0, min_face_detection_confidence: float = 0.5,
                  min_face_presence_confidence: float = 0.5, min_tracking_confidence: float = 0.5,
                  frame_lost_timeout: float = 1.0, try_use_gpu: bool = True):
@@ -29,7 +29,7 @@ class MediaPipeStream:
         self.__frame_timeout: float | None = frame_timeout
         self.__frame_lost_timeout: float = frame_lost_timeout
 
-        self.__landmarker = self.__create_landmarker(model_asset_path, min_face_detection_confidence,
+        self.__landmarker = self.__create_landmarker(model_asset_data, min_face_detection_confidence,
                                                      min_face_presence_confidence, min_tracking_confidence, try_use_gpu)
 
         self.__close_event = Event()
@@ -137,7 +137,7 @@ class MediaPipeStream:
             except Exception:
                 _logger.warning("Exception in MediaPipe callback", exc_info=True, stack_info=True)
 
-    def __create_landmarker(self, model_asset_path: str, min_face_detection_confidence: float,
+    def __create_landmarker(self, model_asset_data: bytes, min_face_detection_confidence: float,
                             min_face_presence_confidence: float, min_tracking_confidence: float,
                             try_use_gpu: bool = True) -> FaceLandmarker:
         if min_face_detection_confidence < 0.0 or min_face_detection_confidence > 1.0:
@@ -154,7 +154,7 @@ class MediaPipeStream:
                 raise Exception
 
             return FaceLandmarker.create_from_options(FaceLandmarkerOptions(
-                base_options=BaseOptions(model_asset_path=model_asset_path, delegate=BaseOptions.Delegate.GPU),
+                base_options=BaseOptions(model_asset_buffer=model_asset_data, delegate=BaseOptions.Delegate.GPU),
                 running_mode=VisionTaskRunningMode.LIVE_STREAM, num_faces=1,
                 min_face_detection_confidence=min_face_detection_confidence,
                 min_face_presence_confidence=min_face_presence_confidence,
@@ -162,7 +162,7 @@ class MediaPipeStream:
                 output_facial_transformation_matrixes=True, result_callback=self.__async_result))
         except Exception:
             return FaceLandmarker.create_from_options(
-                FaceLandmarkerOptions(base_options=BaseOptions(model_asset_path=model_asset_path),
+                FaceLandmarkerOptions(base_options=BaseOptions(model_asset_buffer=model_asset_data),
                                       running_mode=VisionTaskRunningMode.LIVE_STREAM, num_faces=1,
                                       min_face_detection_confidence=min_face_detection_confidence,
                                       min_face_presence_confidence=min_face_presence_confidence,
