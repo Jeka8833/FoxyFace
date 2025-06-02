@@ -1,4 +1,4 @@
-from threading import Lock
+from threading import RLock
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 
@@ -6,7 +6,7 @@ from src.stream.core.StreamWriteOnly import StreamWriteOnly
 class WriteStreamSplitter[T](StreamWriteOnly[T]):
     def __init__(self):
         self.__streams: set[StreamWriteOnly[T]] | None = set[StreamWriteOnly[T]]()
-        self.__lock: Lock = Lock()
+        self.__lock: RLock = RLock()
 
     def put(self, value: T) -> bool:
         not_closed = False
@@ -15,7 +15,7 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
             if self.__streams is None:
                 raise InterruptedError()
 
-            for stream in self.__streams:
+            for stream in self.__streams.copy():
                 if not stream.put(value):
                     self.unregister_stream(stream)
                 else:
@@ -50,7 +50,7 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
             self.__streams = None
 
         if streams is not None:
-            for stream in streams:
+            for stream in streams.copy():
                 stream.close()
 
     def __enter__(self):

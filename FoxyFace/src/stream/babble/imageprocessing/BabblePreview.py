@@ -42,6 +42,7 @@ class BabblePreview:
         return self.__window.is_closed.is_set()
 
     def close(self, do_join: bool = True):
+        self.__window.is_closed.set()
         self.__window.close_event.emit()
 
         if do_join:

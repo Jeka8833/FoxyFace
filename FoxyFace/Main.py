@@ -75,13 +75,7 @@ class RunMainStream:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__config_manager.close()
 
-        self.__babble_pipeline.close()
-        self.__media_pipe_pipeline.close()
-        self.__camera_pipeline.close()
-        self.__processing_pipeline.close()
-        self.__udp_pipeline.close()
-        self.__auto_calibration_endpoint.close()
-        self.__update_checker.close()
+        # Don't need close pipelines, until threads are not daemons. Significantly speeds up the closing of the program.
 
 
 UiImageUtil.allow_change_windows_icon()
