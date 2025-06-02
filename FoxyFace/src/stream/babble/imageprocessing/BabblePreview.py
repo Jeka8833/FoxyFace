@@ -41,18 +41,17 @@ class BabblePreview:
     def is_closed(self) -> bool:
         return self.__window.is_closed.is_set()
 
-    def close(self):
-        self.__window.is_closed.set()
+    def close(self, do_join: bool = True):
+        self.__window.close_event.emit()
+
+        if do_join:
+            try:
+                self.__thread.join(self.__frame_timeout * 2.0)
+            except Exception:
+                _logger.warning("Failed to join Babble Preview thread", exc_info=True, stack_info=True)
 
         self.__mediapipe_stream.unregister_stream(self.__single_buffer_stream)
         self.__single_buffer_stream.close()
-
-        try:
-            self.__thread.join()
-        except Exception:
-            pass
-
-        self.__window.close_event.emit()
 
     def __enter__(self):
         return self
@@ -72,10 +71,10 @@ class BabblePreview:
             except TimeoutError:
                 self.__window.set_image_event.emit(None)
             except InterruptedError:
-                self.close()
-
-                return
+                break
             except Exception:
                 _logger.warning("Exception in Babble Preview loop", exc_info=True, stack_info=True)
 
                 self.__window.is_closed.wait(0.001)
+
+        self.close(False)

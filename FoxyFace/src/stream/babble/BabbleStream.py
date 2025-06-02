@@ -35,7 +35,10 @@ class BabbleStream:
         self.__close_event.set()
         self.__stream_root.close()
 
-        self.__thread.join()
+        try:
+            self.__thread.join(self.__frame_timeout * 2.0)
+        except Exception:
+            _logger.warning("Failed to join Babble thread", exc_info=True, stack_info=True)
 
     def __enter__(self):
         return self

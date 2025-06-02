@@ -70,7 +70,10 @@ class MediaPipeStream:
         with self.__condition_lock:
             self.__condition_lock.notify_all()
 
-        self.__thread.join()
+        try:
+            self.__thread.join(self.__frame_timeout * 2.0)
+        except Exception:
+            _logger.warning("Failed to join MediaPipe thread", exc_info=True, stack_info=True)
 
         self.__landmarker.close()
 
