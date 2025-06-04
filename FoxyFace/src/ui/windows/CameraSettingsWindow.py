@@ -17,24 +17,32 @@ class CameraSettingsWindow(FoxyWindow):
         self.__ui.setupUi(self)
 
         self.__ui.apply_and_save_btn.clicked.connect(self.__save)
-        self.__ui.height_sp.valueChanged.connect(self.__height_sp_value_changed)
-        self.__ui.width_sp.valueChanged.connect(self.__width_sp_value_changed)
+        self.__ui.height_sp.installEventFilter(self)
+        self.__ui.width_sp.installEventFilter(self)
 
         self.__set_default_values()
 
         self.show()
 
+    def eventFilter(self, watched, event, /):
+        if watched == self.__ui.width_sp and event.type() == event.Type.FocusOut:
+            if self.__ui.width_sp.value() % 2 != 0:
+                self.__ui.width_sp.setValue(self.__ui.width_sp.value() + 1)
+        elif watched == self.__ui.height_sp and event.type() == event.Type.FocusOut:
+            if self.__ui.height_sp.value() % 2 != 0:
+                self.__ui.height_sp.setValue(self.__ui.height_sp.value() + 1)
+
+        return super().eventFilter(watched, event)
+
     def closeEvent(self, event, /):
         super().closeEvent(event)
 
         self.__ui.apply_and_save_btn.clicked.disconnect(self.__save)
-        self.__ui.height_sp.valueChanged.disconnect(self.__height_sp_value_changed)
-        self.__ui.width_sp.valueChanged.disconnect(self.__width_sp_value_changed)
 
     def __set_default_values(self):
         self.__ui.camera_id_sp.setValue(self.__config_manager.config.camera.camera_id)
-        self.__ui.width_sp.setValue(self.__config_manager.config.camera.width)
-        self.__ui.height_sp.setValue(self.__config_manager.config.camera.height)
+        self.__ui.width_sp.setValue((self.__config_manager.config.camera.width // 2) * 2)
+        self.__ui.height_sp.setValue((self.__config_manager.config.camera.height // 2) * 2)
         self.__ui.horizontal_flip_cb.setChecked(self.__config_manager.config.camera.mirror_x)
         self.__ui.vertical_flip_cb.setChecked(self.__config_manager.config.camera.mirror_y)
         self.__ui.rotate_90_cb.setChecked(self.__config_manager.config.camera.rotate_ninety)
@@ -51,11 +59,3 @@ class CameraSettingsWindow(FoxyWindow):
             self.__config_manager.write()
         except Exception:
             _logger.warning("Failed to save camera settings", exc_info=True, stack_info=True)
-
-    def __height_sp_value_changed(self, value):
-        if value % 2 != 0:
-            self.__ui.height_sp.setValue(value + 1)
-
-    def __width_sp_value_changed(self, value):
-        if value % 2 != 0:
-            self.__ui.width_sp.setValue(value + 1)
