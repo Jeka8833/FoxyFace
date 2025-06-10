@@ -32,7 +32,7 @@ public class FoxyFacePacketProcessor
 
     public FoxyFacePacketProcessor(ILogger logger)
     {
-        logger.LogInformation("Available {} unified expressions. Head Rotation Allowed: {}",
+        logger.LogInformation("Available {} unified expressions. Head Position/Rotation Allowed: {}",
             _unifiedExpressionsDictionary.Count, _headRotationAllowed);
     }
 

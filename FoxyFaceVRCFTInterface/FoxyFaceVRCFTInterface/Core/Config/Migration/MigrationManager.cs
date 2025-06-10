@@ -51,10 +51,12 @@ public class MigrationManager
 
     private void Migrate(FoxyFaceConfig config, Version configVersion)
     {
-        /* Example migration
-        if (_moduleVersion > configVersion)
+        if (configVersion <= new Version(1, 0, 2, 2))
         {
-            config.EyeMapper.EyeGazeX = false;
-        }*/
+            if (config.FoxyFacePort == 54321)
+            {
+                config.FoxyFacePort = 25747;
+            }
+        }
     }
 }

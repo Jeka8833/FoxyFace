@@ -152,10 +152,8 @@ public class FoxyFaceUdpClient : IDisposable
             {
                 return new UdpClient(SocketPort);
             }
-            catch (SocketException socketException)
+            catch (SocketException)
             {
-                if (socketException.SocketErrorCode != SocketError.AddressAlreadyInUse) throw;
-
                 _logger.LogInformation("UDP port {} is busy, the next one will be used!", SocketPort);
 
                 SocketPort++; // controlled ushort overflow 
