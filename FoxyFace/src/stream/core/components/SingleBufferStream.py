@@ -1,4 +1,4 @@
-import threading
+from threading import Condition, Lock
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
@@ -8,7 +8,7 @@ class SingleBufferStream[T](StreamReadOnly[T], StreamWriteOnly[T]):
     def __init__(self):
         self.__value: T | None = None
         self.__closed: bool = False
-        self.__condition: threading.Condition = threading.Condition(threading.Lock())
+        self.__condition: Condition = Condition(Lock())
 
     def put(self, value: T) -> bool:
         if self.__closed:

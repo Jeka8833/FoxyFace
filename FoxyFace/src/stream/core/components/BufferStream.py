@@ -1,5 +1,5 @@
-import threading
 from collections import deque
+from threading import Condition, Lock
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
@@ -9,7 +9,7 @@ class BufferStream[T](StreamReadOnly[T], StreamWriteOnly[T]):
     def __init__(self, max_len: int | None = None):
         self.__values: deque[T] = deque(maxlen=max_len)
         self.__closed: bool = False
-        self.__condition: threading.Condition = threading.Condition(threading.Lock())
+        self.__condition: Condition = Condition(Lock())
 
     def put(self, value: T) -> bool:
         if self.__closed:

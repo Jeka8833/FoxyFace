@@ -1,4 +1,3 @@
-import math
 import time
 
 import cv2
@@ -96,7 +95,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
         delta_y_ab = point_b[1] - point_a[1]
 
         denominator = (delta_x_ab ** 2) + (delta_y_ab ** 2)
-        if math.fabs(denominator) == 0.0:
+        if denominator < 0.0000001:
             return point_c, point_c
 
         signed_numerator = delta_y_ab * point_c[0] - delta_x_ab * point_c[1] + point_b[0] * point_a[1] - point_b[1] * \

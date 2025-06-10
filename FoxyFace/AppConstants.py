@@ -6,7 +6,7 @@ from packaging.version import Version
 
 
 class AppConstants:
-    VERSION: Final[Version] = Version("1.0.3.3")
+    VERSION: Final[Version] = Version("1.0.3.4")
 
     @staticmethod
     def get_application_root() -> Path:

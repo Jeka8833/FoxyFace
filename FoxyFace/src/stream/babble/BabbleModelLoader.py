@@ -26,7 +26,8 @@ class BabbleModelLoader:
         opts.enable_mem_pattern = False
 
         if use_gpu:
-            provider = ["DmlExecutionProvider", "CUDAExecutionProvider", "CPUExecutionProvider"]
+            provider = ["DmlExecutionProvider", "TensorrtExecutionProvider", "CUDAExecutionProvider",
+                        "CoreMLExecutionProvider", "CPUExecutionProvider"]
         else:
             provider = ["CPUExecutionProvider"]
 

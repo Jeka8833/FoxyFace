@@ -1,6 +1,9 @@
+import logging
 from threading import RLock
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
+
+_logger = logging.getLogger(__name__)
 
 
 class WriteStreamSplitter[T](StreamWriteOnly[T]):
@@ -50,8 +53,11 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
             self.__streams = None
 
         if streams is not None:
-            for stream in streams.copy():
-                stream.close()
+            for stream in streams:
+                try:
+                    stream.close()
+                except Exception:
+                    _logger.warning("Failed to close child stream", exc_info=True, stack_info=True)
 
     def __enter__(self):
         return self

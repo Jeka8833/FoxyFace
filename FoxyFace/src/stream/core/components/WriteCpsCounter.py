@@ -1,5 +1,5 @@
-import threading
 import time
+from threading import Lock
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 
@@ -10,7 +10,7 @@ class WriteCpsCounter(StreamWriteOnly):
         self.__last_cps_update_ns: int = time.perf_counter_ns()
         self.__call_count: int = 0
 
-        self.__lock = threading.Lock()
+        self.__lock: Lock = Lock()
 
     def put(self, value) -> bool:
         with self.__lock:
