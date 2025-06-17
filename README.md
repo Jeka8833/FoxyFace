@@ -51,6 +51,12 @@ Instructions on how to update the neural network from Project Babble can be foun
 
 <br/>
 
+## Want to control your avatar's head rotation?
+
+Instructions on how to track head rotation can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Head-Rotation).
+
+<br/>
+
 ## Update FoxyFace Application
 
 Instructions on how to update the FoxyFace app can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Update-FoxyFace).
