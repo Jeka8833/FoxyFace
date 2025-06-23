@@ -10,6 +10,7 @@ FoxyFace is a good starting point as it doesn't require you to invest any money 
 ## Almost complete facial tracking
 
 ![Example of Face Tracking](https://raw.githubusercontent.com/wiki/Jeka8833/FoxyFace/images/MainPage/Example.png)
+<sub><sup>Face is taken from [FreePik](https://www.freepik.com/free-photo/medium-shot-woman-sticking-out-tongue_38162313.htm#fromView=keyword&amp;page=1&amp;position=45&amp;uuid=48e0b063-562f-4793-988c-3fb80cd0ca43&amp;query=Tongue+Out+Face), and [Yeenie](https://yoursmu.gumroad.com/l/yeenie) avatar is made by SMU</sup></sub>
 
 The FoxyFace is currently tracking 83 parameters out of 102 parameters supported by VRCFT, which is 81%. That's taking into account the [Blended Shapes](https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendshapes).
 
