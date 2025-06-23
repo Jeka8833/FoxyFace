@@ -9,6 +9,8 @@ FoxyFace is a good starting point as it doesn't require you to invest any money 
 
 ## Almost complete facial tracking
 
+![Example of Face Tracking](https://raw.githubusercontent.com/wiki/Jeka8833/FoxyFace/images/MainPage/Example.png)
+
 The FoxyFace is currently tracking 83 parameters out of 102 parameters supported by VRCFT, which is 81%. That's taking into account the [Blended Shapes](https://docs.vrcft.io/docs/tutorial-avatars/tutorial-avatars-extras/unified-blendshapes).
 
 <details>
