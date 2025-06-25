@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class SocketConfig:
     ip: str = "localhost"
     port: int = 25747

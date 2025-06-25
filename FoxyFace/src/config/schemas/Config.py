@@ -11,7 +11,7 @@ from src.config.schemas.core.SocketConfig import SocketConfig
 from src.config.schemas.gui.GuiConfig import GuiConfig
 
 
-@dataclass
+@dataclass(slots=True)
 class Config(JSONWizard):
     file_version: str = str(AppConstants.VERSION)
 

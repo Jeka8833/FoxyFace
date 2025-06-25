@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(slots=True)
 class CameraConfig:
     width: int = 640
     height: int = 480

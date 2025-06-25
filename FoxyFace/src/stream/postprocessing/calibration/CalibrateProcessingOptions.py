@@ -4,6 +4,6 @@ from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnu
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 
 
-@dataclass
+@dataclass(slots=True)
 class CalibrateProcessingOptions:
     blend_shape_options: dict[GeneralBlendShapeEnum, BlendShapeOption] = field(default_factory=dict)
