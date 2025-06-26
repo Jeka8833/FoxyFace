@@ -14,14 +14,13 @@ namespace FoxyFaceVRCFTInterface;
 // ReSharper disable once UnusedType.Global
 public class FoxyFaceVRCFTInterface : ExtTrackingModule
 {
+    // If App From Windows Store then:
     // C:\Users\[UserName]\AppData\Local\Packages\[96ba052f-0948-44d8-86c4-a0212e4ae047_4s4k90pjvq32p]\LocalCache\Roaming\VRCFaceTracking\Configs\FoxyFace\FoxyFace.json
-    // or
-    // C:\Users\[UserName]\AppData\Roaming\VRCFaceTracking\Configs\FoxyFace\FoxyFace.json
     //
     // Where [UserName] is your Windows username
     // and [96ba052f-0948-44d8-86c4-a0212e4ae047_4s4k90pjvq32p] is the VRCFaceTracking package name, for you, it can be different, try to search similar folder
     //
-    // In either case, the path should be printed in the VRCFT logs.
+    // In other cases, check the logs, where you can find the path to the configuration file.
     private static readonly string ConfigPath = Path.Combine(
         VRCFaceTracking.Core.Utils.PersistentDataDirectory, "Configs", "FoxyFace", "FoxyFace.json");
 
@@ -43,6 +42,8 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
 
         ConfigManager = new ConfigManager(ConfigPath, FoxyFaceLogger);
         ConfigManager.LoadAndMigrateConfig();
+
+        FoxyFaceLogger.LogInformation("The FoxyFace Configuration file is located in: {}", ConfigPath);
 
         FoxyFaceSpamLogger = ConfigManager.Config.ShowAllLogs ? FoxyFaceLogger : new SkipSpamLogger(FoxyFaceLogger);
 

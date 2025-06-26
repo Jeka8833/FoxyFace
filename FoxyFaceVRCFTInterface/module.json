@@ -1,7 +1,7 @@
 {
   "ModuleId": "7608ec5e-3900-4f08-9c94-2568255b9dce",
-  "LastUpdated": "2025-06-10T16:10:00Z",
-  "Version": "1.0.3.4",
+  "LastUpdated": "2025-06-26T14:09:00Z",
+  "Version": "1.0.4.0",
   "Downloads": 0,
   "Ratings": 0,
   "Rating": 0,
@@ -9,7 +9,7 @@
   "ModuleName": "FoxyFaceVRCFTInterface",
   "ModuleDescription": "Use the free FoxyFace app to track your face. The app uses your computer/phone camera.",
   "UsageInstructions": "All instructions are on GitHub, please visit the module page.",
-  "DownloadUrl": "https://github.com/Jeka8833/FoxyFace/releases/download/1.0.3.4/FoxyFaceVRCFTInterface.zip",
+  "DownloadUrl": "https://github.com/Jeka8833/FoxyFace/releases/download/1.0.4.0/FoxyFaceVRCFTInterface.zip",
   "ModulePageUrl": "https://github.com/Jeka8833/FoxyFace",
   "DllFileName": "FoxyFaceVRCFTInterface.dll"
 }

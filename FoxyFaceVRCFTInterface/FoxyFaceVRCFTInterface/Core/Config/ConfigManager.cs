@@ -8,7 +8,6 @@ namespace FoxyFaceVRCFTInterface.Core.Config;
 public class ConfigManager
 {
     private readonly MigrationManager _migrationManager;
-    private readonly UwpConfigPathFinder _uwpConfigPathFinder;
     private readonly string _configPath;
     private readonly ILogger _logger;
 
@@ -17,7 +16,6 @@ public class ConfigManager
     public ConfigManager(string configPath, ILogger logger)
     {
         _migrationManager = new MigrationManager(ModuleVersion.FileVersion, logger);
-        _uwpConfigPathFinder = new UwpConfigPathFinder(configPath, logger);
 
         _configPath = configPath;
         _logger = logger;
@@ -49,24 +47,11 @@ public class ConfigManager
                 _migrationManager.UpdateConfigVersion(Config);
                 string configJson = JsonConvert.SerializeObject(Config, Formatting.Indented);
 
-                bool saved = false;
-                if (_uwpConfigPathFinder.UwpConfigPath != null)
-                {
-                    try
-                    {
-                        WriteConfig(configJson, _uwpConfigPathFinder.UwpConfigPath);
-                        saved = true;
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogDebug(e, "First try to write config has failed");
-                    }
-                }
+                TryCreateConfigFolder(_configPath);
 
-                if (!saved)
-                {
-                    WriteConfig(configJson, _configPath);
-                }
+                File.WriteAllText(_configPath, configJson, Encoding.UTF8);
+
+                _logger.LogDebug("Config saved");
             }
             catch (Exception e)
             {
@@ -103,18 +88,6 @@ public class ConfigManager
         }
 
         return null;
-    }
-
-    /// <exception cref="Exception"></exception>
-    private void WriteConfig(string configJson, string configPath)
-    {
-        _uwpConfigPathFinder.PrintConfigLocationOnce();
-
-        TryCreateConfigFolder(configPath);
-
-        File.WriteAllText(configPath, configJson, Encoding.UTF8);
-
-        _logger.LogDebug("Config saved");
     }
 
     private void TryCreateConfigFolder(string configPath)
