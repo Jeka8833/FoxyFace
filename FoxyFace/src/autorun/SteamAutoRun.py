@@ -138,8 +138,9 @@ class SteamAutoRun:
     def __run_steam_process(steam_id: int, error_callback: Callable[[str], None]) -> None:
         try:
             webbrowser.open(f"steam://rungameid/{steam_id}")
+            _logger.info(f"Started Steam Store({steam_id}) process")
         except Exception as e:
-            _logger.warning(f"Failed to run {steam_id} process", exc_info=True, stack_info=True)
+            _logger.warning(f"Failed to run Steam Store({steam_id}) process", exc_info=True, stack_info=True)
 
             error_callback(str(e))
 
@@ -147,6 +148,7 @@ class SteamAutoRun:
     def __run_file_process(path: Path, error_callback: Callable[[str], None]) -> None:
         try:
             subprocess.Popen(path)
+            _logger.info(f"Started process: {path}")
         except Exception as e:
             _logger.warning(f"Failed to run process: {path}", exc_info=True, stack_info=True)
 
