@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QApplication
 from packaging.version import Version
 
 from AppConstants import AppConstants
+from src.autorun.SteamAutoRun import SteamAutoRun
 from src.config.ConfigManager import ConfigManager
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.CameraPipeline import CameraPipeline
@@ -41,7 +42,7 @@ class MainWindow(FoxyWindow):
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
                  mediapipe_pipeline: MediaPipePipeline, babble_pipeline: BabblePipeline,
                  processing_pipeline: ProcessingPipeline, udp_pipeline: UdpPipeline,
-                 auto_calibration_endpoint: AutoCalibrationEndpoint):
+                 auto_calibration_endpoint: AutoCalibrationEndpoint, steam_auto_run: SteamAutoRun):
         super().__init__()
 
         self.is_closed: threading.Event = threading.Event()
@@ -53,6 +54,7 @@ class MainWindow(FoxyWindow):
         self.__processing_pipeline = processing_pipeline
         self.__udp_pipeline = udp_pipeline
         self.__auto_calibration_endpoint = auto_calibration_endpoint
+        self.__steam_auto_run = steam_auto_run
 
         self.__ui = Ui_MainWindow()
         self.__ui.setupUi(self)
@@ -60,7 +62,7 @@ class MainWindow(FoxyWindow):
         self.__register_events()
         self.__register_signals()
 
-        self.__timer = QTimer(self, interval=1000, timerType=Qt.TimerType.VeryCoarseTimer)
+        self.__timer: QTimer = QTimer(self, interval=1000, timerType=Qt.TimerType.VeryCoarseTimer)
         self.__timer.timeout.connect(self.__update_thread)
         self.__timer.start()
 
@@ -213,7 +215,7 @@ class MainWindow(FoxyWindow):
     def __open_vrcft_settings(self):
         try:
             if self.__vrcft_settings_window is None or self.__vrcft_settings_window.is_closed.is_set():
-                self.__vrcft_settings_window = VrcftSettingsWindow(self.__config_manager)
+                self.__vrcft_settings_window = VrcftSettingsWindow(self.__config_manager, self.__steam_auto_run)
             else:
                 self.__vrcft_settings_window.close_event.emit()
         except Exception:

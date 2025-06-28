@@ -251,6 +251,7 @@ class Ui_BabbleSettings(object):
         BabbleSettings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(BabbleSettings)
+        self.reset_model_path_btn.clicked.connect(self.selected_path_le.clear)
 
         QMetaObject.connectSlotsByName(BabbleSettings)
     # setupUi

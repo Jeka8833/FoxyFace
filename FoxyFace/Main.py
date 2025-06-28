@@ -28,6 +28,7 @@ else:
 from pathlib import Path
 from AppConstants import AppConstants
 from src.UpdateChecker import UpdateChecker
+from src.autorun.SteamAutoRun import SteamAutoRun
 from src.ui.windows.MainWindow import MainWindow
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.pipline.BabblePipeline import BabblePipeline
@@ -58,15 +59,18 @@ class RunMainStream:
                                                                                             self.__media_pipe_pipeline,
                                                                                             self.__processing_pipeline)
 
+        self.__steam_auto_run: SteamAutoRun = SteamAutoRun(self.__config_manager)
+
         self.__main_window: MainWindow = MainWindow(self.__config_manager, self.__camera_pipeline,
                                                     self.__media_pipe_pipeline, self.__babble_pipeline,
                                                     self.__processing_pipeline, self.__udp_pipeline,
-                                                    self.__auto_calibration_endpoint)
+                                                    self.__auto_calibration_endpoint, self.__steam_auto_run)
 
         if splash_screen is not None:
             splash_screen.finish(self.__main_window)
 
-        self.__update_checker = UpdateChecker(self.__config_manager, self.__main_window)
+        self.__update_checker: UpdateChecker = UpdateChecker(self.__config_manager, self.__main_window)
+        self.__steam_auto_run.run()
         self.__update_checker.startup_check()
 
     def __enter__(self):
@@ -81,7 +85,9 @@ class RunMainStream:
         self.__processing_pipeline.close()
         self.__udp_pipeline.close()
         self.__auto_calibration_endpoint.close()
+
         self.__update_checker.close()
+        self.__steam_auto_run.close()
 
 
 UiImageUtil.allow_change_windows_icon()

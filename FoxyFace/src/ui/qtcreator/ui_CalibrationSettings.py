@@ -30,50 +30,6 @@ class Ui_CalibrationWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.tabWidget = QTabWidget(self.main_frame_layout)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.head_global = QWidget()
-        self.head_global.setObjectName(u"head_global")
-        self.horizontalLayout_4 = QHBoxLayout(self.head_global)
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.head_global_scroll = QScrollArea(self.head_global)
-        self.head_global_scroll.setObjectName(u"head_global_scroll")
-        self.head_global_scroll.setWidgetResizable(True)
-        self.head_global_widget = QWidget()
-        self.head_global_widget.setObjectName(u"head_global_widget")
-        self.head_global_widget.setGeometry(QRect(0, 0, 758, 500))
-        self.verticalLayout_4 = QVBoxLayout(self.head_global_widget)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.head_global_container = QVBoxLayout()
-        self.head_global_container.setObjectName(u"head_global_container")
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.head_center_lb = QLabel(self.head_global_widget)
-        self.head_center_lb.setObjectName(u"head_center_lb")
-
-        self.horizontalLayout.addWidget(self.head_center_lb)
-
-        self.reset_head_center_btn = QPushButton(self.head_global_widget)
-        self.reset_head_center_btn.setObjectName(u"reset_head_center_btn")
-
-        self.horizontalLayout.addWidget(self.reset_head_center_btn)
-
-
-        self.head_global_container.addLayout(self.horizontalLayout)
-
-        self.line = QFrame(self.head_global_widget)
-        self.line.setObjectName(u"line")
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.head_global_container.addWidget(self.line)
-
-
-        self.verticalLayout_4.addLayout(self.head_global_container)
-
-        self.head_global_scroll.setWidget(self.head_global_widget)
-
-        self.horizontalLayout_4.addWidget(self.head_global_scroll)
-
-        self.tabWidget.addTab(self.head_global, "")
         self.head_upper = QWidget()
         self.head_upper.setObjectName(u"head_upper")
         self.verticalLayout_3 = QVBoxLayout(self.head_upper)
@@ -118,6 +74,50 @@ class Ui_CalibrationWindow(object):
         self.verticalLayout.addWidget(self.head_bottom_scroll)
 
         self.tabWidget.addTab(self.head_bottom, "")
+        self.head_global = QWidget()
+        self.head_global.setObjectName(u"head_global")
+        self.horizontalLayout_4 = QHBoxLayout(self.head_global)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.head_global_scroll = QScrollArea(self.head_global)
+        self.head_global_scroll.setObjectName(u"head_global_scroll")
+        self.head_global_scroll.setWidgetResizable(True)
+        self.head_global_widget = QWidget()
+        self.head_global_widget.setObjectName(u"head_global_widget")
+        self.head_global_widget.setGeometry(QRect(0, 0, 758, 500))
+        self.verticalLayout_4 = QVBoxLayout(self.head_global_widget)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.head_global_container = QVBoxLayout()
+        self.head_global_container.setObjectName(u"head_global_container")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.head_center_lb = QLabel(self.head_global_widget)
+        self.head_center_lb.setObjectName(u"head_center_lb")
+
+        self.horizontalLayout.addWidget(self.head_center_lb)
+
+        self.reset_head_center_btn = QPushButton(self.head_global_widget)
+        self.reset_head_center_btn.setObjectName(u"reset_head_center_btn")
+
+        self.horizontalLayout.addWidget(self.reset_head_center_btn)
+
+
+        self.head_global_container.addLayout(self.horizontalLayout)
+
+        self.line = QFrame(self.head_global_widget)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.head_global_container.addWidget(self.line)
+
+
+        self.verticalLayout_4.addLayout(self.head_global_container)
+
+        self.head_global_scroll.setWidget(self.head_global_widget)
+
+        self.horizontalLayout_4.addWidget(self.head_global_scroll)
+
+        self.tabWidget.addTab(self.head_global, "")
 
         self.verticalLayout_2.addWidget(self.tabWidget)
 
@@ -152,11 +152,11 @@ class Ui_CalibrationWindow(object):
 
     def retranslateUi(self, CalibrationWindow):
         CalibrationWindow.setWindowTitle(QCoreApplication.translate("CalibrationWindow", u"Manual Calibration", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_upper), QCoreApplication.translate("CalibrationWindow", u"Head Upper", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_bottom), QCoreApplication.translate("CalibrationWindow", u"Head Bottom", None))
         self.head_center_lb.setText(QCoreApplication.translate("CalibrationWindow", u"Center Head Rotation:", None))
         self.reset_head_center_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Reset", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_global), QCoreApplication.translate("CalibrationWindow", u"Head Global", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_upper), QCoreApplication.translate("CalibrationWindow", u"Head Upper", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_bottom), QCoreApplication.translate("CalibrationWindow", u"Head Bottom", None))
         self.full_reset_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Full Reset", None))
         self.save_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Apply and Save", None))
     # retranslateUi

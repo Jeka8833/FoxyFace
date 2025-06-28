@@ -23,7 +23,6 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__ui.setupUi(self)
 
         self.__ui.save_btn.clicked.connect(self.__save)
-        self.__ui.reset_model_path_btn.clicked.connect(self.__reset_model_path)
         self.__ui.select_path_btn.clicked.connect(self.__path_selector)
         self.__ui.full_reset_btn.clicked.connect(self.__full_reset)
         self.__ui.selected_path_le.textChanged.connect(self.__update_model_status)
@@ -42,7 +41,6 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__timer.stop()
 
         self.__ui.save_btn.clicked.disconnect(self.__save)
-        self.__ui.reset_model_path_btn.clicked.disconnect(self.__reset_model_path)
         self.__ui.select_path_btn.clicked.disconnect(self.__path_selector)
         self.__ui.full_reset_btn.clicked.disconnect(self.__full_reset)
         self.__ui.selected_path_le.textChanged.disconnect(self.__update_model_status)
@@ -59,9 +57,6 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__ui.thread_count_sp.setValue(self.__config_manager.config.babble.intra_op_num_threads)
 
         self.__update_model_status()
-
-    def __reset_model_path(self):
-        self.__ui.selected_path_le.setText("")
 
     def __full_reset(self):
         self.__config_manager.config.babble = BabbleConfig()
@@ -102,7 +97,5 @@ class BabbleSettingsWindow(FoxyWindow):
             self.__ui.model_status_lb.hide()
 
         selected_path = self.__ui.selected_path_le.text()
-        if not selected_path or selected_path.isspace():
-            self.__ui.reset_model_path_btn.hide()
-        else:
-            self.__ui.reset_model_path_btn.show()
+
+        self.__ui.reset_model_path_btn.setVisible(bool(selected_path))
