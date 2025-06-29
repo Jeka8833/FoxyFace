@@ -1,7 +1,7 @@
 import logging
 import socket
-import threading
 import time
+from threading import Event, Lock, Thread
 
 from src.stream.vrcft.VrcftPacketEncoderStream import VrcftPacketEncoderStream
 
@@ -16,7 +16,7 @@ class VRCFTUdpSocket:
         self.ping_connection_time: float = ping_connection_time
 
         self.__sock: socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.__lock = threading.Lock()
+        self.__lock: Lock = Lock()
 
         self.__last_statistic_time_ns: int = time.perf_counter_ns()
 
@@ -25,8 +25,8 @@ class VRCFTUdpSocket:
         self.__last_pps: int = 0
         self.__has_error: bool = False
 
-        self.__close_event = threading.Event()
-        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="VRCFT UDP Socket")
+        self.__close_event: Event = Event()
+        self.__thread: Thread = Thread(target=self.__loop, daemon=True, name="VRCFT UDP Socket")
         self.__thread.start()
 
     def has_error(self) -> bool:
@@ -53,7 +53,11 @@ class VRCFTUdpSocket:
     def __loop(self):
         while not self.__close_event.is_set():
             try:
-                data = self.__packet_stream.poll(self.ping_connection_time)
+                try:
+                    data = self.__packet_stream.poll(self.ping_connection_time)
+                except TimeoutError:
+                    data = self.__packet_stream.generate_ping_packet()
+
                 _logger.debug(f"Sending {data}")
                 self.__sock.sendto(data, self.target_address)
 
@@ -61,16 +65,6 @@ class VRCFTUdpSocket:
                     self.__packet_count += 1
 
                 self.__has_error = False
-            except TimeoutError:
-                try:
-                    self.__sock.sendto(self.__packet_stream.generate_ping_packet(), self.target_address)
-
-                    with self.__lock:
-                        self.__packet_count += 1
-                except Exception:
-                    self.__has_error = True
-
-                    _logger.warning("Exception in ping UDP send", exc_info=True, stack_info=True)
             except InterruptedError:
                 return
             except Exception:
