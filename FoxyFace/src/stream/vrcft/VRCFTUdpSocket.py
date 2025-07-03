@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class VRCFTUdpSocket:
-    def __init__(self, packet_stream: VrcftPacketEncoderStream, target_address: tuple[str, int] = ("localhost", 54321),
+    def __init__(self, packet_stream: VrcftPacketEncoderStream, target_address: tuple[str, int] = ("localhost", 25747),
                  ping_connection_time: float = 1.0):
         self.__packet_stream: VrcftPacketEncoderStream = packet_stream
         self.target_address: tuple[str, int] = target_address
