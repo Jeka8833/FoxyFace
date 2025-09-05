@@ -44,7 +44,7 @@ class UpdateChecker:
 
     def __update_check(self) -> bool:
         try:
-            # Used requests library because of automatic GZIP, easy to update library and other stuff
+            # Used requests library because of automatic GZIP, easy to update libraries and other stuff
             request_result = requests.get(UpdateChecker.__VERSION_FILE_URL, headers=UpdateChecker.__HEADERS)
 
             json_content = request_result.json()

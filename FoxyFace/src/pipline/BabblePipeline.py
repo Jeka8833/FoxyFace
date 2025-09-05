@@ -134,7 +134,8 @@ class BabblePipeline:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.babble.model_path,
                                                       lambda config: config.babble.try_use_gpu,
                                                       lambda config: config.babble.intra_op_num_threads,
-                                                      lambda config: config.babble.allow_spinning]
+                                                      lambda config: config.babble.allow_spinning,
+                                                      lambda config: config.babble.device_id]
 
         return self.__config_manager.create_update_listener(self.__update_babble_loader_options, watch_array, True)
 
@@ -142,4 +143,5 @@ class BabblePipeline:
         self.__babble_loader.start_new_session(config_manager.config.babble.model_path,
                                                config_manager.config.babble.try_use_gpu,
                                                config_manager.config.babble.intra_op_num_threads,
-                                               config_manager.config.babble.allow_spinning)
+                                               config_manager.config.babble.allow_spinning,
+                                               config_manager.config.babble.device_id)

@@ -15,8 +15,11 @@ class BabbleModelLoader:
     def __init__(self):
         self.model: BabbleModel | None = None
 
-    def start_new_session(self, model_path: str, use_gpu: bool, intra_op_num_threads: int, allow_spinning: bool):
+    def start_new_session(self, model_path: str, use_gpu: bool, intra_op_num_threads: int, allow_spinning: bool,
+                          device_id: int):
         self.model = None
+
+        device_id_str = str(device_id)
 
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
@@ -26,8 +29,10 @@ class BabbleModelLoader:
         opts.enable_mem_pattern = False
 
         if use_gpu:
-            provider = ["DmlExecutionProvider", "TensorrtExecutionProvider", "CUDAExecutionProvider",
-                        "CoreMLExecutionProvider", "CPUExecutionProvider"]
+            provider = [("DmlExecutionProvider", {"device_id": device_id_str}),
+                        ("TensorrtExecutionProvider", {"device_id": device_id_str}),
+                        ("CUDAExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
+                        "CPUExecutionProvider"]
         else:
             provider = ["CPUExecutionProvider"]
 

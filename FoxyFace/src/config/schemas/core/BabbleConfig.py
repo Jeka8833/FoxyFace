@@ -8,6 +8,7 @@ class BabbleConfig:
     model_path: str = ""
 
     try_use_gpu: bool = True
+    device_id: int = 0
     intra_op_num_threads: int = 1
     allow_spinning: bool = False
 
