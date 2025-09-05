@@ -37,7 +37,7 @@ class VrcftAutoConnect:
             except Exception:
                 _logger.info("Failed to set SO_REUSEPORT")
 
-            self.__socket.setblocking(True)
+            self.__socket.settimeout(1.0)
 
             self.__socket.bind(("", self.__BROADCASTED_PORT))
 
@@ -75,6 +75,8 @@ class VrcftAutoConnect:
                 self.__config_manager.write()
 
                 _logger.info(f"Auto connected to {self.__config_manager.config.socket.ip}. Data: {json_data}")
+            except socket.timeout: # Linux cant release recvfrom without timeout
+                continue
             except Exception:
                 if self.__is_started.is_set():
                     _logger.warning("Failed to receive auto connect data", exc_info=True, stack_info=True)
