@@ -39,7 +39,8 @@ class BabbleModelLoader:
 
         if use_gpu:
             provider = [("DmlExecutionProvider", {"device_id": device_id_str}),
-                        ("CUDAExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
+                        ("CUDAExecutionProvider", {"device_id": device_id_str}),
+                        ("ROCMExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
                         "CPUExecutionProvider"]
         else:
             provider = ["CPUExecutionProvider"]
