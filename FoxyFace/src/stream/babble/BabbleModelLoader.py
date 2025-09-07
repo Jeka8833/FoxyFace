@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 
+import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
@@ -21,6 +22,14 @@ class BabbleModelLoader:
 
         device_id_str = str(device_id)
 
+        try:
+            providers: list[str] = onnxruntime.get_available_providers()
+            if "CUDAExecutionProvider" in providers:
+                # noinspection PyUnusedImports
+                import torch
+        except Exception:
+            _logger.warning("Failed to import torch", exc_info=True, stack_info=True)
+
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
         opts.intra_op_num_threads = intra_op_num_threads
@@ -30,7 +39,6 @@ class BabbleModelLoader:
 
         if use_gpu:
             provider = [("DmlExecutionProvider", {"device_id": device_id_str}),
-                        ("TensorrtExecutionProvider", {"device_id": device_id_str}),
                         ("CUDAExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
                         "CPUExecutionProvider"]
         else:
