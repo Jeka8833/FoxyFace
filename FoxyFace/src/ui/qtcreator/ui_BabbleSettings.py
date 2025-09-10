@@ -209,15 +209,27 @@ class Ui_BabbleSettings(object):
 
         self.verticalLayout_4.addWidget(self.thread_count_sp)
 
-        self.try_use_gpu_cb = QCheckBox(self.centralwidget)
-        self.try_use_gpu_cb.setObjectName(u"try_use_gpu_cb")
-
-        self.verticalLayout_4.addWidget(self.try_use_gpu_cb)
-
         self.allow_spinning_cb = QCheckBox(self.centralwidget)
         self.allow_spinning_cb.setObjectName(u"allow_spinning_cb")
 
         self.verticalLayout_4.addWidget(self.allow_spinning_cb)
+
+        self.try_use_gpu_cb = QCheckBox(self.centralwidget)
+        self.try_use_gpu_cb.setObjectName(u"try_use_gpu_cb")
+        self.try_use_gpu_cb.setChecked(True)
+        self.try_use_gpu_cb.setTristate(False)
+
+        self.verticalLayout_4.addWidget(self.try_use_gpu_cb)
+
+        self.gpu_device_id_lb = QLabel(self.centralwidget)
+        self.gpu_device_id_lb.setObjectName(u"gpu_device_id_lb")
+
+        self.verticalLayout_4.addWidget(self.gpu_device_id_lb)
+
+        self.gpu_device_id_sb = QSpinBox(self.centralwidget)
+        self.gpu_device_id_sb.setObjectName(u"gpu_device_id_sb")
+
+        self.verticalLayout_4.addWidget(self.gpu_device_id_sb)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -252,6 +264,7 @@ class Ui_BabbleSettings(object):
 
         self.retranslateUi(BabbleSettings)
         self.reset_model_path_btn.clicked.connect(self.selected_path_le.clear)
+        self.try_use_gpu_cb.toggled.connect(self.gpu_device_id_sb.setEnabled)
 
         QMetaObject.connectSlotsByName(BabbleSettings)
     # setupUi
@@ -272,8 +285,9 @@ class Ui_BabbleSettings(object):
         self.model_status_lb.setText(QCoreApplication.translate("BabbleSettings", u"Update the model for better face tracking!", None))
         self.reset_model_path_btn.setText(QCoreApplication.translate("BabbleSettings", u"Reset Model Path", None))
         self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"Thread Count:", None))
-        self.try_use_gpu_cb.setText(QCoreApplication.translate("BabbleSettings", u"Try to use GPU acceleration", None))
         self.allow_spinning_cb.setText(QCoreApplication.translate("BabbleSettings", u"Allow Spinning", None))
+        self.try_use_gpu_cb.setText(QCoreApplication.translate("BabbleSettings", u"Try to use GPU acceleration", None))
+        self.gpu_device_id_lb.setText(QCoreApplication.translate("BabbleSettings", u"GPU Device ID:", None))
         self.full_reset_btn.setText(QCoreApplication.translate("BabbleSettings", u"Full Reset", None))
         self.save_btn.setText(QCoreApplication.translate("BabbleSettings", u"Apply and Save", None))
     # retranslateUi

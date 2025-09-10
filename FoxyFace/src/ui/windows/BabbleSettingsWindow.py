@@ -53,6 +53,7 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__ui.beta_sp.setValue(self.__config_manager.config.babble.beta)
         self.__ui.selected_path_le.setText(self.__config_manager.config.babble.model_path)
         self.__ui.try_use_gpu_cb.setChecked(self.__config_manager.config.babble.try_use_gpu)
+        self.__ui.gpu_device_id_sb.setValue(self.__config_manager.config.babble.device_id)
         self.__ui.allow_spinning_cb.setChecked(self.__config_manager.config.babble.allow_spinning)
         self.__ui.thread_count_sp.setValue(self.__config_manager.config.babble.intra_op_num_threads)
 
@@ -79,6 +80,7 @@ class BabbleSettingsWindow(FoxyWindow):
             self.__config_manager.config.babble.beta = self.__ui.beta_sp.value()
             self.__config_manager.config.babble.model_path = self.__ui.selected_path_le.text()
             self.__config_manager.config.babble.try_use_gpu = self.__ui.try_use_gpu_cb.isChecked()
+            self.__config_manager.config.babble.device_id = self.__ui.gpu_device_id_sb.value()
             self.__config_manager.config.babble.allow_spinning = self.__ui.allow_spinning_cb.isChecked()
             self.__config_manager.config.babble.intra_op_num_threads = self.__ui.thread_count_sp.value()
 

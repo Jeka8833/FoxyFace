@@ -298,18 +298,34 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="try_use_gpu_cb">
-          <property name="text">
-           <string>Try to use GPU acceleration</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QCheckBox" name="allow_spinning_cb">
           <property name="text">
            <string>Allow Spinning</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="try_use_gpu_cb">
+          <property name="text">
+           <string>Try to use GPU acceleration</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+          <property name="tristate">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="gpu_device_id_lb">
+          <property name="text">
+           <string>GPU Device ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="gpu_device_id_sb"/>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -377,6 +393,22 @@
     <hint type="destinationlabel">
      <x>308</x>
      <y>84</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>try_use_gpu_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gpu_device_id_sb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>261</x>
+     <y>261</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>273</x>
+     <y>309</y>
     </hint>
    </hints>
   </connection>
