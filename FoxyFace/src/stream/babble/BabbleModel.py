@@ -39,3 +39,9 @@ class BabbleModel:
             _logger.warning("Failed to load babble model", exc_info=True, stack_info=True)
 
         return False
+
+    def get_provider_name(self) -> str | None:
+        try:
+            return self.__session.get_providers()[0]
+        except Exception:
+            return None
