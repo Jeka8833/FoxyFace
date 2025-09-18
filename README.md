@@ -1,6 +1,6 @@
 # FoxyFace
 
-FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it](https://github.com/Jeka8833/FoxyFace/wiki/Using-another-device-as-a-camera).
+FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/connection/Using-another-device-as-a-camera).
 
 FoxyFace uses the [MediaPipe Face landmark detection](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker) neural network bundle and the neural network from [Project Babble](https://github.com/Project-Babble).
 
@@ -36,33 +36,33 @@ EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMand
 ## Installation
 
 Perform the installation in this order:
-1. Install FoxyFace, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-FoxyFace).
-2. Install FoxyFaceVRCFTInterface, instructions [here](https://github.com/Jeka8833/FoxyFace/wiki/Install-Module).
+1. Install FoxyFace, instructions [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/install-update-uninstall/install/Install-FoxyFace).
+2. Install FoxyFaceVRCFTInterface, instructions [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFaceVRCFTInterface/install-update-uninstall/install/Install-Module-from-Module-Registry).
 <br/>
 
 ## Camera setup
 
-Instructions on how to set up the camera can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Camera-Settings).
+Instructions on how to set up the camera can be found [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/ui/camera/Camera-Settings).
 
-Instructions on how to use another device as a webcam can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Using-another-device-as-a-camera).
+Instructions on how to use another device as a webcam can be found [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/connection/Using-another-device-as-a-camera).
 
 <br/>
 
 ## Updating the Project Babble neural network
 
-Instructions on how to update the neural network from Project Babble can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Update-Babble-Model).
+Instructions on how to update the neural network from Project Babble can be found [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/ui/babble/Update-Babble-Model).
 
 <br/>
 
 ## Want to control your avatar's head rotation?
 
-Instructions on how to track head rotation can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Head-Rotation).
+Instructions on how to track head rotation can be found [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/ui/vrcft/headrotation/Head-Rotation).
 
 <br/>
 
 ## Update FoxyFace Application
 
-Instructions on how to update the FoxyFace app can be found [here](https://github.com/Jeka8833/FoxyFace/wiki/Update-FoxyFace).
+Instructions on how to update the FoxyFace app can be found [here](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/install-update-uninstall/Update-FoxyFace).
 
 <br/>
 
@@ -109,3 +109,4 @@ FoxyFaceVRCFTInterface code is licensed under [Unlicense](https://github.com/Jek
 
 FoxyFaceVRCFTInterface uses code from third-party developers under license:
 1. License for VRCFaceTracking: [Apache License 2.0](https://github.com/benaclejames/VRCFaceTracking/blob/master/LICENSE)
+
