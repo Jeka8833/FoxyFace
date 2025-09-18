@@ -24,7 +24,7 @@ class Ui_BabbleSettings(object):
     def setupUi(self, BabbleSettings):
         if not BabbleSettings.objectName():
             BabbleSettings.setObjectName(u"BabbleSettings")
-        BabbleSettings.resize(428, 403)
+        BabbleSettings.resize(434, 403)
         self.centralwidget = QWidget(BabbleSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -248,6 +248,14 @@ class Ui_BabbleSettings(object):
 
         self.horizontalLayout.addWidget(self.full_reset_btn)
 
+        self.provider_status_lb = QLabel(self.centralwidget)
+        self.provider_status_lb.setObjectName(u"provider_status_lb")
+#if QT_CONFIG(tooltip)
+        self.provider_status_lb.setToolTip(u"")
+#endif // QT_CONFIG(tooltip)
+
+        self.horizontalLayout.addWidget(self.provider_status_lb)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
@@ -265,6 +273,7 @@ class Ui_BabbleSettings(object):
         self.retranslateUi(BabbleSettings)
         self.reset_model_path_btn.clicked.connect(self.selected_path_le.clear)
         self.try_use_gpu_cb.toggled.connect(self.gpu_device_id_sb.setEnabled)
+        self.use_babble_cb.toggled.connect(self.provider_status_lb.setVisible)
 
         QMetaObject.connectSlotsByName(BabbleSettings)
     # setupUi
@@ -289,6 +298,7 @@ class Ui_BabbleSettings(object):
         self.try_use_gpu_cb.setText(QCoreApplication.translate("BabbleSettings", u"Try to use GPU acceleration", None))
         self.gpu_device_id_lb.setText(QCoreApplication.translate("BabbleSettings", u"GPU Device ID:", None))
         self.full_reset_btn.setText(QCoreApplication.translate("BabbleSettings", u"Full Reset", None))
+        self.provider_status_lb.setText(QCoreApplication.translate("BabbleSettings", u"Provider: Unknown", None))
         self.save_btn.setText(QCoreApplication.translate("BabbleSettings", u"Apply and Save", None))
     # retranslateUi
 

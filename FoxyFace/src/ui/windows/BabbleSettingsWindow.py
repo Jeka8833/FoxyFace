@@ -98,6 +98,12 @@ class BabbleSettingsWindow(FoxyWindow):
         else:
             self.__ui.model_status_lb.hide()
 
+        provider: str | None = self.__model_loader.model.get_provider_name() if self.__model_loader.model is not None else None
+        if provider is None:
+            self.__ui.provider_status_lb.setText("Provider: Unknown")
+        else:
+            self.__ui.provider_status_lb.setText(f"Provider: {provider}")
+
         selected_path = self.__ui.selected_path_le.text()
 
         self.__ui.reset_model_path_btn.setVisible(bool(selected_path))

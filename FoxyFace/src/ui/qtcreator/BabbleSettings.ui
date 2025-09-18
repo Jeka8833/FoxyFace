@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>428</width>
+    <width>434</width>
     <height>403</height>
    </rect>
   </property>
@@ -354,6 +354,16 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="provider_status_lb">
+        <property name="toolTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Provider: Unknown</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Orientation::Horizontal</enum>
@@ -409,6 +419,22 @@
     <hint type="destinationlabel">
      <x>273</x>
      <y>309</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>use_babble_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>provider_status_lb</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>138</x>
+     <y>53</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>385</y>
     </hint>
    </hints>
   </connection>
