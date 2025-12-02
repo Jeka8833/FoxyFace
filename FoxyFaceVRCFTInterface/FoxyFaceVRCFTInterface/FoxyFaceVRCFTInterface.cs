@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using FoxyFaceVRCFTInterface.Core.Config;
 using FoxyFaceVRCFTInterface.Core.FoxyFace;
 using FoxyFaceVRCFTInterface.Core.Logger;
-using FoxyFaceVRCFTInterface.Core.VRCFT;
 using Microsoft.Extensions.Logging;
 using VRCFaceTracking;
 using VRCFaceTracking.Core.Library;
@@ -28,13 +27,10 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
     public ILogger FoxyFaceSpamLogger { get; private set; } = null!;
     public ConfigManager ConfigManager { get; private set; } = null!;
 
-    private readonly OtherModulesBlockBypass _otherModulesBlockBypass = new(true, true);
-
     private FoxyFaceUdpClient _udpClient = null!;
     private FoxyFacePacketProcessor _packetProcessor = null!;
 
-    public override (bool SupportsEye, bool SupportsExpression) Supported =>
-        _otherModulesBlockBypass.GetSupportedStates();
+    public override (bool SupportsEye, bool SupportsExpression) Supported => (true, true);
 
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable, bool expressionAvailable)
     {
@@ -84,7 +80,6 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
             return (false, false);
         }
 
-        _otherModulesBlockBypass.BypassEnabled = packetConfig.BypassOtherModulesBlock;
         _udpClient.ReceiveTimeoutMillis = packetConfig.UdpReadTimeoutMs;
 
         ModuleInformation.Name = "FoxyFace";
@@ -107,38 +102,26 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
 
         FoxyFaceLogger.LogInformation("FoxyFace app is connected successfully!");
 
-        return _otherModulesBlockBypass.Initialize(eyeAvailable, expressionAvailable);
+        return (eyeAvailable, expressionAvailable);
     }
 
     public override void Update()
     {
         try
         {
-            bool isUsingEye = _otherModulesBlockBypass.IsUsingEye(ModuleInformation.UsingEye);
-            bool isUsingExpression = _otherModulesBlockBypass.IsUsingExpression(ModuleInformation.UsingExpression);
-
-            if (Status != ModuleState.Active || !(isUsingEye || isUsingExpression))
+            if (Status != ModuleState.Active)
             {
                 Thread.Sleep(100);
 
                 return;
             }
 
-            ModuleInformation.UsingEye = isUsingEye;
-            ModuleInformation.UsingExpression = isUsingExpression;
-
             FoxyFaceDto? packet = _udpClient.TryRequest();
 
             if (packet?.Values == null || packet.Values.Count == 0) return;
-            if (isUsingEye)
-            {
-                _packetProcessor.UpdateEyes(packet.Values);
-            }
-
-            if (isUsingExpression)
-            {
-                _packetProcessor.UpdateExpression(packet.Values);
-            }
+            
+            _packetProcessor.UpdateEyes(packet.Values);
+            _packetProcessor.UpdateExpression(packet.Values);
         }
         catch (ThreadInterruptedException) // VRCFT doesn't send an interrupt when it wants to stop the module ((
         {
