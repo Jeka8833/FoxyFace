@@ -345,14 +345,14 @@
     <item>
      <layout class="QVBoxLayout" name="vrcft_vertical_layout">
       <item>
-       <widget class="QLabel" name="vrcft_zone_lbl">
+       <widget class="QLabel" name="sender_zone_lbl">
         <property name="font">
          <font>
           <pointsize>20</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>VRCFT</string>
+         <string>Sender</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -360,14 +360,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="vrcft_pps_lbl">
+       <widget class="QLabel" name="sender_info_lb">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>PPS: 0.0</string>
+         <string>To: iFacialMocap</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -375,22 +375,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="vrcft_status_lbl">
-        <property name="font">
-         <font>
-          <pointsize>11</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Status: IP Error</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignmentFlag::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="vrcft_spacer">
+       <spacer name="sender_spacer">
         <property name="orientation">
          <enum>Qt::Orientation::Vertical</enum>
         </property>

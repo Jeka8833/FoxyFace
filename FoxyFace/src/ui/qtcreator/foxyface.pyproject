@@ -9,6 +9,7 @@
         "AutoCalibrationWindow.ui",
         "CalibrationSettings.ui",
         "CalibrationSettingsItem.ui",
-        "HasUpdateWindow.ui"
+        "HasUpdateWindow.ui",
+        "SenderSettings.ui"
     ]
 }

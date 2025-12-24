@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.10.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -209,30 +209,23 @@ class Ui_MainWindow(object):
 
         self.vrcft_vertical_layout = QVBoxLayout()
         self.vrcft_vertical_layout.setObjectName(u"vrcft_vertical_layout")
-        self.vrcft_zone_lbl = QLabel(self.centralwidget)
-        self.vrcft_zone_lbl.setObjectName(u"vrcft_zone_lbl")
-        self.vrcft_zone_lbl.setFont(font)
-        self.vrcft_zone_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.sender_zone_lbl = QLabel(self.centralwidget)
+        self.sender_zone_lbl.setObjectName(u"sender_zone_lbl")
+        self.sender_zone_lbl.setFont(font)
+        self.sender_zone_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.vrcft_vertical_layout.addWidget(self.vrcft_zone_lbl)
+        self.vrcft_vertical_layout.addWidget(self.sender_zone_lbl)
 
-        self.vrcft_pps_lbl = QLabel(self.centralwidget)
-        self.vrcft_pps_lbl.setObjectName(u"vrcft_pps_lbl")
-        self.vrcft_pps_lbl.setFont(font1)
-        self.vrcft_pps_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.sender_info_lb = QLabel(self.centralwidget)
+        self.sender_info_lb.setObjectName(u"sender_info_lb")
+        self.sender_info_lb.setFont(font1)
+        self.sender_info_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.vrcft_vertical_layout.addWidget(self.vrcft_pps_lbl)
+        self.vrcft_vertical_layout.addWidget(self.sender_info_lb)
 
-        self.vrcft_status_lbl = QLabel(self.centralwidget)
-        self.vrcft_status_lbl.setObjectName(u"vrcft_status_lbl")
-        self.vrcft_status_lbl.setFont(font1)
-        self.vrcft_status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.sender_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.vrcft_vertical_layout.addWidget(self.vrcft_status_lbl)
-
-        self.vrcft_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.vrcft_vertical_layout.addItem(self.vrcft_spacer)
+        self.vrcft_vertical_layout.addItem(self.sender_spacer)
 
         self.open_vrcft_settings_btn = QPushButton(self.centralwidget)
         self.open_vrcft_settings_btn.setObjectName(u"open_vrcft_settings_btn")
@@ -269,9 +262,8 @@ class Ui_MainWindow(object):
         self.processing_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"Processing", None))
         self.open_processing_calibration_btn.setText(QCoreApplication.translate("MainWindow", u"Auto Calibration", None))
         self.open_processing_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
-        self.vrcft_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"VRCFT", None))
-        self.vrcft_pps_lbl.setText(QCoreApplication.translate("MainWindow", u"PPS: 0.0", None))
-        self.vrcft_status_lbl.setText(QCoreApplication.translate("MainWindow", u"Status: IP Error", None))
+        self.sender_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"Sender", None))
+        self.sender_info_lb.setText(QCoreApplication.translate("MainWindow", u"To: iFacialMocap", None))
         self.open_vrcft_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
 
