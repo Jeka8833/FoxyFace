@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>729</width>
-    <height>195</height>
+    <height>203</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -343,7 +343,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="vrcft_vertical_layout">
+     <layout class="QVBoxLayout" name="sender_vertical_layout">
       <item>
        <widget class="QLabel" name="sender_zone_lbl">
         <property name="font">
@@ -388,7 +388,19 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="open_vrcft_settings_btn">
+       <widget class="QPushButton" name="open_avatar_calibration_btn">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Avatar Calibration</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="open_sender_settings_btn">
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -403,7 +415,61 @@
     </item>
    </layout>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>729</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAutoRun">
+    <property name="title">
+     <string>AutoRun</string>
+    </property>
+    <addaction name="actionSetup_AutoRun"/>
+   </widget>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAutoRun"/>
+  </widget>
+  <action name="actionSetup_AutoRun">
+   <property name="text">
+    <string>Setup AutoRun</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

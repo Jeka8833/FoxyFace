@@ -10,6 +10,5 @@ public class FoxyFaceDto
     public class ConfigDto
     {
         public ushort UdpReadTimeoutMs { get; init; } = 5_000;
-        public bool BypassOtherModulesBlock { get; init; } = false;
     }
 }

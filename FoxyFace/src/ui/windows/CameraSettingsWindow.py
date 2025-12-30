@@ -2,7 +2,7 @@ import logging
 
 from src.config.ConfigManager import ConfigManager
 from src.ui.FoxyWindow import FoxyWindow
-from src.ui.qtcreator.ui_camerasettings import Ui_CameraSettings
+from ui.qtcreator.ui_CameraSettings import Ui_CameraSettings
 
 _logger = logging.getLogger(__name__)
 

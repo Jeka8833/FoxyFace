@@ -17,14 +17,16 @@ from src.pipline.UdpPipeline import UdpPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.ui import UiImageUtil
 from src.ui.FoxyWindow import FoxyWindow
-from src.ui.qtcreator.ui_mainwindow import Ui_MainWindow
 from src.ui.windows.AutoCalibrationWindow import AutoCalibrationWindow
 from src.ui.windows.BabbleSettingsWindow import BabbleSettingsWindow
 from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
-from src.ui.windows.VrcftSettingsWindow import VrcftSettingsWindow
+from ui.qtcreator.ui_MainWindow import Ui_MainWindow
+from ui.windows.AutoRunSettingsWindow import AutoRunSettingsWindow
+from ui.windows.AvatarCalibrationWindow import AvatarCalibrationWindow
+from ui.windows.SenderSettingsWindow import SenderSettingsWindow
 
 _logger = logging.getLogger(__name__)
 
@@ -35,8 +37,6 @@ class MainWindow(FoxyWindow):
     mediapipe_latency_signal = Signal(str)
     babble_fps_signal = Signal(str)
     babble_latency_signal = Signal(str)
-    udp_pps_signal = Signal(str)
-    udp_status_signal = Signal(str)
     has_update_signal = Signal(object)
 
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
@@ -71,9 +71,11 @@ class MainWindow(FoxyWindow):
         self.__camera_settings_window: CameraSettingsWindow | None = None
         self.__media_pipe_settings_window: MediaPipeSettingsWindow | None = None
         self.__babble_settings_window: BabbleSettingsWindow | None = None
-        self.__vrcft_settings_window: VrcftSettingsWindow | None = None
+        self.__sender_settings_window: SenderSettingsWindow | None = None
         self.__auto_calibration_window: AutoCalibrationWindow | None = None
         self.__calibration_window: CalibrationWindow | None = None
+        self.__sender_avatar_calibration_window: AvatarCalibrationWindow | None = None
+        self.__auto_run_window: AutoRunSettingsWindow | None = None
         self.__has_update_window: HasUpdateWindow | None = None
 
         self.show()
@@ -98,10 +100,6 @@ class MainWindow(FoxyWindow):
             self.mediapipe_latency_signal.emit(f"Latency: {self.__media_pipe_pipeline.get_latency() * 1000.0:.0f} ms")
             self.babble_latency_signal.emit(f"Latency: {self.__babble_pipeline.get_latency() * 1000.0:.0f} ms")
 
-            self.udp_pps_signal.emit(f"PPS: {self.__udp_pipeline.get_pps():.1f}")
-            self.udp_status_signal.emit(
-                "Status: {}".format("IP Error" if self.__udp_pipeline.has_error() else "Sending"))
-
             model = self.__babble_pipeline.get_model_loader().model
             if model is None or model.is_default_model:
                 warning_icon = UiImageUtil.get_warning_icon()
@@ -118,8 +116,6 @@ class MainWindow(FoxyWindow):
         self.mediapipe_latency_signal.connect(self.__ui.mediapipe_latency_lbl.setText)
         self.babble_fps_signal.connect(self.__ui.babble_fps_lbl.setText)
         self.babble_latency_signal.connect(self.__ui.babble_latency_lbl.setText)
-        self.udp_pps_signal.connect(self.__ui.vrcft_pps_lbl.setText)
-        self.udp_status_signal.connect(self.__ui.vrcft_status_lbl.setText)
         self.has_update_signal.connect(self.__has_update)
 
     def __unregister_signals(self):
@@ -128,8 +124,6 @@ class MainWindow(FoxyWindow):
         self.mediapipe_latency_signal.disconnect(self.__ui.mediapipe_latency_lbl.setText)
         self.babble_fps_signal.disconnect(self.__ui.babble_fps_lbl.setText)
         self.babble_latency_signal.disconnect(self.__ui.babble_latency_lbl.setText)
-        self.udp_pps_signal.disconnect(self.__ui.vrcft_pps_lbl.setText)
-        self.udp_status_signal.disconnect(self.__ui.vrcft_status_lbl.setText)
         self.has_update_signal.disconnect(self.__has_update)
 
     def __register_events(self):
@@ -145,7 +139,10 @@ class MainWindow(FoxyWindow):
         self.__ui.open_processing_calibration_btn.clicked.connect(self.__open_processing_calibration)
         self.__ui.open_processing_settings_btn.clicked.connect(self.__open_processing_settings)
 
-        self.__ui.open_vrcft_settings_btn.clicked.connect(self.__open_vrcft_settings)
+        self.__ui.open_avatar_calibration_btn.clicked.connect(self.__open_avatar_calibration)
+        self.__ui.open_sender_settings_btn.clicked.connect(self.__open_sender_settings)
+
+        self.__ui.actionSetup_AutoRun.triggered.connect(self.__open_auto_run_window)
 
     def __open_camera_preview(self):
         try:
@@ -212,14 +209,32 @@ class MainWindow(FoxyWindow):
         except Exception:
             _logger.warning("Failed to open processing settings", exc_info=True, stack_info=True)
 
-    def __open_vrcft_settings(self):
+    def __open_auto_run_window(self):
         try:
-            if self.__vrcft_settings_window is None or self.__vrcft_settings_window.is_closed.is_set():
-                self.__vrcft_settings_window = VrcftSettingsWindow(self.__config_manager, self.__steam_auto_run)
+            if self.__auto_run_window is None or self.__auto_run_window.is_closed.is_set():
+                self.__auto_run_window = AutoRunSettingsWindow(self.__config_manager, self.__steam_auto_run)
             else:
-                self.__vrcft_settings_window.close_event.emit()
+                self.__auto_run_window.close_event.emit()
         except Exception:
-            _logger.warning("Failed to open vrcft settings", exc_info=True, stack_info=True)
+            _logger.warning("Failed to open auto run settings", exc_info=True, stack_info=True)
+
+    def __open_sender_settings(self):
+        try:
+            if self.__sender_settings_window is None or self.__sender_settings_window.is_closed.is_set():
+                self.__sender_settings_window = SenderSettingsWindow(self.__config_manager)
+            else:
+                self.__sender_settings_window.close_event.emit()
+        except Exception:
+            _logger.warning("Failed to open sender settings", exc_info=True, stack_info=True)
+
+    def __open_avatar_calibration(self):
+        try:
+            if self.__sender_avatar_calibration_window is None or self.__sender_avatar_calibration_window.is_closed.is_set():
+                self.__sender_avatar_calibration_window = AvatarCalibrationWindow(self.__config_manager)
+            else:
+                self.__sender_avatar_calibration_window.close_event.emit()
+        except Exception:
+            _logger.warning("Failed to open sender avatar calibration", exc_info=True, stack_info=True)
 
     def __has_update(self, founded_version: Version):
         try:

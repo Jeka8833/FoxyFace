@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>894</width>
-    <height>681</height>
+    <width>408</width>
+    <height>650</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,8 +35,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>852</width>
-             <height>583</height>
+             <width>366</width>
+             <height>552</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
@@ -654,7 +654,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>0</height>
                </size>
               </property>
              </spacer>
@@ -680,8 +680,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>852</width>
-             <height>583</height>
+             <width>366</width>
+             <height>552</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -710,6 +710,13 @@
                <property name="bottomMargin">
                 <number>0</number>
                </property>
+               <item>
+                <widget class="QCheckBox" name="use_facemotion3d_protocol">
+                 <property name="text">
+                  <string>Use FaceMotion3D Protocol</string>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QLabel" name="ifm_connection_lb">
                  <property name="font">
@@ -1218,7 +1225,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>40</height>
+                <height>0</height>
                </size>
               </property>
              </spacer>
@@ -1244,8 +1251,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>852</width>
-             <height>583</height>
+             <width>366</width>
+             <height>552</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1372,7 +1379,7 @@
                      <number>65535</number>
                     </property>
                     <property name="value">
-                     <number>49983</number>
+                     <number>12345</number>
                     </property>
                    </widget>
                   </item>
@@ -1782,7 +1789,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>104</height>
+                <height>0</height>
                </size>
               </property>
              </spacer>
@@ -1808,8 +1815,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>852</width>
-             <height>583</height>
+             <width>366</width>
+             <height>552</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1936,7 +1943,7 @@
                      <number>65535</number>
                     </property>
                     <property name="value">
-                     <number>49983</number>
+                     <number>25747</number>
                     </property>
                    </widget>
                   </item>
@@ -2343,7 +2350,7 @@
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>104</height>
+                <height>0</height>
                </size>
               </property>
              </spacer>

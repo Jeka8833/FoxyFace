@@ -25,7 +25,7 @@ class Ui_SenderSettings(object):
     def setupUi(self, SenderSettings):
         if not SenderSettings.objectName():
             SenderSettings.setObjectName(u"SenderSettings")
-        SenderSettings.resize(894, 681)
+        SenderSettings.resize(408, 650)
         self.centralwidget = QWidget(SenderSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_4 = QVBoxLayout(self.centralwidget)
@@ -41,7 +41,7 @@ class Ui_SenderSettings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 852, 583))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 366, 552))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.vrchat_enable_cb = QCheckBox(self.scrollAreaWidgetContents)
@@ -372,7 +372,7 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout.addWidget(self.widget_2)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
@@ -390,7 +390,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 852, 583))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 366, 552))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.ifm_enable_cb = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -404,6 +404,11 @@ class Ui_SenderSettings(object):
         self.verticalLayout_11 = QVBoxLayout(self.widget_4)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.use_facemotion3d_protocol = QCheckBox(self.widget_4)
+        self.use_facemotion3d_protocol.setObjectName(u"use_facemotion3d_protocol")
+
+        self.verticalLayout_11.addWidget(self.use_facemotion3d_protocol)
+
         self.ifm_connection_lb = QLabel(self.widget_4)
         self.ifm_connection_lb.setObjectName(u"ifm_connection_lb")
         self.ifm_connection_lb.setFont(font)
@@ -681,7 +686,7 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_3.addWidget(self.widget_4)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_2)
 
@@ -699,7 +704,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_4 = QWidget()
         self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
-        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 852, 583))
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 366, 552))
         self.verticalLayout_7 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.meowface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_4)
@@ -766,7 +771,7 @@ class Ui_SenderSettings(object):
         self.meowface_port_sb.setObjectName(u"meowface_port_sb")
         self.meowface_port_sb.setEnabled(False)
         self.meowface_port_sb.setMaximum(65535)
-        self.meowface_port_sb.setValue(49983)
+        self.meowface_port_sb.setValue(12345)
 
         self.horizontalLayout_70.addWidget(self.meowface_port_sb)
 
@@ -990,7 +995,7 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_7.addWidget(self.widget_6)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 104, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_3 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_7.addItem(self.verticalSpacer_3)
 
@@ -1008,7 +1013,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollAreaWidgetContents_5 = QWidget()
         self.scrollAreaWidgetContents_5.setObjectName(u"scrollAreaWidgetContents_5")
-        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 852, 583))
+        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 366, 552))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.foxyface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_5)
@@ -1075,7 +1080,7 @@ class Ui_SenderSettings(object):
         self.foxyface_port_sb.setObjectName(u"foxyface_port_sb")
         self.foxyface_port_sb.setEnabled(False)
         self.foxyface_port_sb.setMaximum(65535)
-        self.foxyface_port_sb.setValue(49983)
+        self.foxyface_port_sb.setValue(25747)
 
         self.horizontalLayout_109.addWidget(self.foxyface_port_sb)
 
@@ -1298,7 +1303,7 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_8.addWidget(self.widget_8)
 
-        self.verticalSpacer_4 = QSpacerItem(20, 104, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_4 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_8.addItem(self.verticalSpacer_4)
 
@@ -1350,7 +1355,7 @@ class Ui_SenderSettings(object):
         self.foxyface_enable_cb.toggled.connect(self.widget_8.setVisible)
         self.foxyface_enable_solver_cb.toggled.connect(self.widget_9.setVisible)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(SenderSettings)
@@ -1386,6 +1391,7 @@ class Ui_SenderSettings(object):
         self.vrchat_cache_bundle_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" bytes", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("SenderSettings", u"VRChat/ChilloutVR", None))
         self.ifm_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable iFacialMocap Router", None))
+        self.use_facemotion3d_protocol.setText(QCoreApplication.translate("SenderSettings", u"Use FaceMotion3D Protocol", None))
         self.ifm_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.ifm_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))
         self.ifm_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))

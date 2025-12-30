@@ -45,27 +45,17 @@ class UdpPipeline:
         self.close()
 
     def __register_change_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.socket.ip,
-                                                      lambda config: config.socket.port,
-                                                      lambda config: config.socket.udp_read_timeout,
-                                                      lambda config: config.socket.bypass_other_modules_block]
+        watch_array: list[Callable[[Config], Any]] = []
 
         return self.__config_manager.create_update_listener(self.__update_options, watch_array, True)
 
     def __update_options(self, config_manager: ConfigManager):
-        self.__options.udp_read_timeout_ms = config_manager.config.socket.udp_read_timeout
-        self.__options.bypass_other_modules_block = config_manager.config.socket.bypass_other_modules_block
-
-        self.__stream.ping_connection_time = config_manager.config.socket.udp_read_timeout / 4000.0
-        self.__stream.target_address = (config_manager.config.socket.ip, config_manager.config.socket.port)
+        pass
 
     def __register_auto_connect_change(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.socket.auto_connect]
+        watch_array: list[Callable[[Config], Any]] = []
 
         return self.__config_manager.create_update_listener(self.__update_auto_connect, watch_array, True)
 
     def __update_auto_connect(self, config_manager: ConfigManager):
-        if config_manager.config.socket.auto_connect:
-            self.__auto_connect.start()
-        else:
-            self.__auto_connect.stop()
+        pass

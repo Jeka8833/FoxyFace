@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ManualCalibrationAvatar</class>
- <widget class="QMainWindow" name="ManualCalibrationAvatar">
+ <class>AvatarCalibration</class>
+ <widget class="QMainWindow" name="AvatarCalibration">
   <property name="geometry">
    <rect>
     <x>0</x>

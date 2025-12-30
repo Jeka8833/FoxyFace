@@ -11,19 +11,24 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QVBoxLayout, QWidget)
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(729, 195)
+        MainWindow.resize(729, 203)
+        self.actionSetup_AutoRun = QAction(MainWindow)
+        self.actionSetup_AutoRun.setObjectName(u"actionSetup_AutoRun")
+        self.actionExit = QAction(MainWindow)
+        self.actionExit.setObjectName(u"actionExit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -207,44 +212,69 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.line_4)
 
-        self.vrcft_vertical_layout = QVBoxLayout()
-        self.vrcft_vertical_layout.setObjectName(u"vrcft_vertical_layout")
+        self.sender_vertical_layout = QVBoxLayout()
+        self.sender_vertical_layout.setObjectName(u"sender_vertical_layout")
         self.sender_zone_lbl = QLabel(self.centralwidget)
         self.sender_zone_lbl.setObjectName(u"sender_zone_lbl")
         self.sender_zone_lbl.setFont(font)
         self.sender_zone_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.vrcft_vertical_layout.addWidget(self.sender_zone_lbl)
+        self.sender_vertical_layout.addWidget(self.sender_zone_lbl)
 
         self.sender_info_lb = QLabel(self.centralwidget)
         self.sender_info_lb.setObjectName(u"sender_info_lb")
         self.sender_info_lb.setFont(font1)
         self.sender_info_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.vrcft_vertical_layout.addWidget(self.sender_info_lb)
+        self.sender_vertical_layout.addWidget(self.sender_info_lb)
 
         self.sender_spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.vrcft_vertical_layout.addItem(self.sender_spacer)
+        self.sender_vertical_layout.addItem(self.sender_spacer)
 
-        self.open_vrcft_settings_btn = QPushButton(self.centralwidget)
-        self.open_vrcft_settings_btn.setObjectName(u"open_vrcft_settings_btn")
-        self.open_vrcft_settings_btn.setFont(font1)
+        self.open_avatar_calibration_btn = QPushButton(self.centralwidget)
+        self.open_avatar_calibration_btn.setObjectName(u"open_avatar_calibration_btn")
+        self.open_avatar_calibration_btn.setFont(font1)
 
-        self.vrcft_vertical_layout.addWidget(self.open_vrcft_settings_btn)
+        self.sender_vertical_layout.addWidget(self.open_avatar_calibration_btn)
+
+        self.open_sender_settings_btn = QPushButton(self.centralwidget)
+        self.open_sender_settings_btn.setObjectName(u"open_sender_settings_btn")
+        self.open_sender_settings_btn.setFont(font1)
+
+        self.sender_vertical_layout.addWidget(self.open_sender_settings_btn)
 
 
-        self.horizontalLayout_2.addLayout(self.vrcft_vertical_layout)
+        self.horizontalLayout_2.addLayout(self.sender_vertical_layout)
 
         MainWindow.setCentralWidget(self.centralwidget)
+        self.menuBar = QMenuBar(MainWindow)
+        self.menuBar.setObjectName(u"menuBar")
+        self.menuBar.setGeometry(QRect(0, 0, 729, 21))
+        self.menuAutoRun = QMenu(self.menuBar)
+        self.menuAutoRun.setObjectName(u"menuAutoRun")
+        self.menuFile = QMenu(self.menuBar)
+        self.menuFile.setObjectName(u"menuFile")
+        MainWindow.setMenuBar(self.menuBar)
+
+        self.menuBar.addAction(self.menuFile.menuAction())
+        self.menuBar.addAction(self.menuAutoRun.menuAction())
+        self.menuAutoRun.addAction(self.actionSetup_AutoRun)
+        self.menuFile.addAction(self.actionExit)
 
         self.retranslateUi(MainWindow)
+        self.actionExit.triggered.connect(MainWindow.close)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"FoxyFace #StandWithUkraine", None))
+        self.actionSetup_AutoRun.setText(QCoreApplication.translate("MainWindow", u"Setup AutoRun", None))
+        self.actionExit.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+#if QT_CONFIG(shortcut)
+        self.actionExit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
+#endif // QT_CONFIG(shortcut)
         self.camera_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"Camera", None))
         self.camera_fps_lbl.setText(QCoreApplication.translate("MainWindow", u"FPS: 0.0", None))
         self.open_camera_preview_btn.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
@@ -264,6 +294,9 @@ class Ui_MainWindow(object):
         self.open_processing_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.sender_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"Sender", None))
         self.sender_info_lb.setText(QCoreApplication.translate("MainWindow", u"To: iFacialMocap", None))
-        self.open_vrcft_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.open_avatar_calibration_btn.setText(QCoreApplication.translate("MainWindow", u"Avatar Calibration", None))
+        self.open_sender_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.menuAutoRun.setTitle(QCoreApplication.translate("MainWindow", u"AutoRun", None))
+        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
     # retranslateUi
 

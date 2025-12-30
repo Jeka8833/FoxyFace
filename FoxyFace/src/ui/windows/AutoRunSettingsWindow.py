@@ -1,22 +1,18 @@
 import logging
-from typing import Any, Callable
 
-from PySide6.QtCore import QTimer, Qt, Signal
+from PySide6.QtCore import QTimer, Qt
 from PySide6.QtWidgets import QComboBox, QFileDialog
 
 from src.autorun.RunStrategyEnum import RunStrategyEnum
 from src.autorun.SteamAutoRun import SteamAutoRun
 from src.config.ConfigManager import ConfigManager
-from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
 from src.ui.FoxyWindow import FoxyWindow
-from src.ui.qtcreator.ui_VrcftSettings import Ui_VrcftSettings
+from ui.qtcreator.ui_AutoRunSettings import Ui_AutoRunSettings
 
 _logger = logging.getLogger(__name__)
 
 
-class VrcftSettingsWindow(FoxyWindow):
-    __update_ip_signal: Signal = Signal()
+class AutoRunSettingsWindow(FoxyWindow):
 
     def __init__(self, config_manager: ConfigManager, steam_auto_run: SteamAutoRun):
         super().__init__()
@@ -24,10 +20,9 @@ class VrcftSettingsWindow(FoxyWindow):
         self.__config_manager = config_manager
         self.__steam_auto_run = steam_auto_run
 
-        self.__ui = Ui_VrcftSettings()
+        self.__ui = Ui_AutoRunSettings()
         self.__ui.setupUi(self)
 
-        self.__update_ip_signal.connect(self.__update_ip)
         self.__ui.save_btn.clicked.connect(self.__save)
         self.__ui.force_run_btn.clicked.connect(self.__force_auto_run)
 
@@ -43,8 +38,6 @@ class VrcftSettingsWindow(FoxyWindow):
         self.__timer.timeout.connect(self.__update_thread)
         self.__timer.start()
 
-        self.__ip_change_listener = self.__register_ip_change()
-
         self.__set_default_values()
 
         self.show()
@@ -52,11 +45,8 @@ class VrcftSettingsWindow(FoxyWindow):
     def closeEvent(self, event, /):
         super().closeEvent(event)
 
-        self.__ip_change_listener.unregister()
-
         self.__timer.stop()
 
-        self.__update_ip_signal.disconnect(self.__update_ip)
         self.__ui.save_btn.clicked.disconnect(self.__save)
         self.__ui.force_run_btn.clicked.disconnect(self.__force_auto_run)
 
@@ -69,10 +59,6 @@ class VrcftSettingsWindow(FoxyWindow):
         self.__ui.vrcft_file_path_select_btn.clicked.disconnect(self.__change_vrcft_path)
 
     def __set_default_values(self):
-        self.__ui.auto_connect_cb.setChecked(self.__config_manager.config.socket.auto_connect)
-        self.__ui.read_timeout_sp.setValue(self.__config_manager.config.socket.udp_read_timeout)
-        self.__ui.bypass_cb.setChecked(self.__config_manager.config.socket.bypass_other_modules_block)
-
         self.__ui.vrchat_file_path_le.setText(self.__config_manager.config.auto_run.vrchat_path)
         self.__ui.vrcft_file_path_le.setText(self.__config_manager.config.auto_run.vrcft_path)
 
@@ -87,12 +73,6 @@ class VrcftSettingsWindow(FoxyWindow):
 
     def __save(self):
         try:
-            self.__config_manager.config.socket.auto_connect = self.__ui.auto_connect_cb.isChecked()
-            self.__config_manager.config.socket.ip = self.__ui.ip_le.text()
-            self.__config_manager.config.socket.port = self.__ui.port_sp.value()
-            self.__config_manager.config.socket.udp_read_timeout = self.__ui.read_timeout_sp.value()
-            self.__config_manager.config.socket.bypass_other_modules_block = self.__ui.bypass_cb.isChecked()
-
             self.__config_manager.config.auto_run.vrchat_path = self.__ui.vrchat_file_path_le.text()
             self.__config_manager.config.auto_run.vrcft_path = self.__ui.vrcft_file_path_le.text()
             self.__config_manager.config.auto_run.vrchat_strategy = self.__get_run_strategy(
@@ -156,24 +136,10 @@ class VrcftSettingsWindow(FoxyWindow):
         self.__ui.force_run_btn.setVisible(
             vrchat_strategy != RunStrategyEnum.DISABLED or vrcft_strategy != RunStrategyEnum.DISABLED)
 
-    def __update_ip(self):
-        self.__ui.ip_le.setText(self.__config_manager.config.socket.ip)
-        self.__ui.port_sp.setValue(self.__config_manager.config.socket.port)
-
-    def __register_ip_change(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.socket.ip,
-                                                      lambda config: config.socket.port]
-
-        return self.__config_manager.create_update_listener(self.__update_ip_change, watch_array, True)
-
-    # noinspection PyUnusedLocal
-    def __update_ip_change(self, config_manager: ConfigManager):
-        self.__update_ip_signal.emit()
-
     @staticmethod
     def __get_run_strategy(combobox: QComboBox) -> RunStrategyEnum:
         for item in RunStrategyEnum:
-            if VrcftSettingsWindow.__get_run_strategy_index(item) == combobox.currentIndex():
+            if AutoRunSettingsWindow.__get_run_strategy_index(item) == combobox.currentIndex():
                 return item
 
         raise ValueError("Invalid run strategy index")

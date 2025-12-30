@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'ManualCalibrationAvatar.ui'
+## Form generated from reading UI file 'AvatarCalibration.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.1
 ##
@@ -19,12 +19,12 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QMainWindow
     QPushButton, QSizePolicy, QSpacerItem, QTabWidget,
     QVBoxLayout, QWidget)
 
-class Ui_ManualCalibrationAvatar(object):
-    def setupUi(self, ManualCalibrationAvatar):
-        if not ManualCalibrationAvatar.objectName():
-            ManualCalibrationAvatar.setObjectName(u"ManualCalibrationAvatar")
-        ManualCalibrationAvatar.resize(800, 600)
-        self.centralwidget = QWidget(ManualCalibrationAvatar)
+class Ui_AvatarCalibration(object):
+    def setupUi(self, AvatarCalibration):
+        if not AvatarCalibration.objectName():
+            AvatarCalibration.setObjectName(u"AvatarCalibration")
+        AvatarCalibration.resize(800, 600)
+        self.centralwidget = QWidget(AvatarCalibration)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -86,26 +86,26 @@ class Ui_ManualCalibrationAvatar(object):
 
         self.verticalLayout_2.addWidget(self.widget_2)
 
-        ManualCalibrationAvatar.setCentralWidget(self.centralwidget)
+        AvatarCalibration.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(ManualCalibrationAvatar)
+        self.retranslateUi(AvatarCalibration)
 
         self.tabWidget.setCurrentIndex(0)
         self.tabWidget_2.setCurrentIndex(0)
 
 
-        QMetaObject.connectSlotsByName(ManualCalibrationAvatar)
+        QMetaObject.connectSlotsByName(AvatarCalibration)
     # setupUi
 
-    def retranslateUi(self, ManualCalibrationAvatar):
-        ManualCalibrationAvatar.setWindowTitle(QCoreApplication.translate("ManualCalibrationAvatar", u"MainWindow", None))
-        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), QCoreApplication.translate("ManualCalibrationAvatar", u"Avatar Parameters", None))
-        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), QCoreApplication.translate("ManualCalibrationAvatar", u"Solver Input", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("ManualCalibrationAvatar", u"VRChat/ChilloutVR", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("ManualCalibrationAvatar", u"Tab 2", None))
-        self.pushButton_4.setText(QCoreApplication.translate("ManualCalibrationAvatar", u"Avatar Parameter Reset", None))
-        self.checkBox.setText(QCoreApplication.translate("ManualCalibrationAvatar", u"Allways use on this avatar", None))
-        self.pushButton_2.setText(QCoreApplication.translate("ManualCalibrationAvatar", u"Import File", None))
-        self.pushButton.setText(QCoreApplication.translate("ManualCalibrationAvatar", u"Export File", None))
+    def retranslateUi(self, AvatarCalibration):
+        AvatarCalibration.setWindowTitle(QCoreApplication.translate("AvatarCalibration", u"MainWindow", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), QCoreApplication.translate("AvatarCalibration", u"Avatar Parameters", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), QCoreApplication.translate("AvatarCalibration", u"Solver Input", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("AvatarCalibration", u"VRChat/ChilloutVR", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("AvatarCalibration", u"Tab 2", None))
+        self.pushButton_4.setText(QCoreApplication.translate("AvatarCalibration", u"Avatar Parameter Reset", None))
+        self.checkBox.setText(QCoreApplication.translate("AvatarCalibration", u"Allways use on this avatar", None))
+        self.pushButton_2.setText(QCoreApplication.translate("AvatarCalibration", u"Import File", None))
+        self.pushButton.setText(QCoreApplication.translate("AvatarCalibration", u"Export File", None))
     # retranslateUi
 
