@@ -11,9 +11,6 @@ class MeowFaceSenderConfig:
     ip: str = "localhost"
     port: int = 12345
 
-    test_send_period: float = MeowFaceDefaultValue.ENCODER_TEST_SEND_PERIOD
-    test_animation_period: float = MeowFaceDefaultValue.ENCODER_TEST_ANIMATION_PERIOD
-
     solver_enabled: bool = True
     solver_model_path: str = ""
     solver_threads: int = MeowFaceDefaultValue.SOLVER_THREADS
@@ -25,4 +22,8 @@ class MeowFaceSenderConfig:
     cache_float_precision: float = MeowFaceDefaultValue.UDP_CACHE_FLOAT_PRECISION
     udp_ping_interval: float = MeowFaceDefaultValue.UDP_PING_INTERVAL
 
+    avatar_config_file: str = ""
+
     auto_connect_port: int = MeowFaceDefaultValue.AUTO_CONNECT_PORT
+    test_send_period: float = MeowFaceDefaultValue.ENCODER_TEST_SEND_PERIOD
+    test_animation_period: float = MeowFaceDefaultValue.ENCODER_TEST_ANIMATION_PERIOD

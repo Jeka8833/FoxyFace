@@ -24,7 +24,7 @@ class BabbleModel:
 
         out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
-        arr = out[0][0].astype(float)
+        arr = out[0][0].tolist()
 
         return {blend_shape: arr[blend_shape.value] for blend_shape in BabbleBlendShapeEnum}
 

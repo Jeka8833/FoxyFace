@@ -11,9 +11,6 @@ class FoxyFaceSenderConfig:
     ip: str = "localhost"
     port: int = 12345
 
-    test_send_period: float = FoxyFaceDefaultValue.ENCODER_TEST_SEND_PERIOD
-    test_animation_period: float = FoxyFaceDefaultValue.ENCODER_TEST_ANIMATION_PERIOD
-
     solver_enabled: bool = True
     solver_model_path: str = ""
     solver_threads: int = FoxyFaceDefaultValue.SOLVER_THREADS
@@ -25,4 +22,8 @@ class FoxyFaceSenderConfig:
     cache_float_precision: float = FoxyFaceDefaultValue.UDP_CACHE_FLOAT_PRECISION
     udp_ping_interval: float = FoxyFaceDefaultValue.UDP_PING_INTERVAL
 
+    avatar_config_file: str = ""
+
     auto_connect_port: int = FoxyFaceDefaultValue.AUTO_CONNECT_PORT
+    test_send_period: float = FoxyFaceDefaultValue.ENCODER_TEST_SEND_PERIOD
+    test_animation_period: float = FoxyFaceDefaultValue.ENCODER_TEST_ANIMATION_PERIOD

@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 
-import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
@@ -10,6 +9,11 @@ from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import torch
+except Exception:
+    _logger.warning("Failed to import torch", exc_info=True, stack_info=True)
 
 
 class BabbleModelLoader:
@@ -21,14 +25,6 @@ class BabbleModelLoader:
         self.model = None
 
         device_id_str = str(device_id)
-
-        try:
-            providers: list[str] = onnxruntime.get_available_providers()
-            if "CUDAExecutionProvider" in providers:
-                # noinspection PyUnusedImports
-                import torch
-        except Exception:
-            _logger.warning("Failed to import torch", exc_info=True, stack_info=True)
 
         opts = SessionOptions()
         opts.inter_op_num_threads = 1

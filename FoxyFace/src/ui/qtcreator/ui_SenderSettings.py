@@ -25,7 +25,7 @@ class Ui_SenderSettings(object):
     def setupUi(self, SenderSettings):
         if not SenderSettings.objectName():
             SenderSettings.setObjectName(u"SenderSettings")
-        SenderSettings.resize(408, 650)
+        SenderSettings.resize(408, 598)
         self.centralwidget = QWidget(SenderSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_4 = QVBoxLayout(self.centralwidget)
@@ -41,7 +41,7 @@ class Ui_SenderSettings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 366, 552))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -108, 352, 608))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.vrchat_enable_cb = QCheckBox(self.scrollAreaWidgetContents)
@@ -372,9 +372,46 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout.addWidget(self.widget_2)
 
-        self.verticalSpacer = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.vrchat_config_lb = QLabel(self.scrollAreaWidgetContents)
+        self.vrchat_config_lb.setObjectName(u"vrchat_config_lb")
+        self.vrchat_config_lb.setFont(font)
+        self.vrchat_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout.addItem(self.verticalSpacer)
+        self.verticalLayout.addWidget(self.vrchat_config_lb)
+
+        self.line = QFrame(self.scrollAreaWidgetContents)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout.addWidget(self.line)
+
+        self.vrchat_avatar_config_widget = QWidget(self.scrollAreaWidgetContents)
+        self.vrchat_avatar_config_widget.setObjectName(u"vrchat_avatar_config_widget")
+        self.horizontalLayout_21 = QHBoxLayout(self.vrchat_avatar_config_widget)
+        self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
+        self.horizontalLayout_21.setContentsMargins(0, 0, 0, 0)
+        self.vrchat_avatar_config_lb = QLabel(self.vrchat_avatar_config_widget)
+        self.vrchat_avatar_config_lb.setObjectName(u"vrchat_avatar_config_lb")
+
+        self.horizontalLayout_21.addWidget(self.vrchat_avatar_config_lb)
+
+        self.vrchat_avatar_config_le = QLineEdit(self.vrchat_avatar_config_widget)
+        self.vrchat_avatar_config_le.setObjectName(u"vrchat_avatar_config_le")
+
+        self.horizontalLayout_21.addWidget(self.vrchat_avatar_config_le)
+
+        self.vrchat_avatar_config_btn = QToolButton(self.vrchat_avatar_config_widget)
+        self.vrchat_avatar_config_btn.setObjectName(u"vrchat_avatar_config_btn")
+
+        self.horizontalLayout_21.addWidget(self.vrchat_avatar_config_btn)
+
+
+        self.verticalLayout.addWidget(self.vrchat_avatar_config_widget)
+
+        self.vrchat_config_line = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.vrchat_config_line)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -390,7 +427,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 366, 552))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, -99, 352, 599))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.ifm_enable_cb = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -686,6 +723,43 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_3.addWidget(self.widget_4)
 
+        self.ifm_config_lb = QLabel(self.scrollAreaWidgetContents_2)
+        self.ifm_config_lb.setObjectName(u"ifm_config_lb")
+        self.ifm_config_lb.setFont(font)
+        self.ifm_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_3.addWidget(self.ifm_config_lb)
+
+        self.ifm_config_line = QFrame(self.scrollAreaWidgetContents_2)
+        self.ifm_config_line.setObjectName(u"ifm_config_line")
+        self.ifm_config_line.setFrameShape(QFrame.Shape.HLine)
+        self.ifm_config_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_3.addWidget(self.ifm_config_line)
+
+        self.ifm_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_2)
+        self.ifm_avatar_config_widget.setObjectName(u"ifm_avatar_config_widget")
+        self.horizontalLayout_22 = QHBoxLayout(self.ifm_avatar_config_widget)
+        self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
+        self.horizontalLayout_22.setContentsMargins(0, 0, 0, 0)
+        self.ifm_avatar_config_lb = QLabel(self.ifm_avatar_config_widget)
+        self.ifm_avatar_config_lb.setObjectName(u"ifm_avatar_config_lb")
+
+        self.horizontalLayout_22.addWidget(self.ifm_avatar_config_lb)
+
+        self.ifm_avatar_config_le = QLineEdit(self.ifm_avatar_config_widget)
+        self.ifm_avatar_config_le.setObjectName(u"ifm_avatar_config_le")
+
+        self.horizontalLayout_22.addWidget(self.ifm_avatar_config_le)
+
+        self.ifm_avatar_config_btn = QToolButton(self.ifm_avatar_config_widget)
+        self.ifm_avatar_config_btn.setObjectName(u"ifm_avatar_config_btn")
+
+        self.horizontalLayout_22.addWidget(self.ifm_avatar_config_btn)
+
+
+        self.verticalLayout_3.addWidget(self.ifm_avatar_config_widget)
+
         self.verticalSpacer_2 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_2)
@@ -704,7 +778,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_4 = QWidget()
         self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
-        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 366, 552))
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, -72, 352, 572))
         self.verticalLayout_7 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.meowface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_4)
@@ -995,9 +1069,46 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_7.addWidget(self.widget_6)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.meowface_config_lb = QLabel(self.scrollAreaWidgetContents_4)
+        self.meowface_config_lb.setObjectName(u"meowface_config_lb")
+        self.meowface_config_lb.setFont(font)
+        self.meowface_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_7.addItem(self.verticalSpacer_3)
+        self.verticalLayout_7.addWidget(self.meowface_config_lb)
+
+        self.line_3 = QFrame(self.scrollAreaWidgetContents_4)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_7.addWidget(self.line_3)
+
+        self.meowface_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_4)
+        self.meowface_avatar_config_widget.setObjectName(u"meowface_avatar_config_widget")
+        self.horizontalLayout_23 = QHBoxLayout(self.meowface_avatar_config_widget)
+        self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
+        self.horizontalLayout_23.setContentsMargins(0, 0, 0, 0)
+        self.meowface_avatar_config_lb = QLabel(self.meowface_avatar_config_widget)
+        self.meowface_avatar_config_lb.setObjectName(u"meowface_avatar_config_lb")
+
+        self.horizontalLayout_23.addWidget(self.meowface_avatar_config_lb)
+
+        self.meowface_avatar_config_le = QLineEdit(self.meowface_avatar_config_widget)
+        self.meowface_avatar_config_le.setObjectName(u"meowface_avatar_config_le")
+
+        self.horizontalLayout_23.addWidget(self.meowface_avatar_config_le)
+
+        self.meowface_avatar_config_btn = QToolButton(self.meowface_avatar_config_widget)
+        self.meowface_avatar_config_btn.setObjectName(u"meowface_avatar_config_btn")
+
+        self.horizontalLayout_23.addWidget(self.meowface_avatar_config_btn)
+
+
+        self.verticalLayout_7.addWidget(self.meowface_avatar_config_widget)
+
+        self.meowface_config_line = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_7.addItem(self.meowface_config_line)
 
         self.scrollArea_3.setWidget(self.scrollAreaWidgetContents_4)
 
@@ -1013,7 +1124,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollAreaWidgetContents_5 = QWidget()
         self.scrollAreaWidgetContents_5.setObjectName(u"scrollAreaWidgetContents_5")
-        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 366, 552))
+        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, -72, 352, 572))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.foxyface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_5)
@@ -1303,6 +1414,43 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_8.addWidget(self.widget_8)
 
+        self.foxyface_config_lb = QLabel(self.scrollAreaWidgetContents_5)
+        self.foxyface_config_lb.setObjectName(u"foxyface_config_lb")
+        self.foxyface_config_lb.setFont(font)
+        self.foxyface_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_8.addWidget(self.foxyface_config_lb)
+
+        self.foxyface_config_line = QFrame(self.scrollAreaWidgetContents_5)
+        self.foxyface_config_line.setObjectName(u"foxyface_config_line")
+        self.foxyface_config_line.setFrameShape(QFrame.Shape.HLine)
+        self.foxyface_config_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_8.addWidget(self.foxyface_config_line)
+
+        self.foxyface_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_5)
+        self.foxyface_avatar_config_widget.setObjectName(u"foxyface_avatar_config_widget")
+        self.horizontalLayout_24 = QHBoxLayout(self.foxyface_avatar_config_widget)
+        self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
+        self.horizontalLayout_24.setContentsMargins(0, 0, 0, 0)
+        self.foxyface_avatar_config_lb = QLabel(self.foxyface_avatar_config_widget)
+        self.foxyface_avatar_config_lb.setObjectName(u"foxyface_avatar_config_lb")
+
+        self.horizontalLayout_24.addWidget(self.foxyface_avatar_config_lb)
+
+        self.foxyface_avatar_config_le = QLineEdit(self.foxyface_avatar_config_widget)
+        self.foxyface_avatar_config_le.setObjectName(u"foxyface_avatar_config_le")
+
+        self.horizontalLayout_24.addWidget(self.foxyface_avatar_config_le)
+
+        self.foxyface_avatar_config_btn = QToolButton(self.foxyface_avatar_config_widget)
+        self.foxyface_avatar_config_btn.setObjectName(u"foxyface_avatar_config_btn")
+
+        self.horizontalLayout_24.addWidget(self.foxyface_avatar_config_btn)
+
+
+        self.verticalLayout_8.addWidget(self.foxyface_avatar_config_widget)
+
         self.verticalSpacer_4 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_8.addItem(self.verticalSpacer_4)
@@ -1389,6 +1537,10 @@ class Ui_SenderSettings(object):
         self.vrchat_cache_float_percision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
         self.vrchat_cache_bundle_lb.setText(QCoreApplication.translate("SenderSettings", u"OSC Bundle Size:", None))
         self.vrchat_cache_bundle_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" bytes", None))
+        self.vrchat_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Config", None))
+        self.vrchat_avatar_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Config Folder:", None))
+        self.vrchat_avatar_config_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"avatars/vrchat/", None))
+        self.vrchat_avatar_config_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("SenderSettings", u"VRChat/ChilloutVR", None))
         self.ifm_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable iFacialMocap Router", None))
         self.use_facemotion3d_protocol.setText(QCoreApplication.translate("SenderSettings", u"Use FaceMotion3D Protocol", None))
@@ -1413,6 +1565,10 @@ class Ui_SenderSettings(object):
         self.ifm_cache_ping_lb.setText(QCoreApplication.translate("SenderSettings", u"Ping Interval:", None))
         self.ifm_cache_ping_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.ifm_cache_float_percision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
+        self.ifm_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Config", None))
+        self.ifm_avatar_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Config File:", None))
+        self.ifm_avatar_config_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"avatars/iFacialMocap.json", None))
+        self.ifm_avatar_config_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("SenderSettings", u"iFacialMocap", None))
         self.meowface_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable MeowFace Router", None))
         self.meowface_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
@@ -1436,6 +1592,10 @@ class Ui_SenderSettings(object):
         self.meowface_cache_ping_lb.setText(QCoreApplication.translate("SenderSettings", u"Ping Interval:", None))
         self.meowface_cache_ping_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.meowface_cache_float_percision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
+        self.meowface_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Config", None))
+        self.meowface_avatar_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Config File:", None))
+        self.meowface_avatar_config_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"avatars/MeowFace.json", None))
+        self.meowface_avatar_config_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("SenderSettings", u"MeowFace", None))
         self.foxyface_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable FoxyFace Router", None))
         self.foxyface_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
@@ -1459,6 +1619,10 @@ class Ui_SenderSettings(object):
         self.foxyface_cache_ping_lb.setText(QCoreApplication.translate("SenderSettings", u"Ping Interval:", None))
         self.foxyface_cache_ping_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.foxyface_cache_float_percision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
+        self.foxyface_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Config", None))
+        self.foxyface_avatar_config_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Config File:", None))
+        self.foxyface_avatar_config_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"avatars/FoxyFace.json", None))
+        self.foxyface_avatar_config_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("SenderSettings", u"FoxyFace", None))
         self.full_reset_btn.setText(QCoreApplication.translate("SenderSettings", u"Full Reset", None))
         self.save_btn.setText(QCoreApplication.translate("SenderSettings", u"Apply and Save", None))
