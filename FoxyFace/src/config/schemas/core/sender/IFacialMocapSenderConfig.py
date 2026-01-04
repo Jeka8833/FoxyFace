@@ -5,7 +5,7 @@ from blendshape_router.facades.ifacialmocap import IFacialMocapDefaultValue
 
 @dataclass(slots=True)
 class IFacialMocapSenderConfig:
-    enabled: bool = True
+    enabled: bool = False
 
     facemotion3d_compatibility: bool = IFacialMocapDefaultValue.FACEMOTION3D_COMPATIBILITY
 

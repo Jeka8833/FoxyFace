@@ -34,7 +34,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-108</y>
+             <y>0</y>
              <width>352</width>
              <height>608</height>
             </rect>
@@ -135,7 +135,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QWidget" name="vrchat_error_sleep_tim_widget" native="true">
+                <widget class="QWidget" name="vrchat_error_sleep_time_widget" native="true">
                  <layout class="QHBoxLayout" name="horizontalLayout_12">
                   <property name="leftMargin">
                    <number>0</number>
@@ -150,14 +150,14 @@
                    <number>0</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="vrchat_error_sleep_tim_lb">
+                   <widget class="QLabel" name="vrchat_error_sleep_time_lb">
                     <property name="text">
                      <string>Sleep time after error:</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QDoubleSpinBox" name="vrchat_error_sleep_tim_sb">
+                   <widget class="QDoubleSpinBox" name="vrchat_error_sleep_time_sb">
                     <property name="suffix">
                      <string> seconds</string>
                     </property>
@@ -361,7 +361,7 @@
                      <item>
                       <widget class="QLabel" name="vrchat_solver_sercision_lb">
                        <property name="text">
-                        <string>Solver Precision (80%): </string>
+                        <string notr="true">Solver Precision (80%): </string>
                        </property>
                       </widget>
                      </item>
@@ -643,65 +643,65 @@
                  </layout>
                 </widget>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="vrchat_config_lb">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Config</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="Line" name="line">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="vrchat_avatar_config_widget" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_21">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
                <item>
-                <widget class="QLabel" name="vrchat_avatar_config_lb">
+                <widget class="QLabel" name="vrchat_config_lb">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
-                  <string>Avatar Config Folder:</string>
+                  <string>Config</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="vrchat_avatar_config_le">
-                 <property name="placeholderText">
-                  <string>avatars/vrchat/</string>
+                <widget class="Line" name="line">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="vrchat_avatar_config_btn">
-                 <property name="text">
-                  <string>...</string>
-                 </property>
+                <widget class="QWidget" name="vrchat_avatar_config_widget" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_21">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="vrchat_avatar_config_lb">
+                    <property name="text">
+                     <string>Avatar Config Folder:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="vrchat_avatar_config_le">
+                    <property name="placeholderText">
+                     <string>avatars/vrchat/</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="vrchat_avatar_config_btn">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -740,7 +740,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-99</y>
+             <y>0</y>
              <width>352</width>
              <height>599</height>
             </rect>
@@ -750,6 +750,9 @@
              <widget class="QCheckBox" name="ifm_enable_cb">
               <property name="text">
                <string>Enable iFacialMocap Router</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -772,7 +775,7 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QCheckBox" name="use_facemotion3d_protocol">
+                <widget class="QCheckBox" name="ifm_use_facemotion3d_protocol">
                  <property name="text">
                   <string>Use FaceMotion3D Protocol</string>
                  </property>
@@ -990,7 +993,7 @@
                      <item>
                       <widget class="QLabel" name="ifm_solver_sercision_lb">
                        <property name="text">
-                        <string>Solver Precision (80%): </string>
+                        <string notr="true">Solver Precision (80%): </string>
                        </property>
                       </widget>
                      </item>
@@ -1275,65 +1278,65 @@
                  </layout>
                 </widget>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="ifm_config_lb">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Config</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="Line" name="ifm_config_line">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="ifm_avatar_config_widget" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_22">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
                <item>
-                <widget class="QLabel" name="ifm_avatar_config_lb">
+                <widget class="QLabel" name="ifm_config_lb">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
-                  <string>Avatar Config File:</string>
+                  <string>Config</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="ifm_avatar_config_le">
-                 <property name="placeholderText">
-                  <string>avatars/iFacialMocap.json</string>
+                <widget class="Line" name="ifm_config_line">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="ifm_avatar_config_btn">
-                 <property name="text">
-                  <string>...</string>
-                 </property>
+                <widget class="QWidget" name="ifm_avatar_config_widget" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_22">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="ifm_avatar_config_lb">
+                    <property name="text">
+                     <string>Avatar Config File:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="ifm_avatar_config_le">
+                    <property name="placeholderText">
+                     <string>avatars/iFacialMocap.json</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="ifm_avatar_config_btn">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -1372,7 +1375,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-72</y>
+             <y>0</y>
              <width>352</width>
              <height>572</height>
             </rect>
@@ -1382,6 +1385,9 @@
              <widget class="QCheckBox" name="meowface_enable_cb">
               <property name="text">
                <string>Enable MeowFace Router</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1598,7 +1604,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QWidget" name="meowface_solver_sercision_widget" native="true">
+                   <widget class="QWidget" name="meowface_solver_percision_widget" native="true">
                     <layout class="QHBoxLayout" name="horizontalLayout_61">
                      <property name="leftMargin">
                       <number>0</number>
@@ -1613,14 +1619,14 @@
                       <number>0</number>
                      </property>
                      <item>
-                      <widget class="QLabel" name="meowface_solver_sercision_lb">
+                      <widget class="QLabel" name="meowface_solver_percision_lb">
                        <property name="text">
-                        <string>Solver Precision (80%): </string>
+                        <string notr="true">Solver Precision (80%): </string>
                        </property>
                       </widget>
                      </item>
                      <item>
-                      <widget class="QSlider" name="meowface_solver_sercision_slider">
+                      <widget class="QSlider" name="meowface_solver_percision_slider">
                        <property name="minimum">
                         <number>1</number>
                        </property>
@@ -1900,65 +1906,65 @@
                  </layout>
                 </widget>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="meowface_config_lb">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Config</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="Line" name="line_3">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="meowface_avatar_config_widget" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_23">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
                <item>
-                <widget class="QLabel" name="meowface_avatar_config_lb">
+                <widget class="QLabel" name="meowface_config_lb">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
-                  <string>Avatar Config File:</string>
+                  <string>Config</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="meowface_avatar_config_le">
-                 <property name="placeholderText">
-                  <string>avatars/MeowFace.json</string>
+                <widget class="Line" name="line_3">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="meowface_avatar_config_btn">
-                 <property name="text">
-                  <string>...</string>
-                 </property>
+                <widget class="QWidget" name="meowface_avatar_config_widget" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_23">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="meowface_avatar_config_lb">
+                    <property name="text">
+                     <string>Avatar Config File:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="meowface_avatar_config_le">
+                    <property name="placeholderText">
+                     <string>avatars/MeowFace.json</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="meowface_avatar_config_btn">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -1997,7 +2003,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-72</y>
+             <y>0</y>
              <width>352</width>
              <height>572</height>
             </rect>
@@ -2007,6 +2013,9 @@
              <widget class="QCheckBox" name="foxyface_enable_cb">
               <property name="text">
                <string>Enable FoxyFace Router</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2237,7 +2246,7 @@
                      <item>
                       <widget class="QLabel" name="foxyface_solver_sercision_lb">
                        <property name="text">
-                        <string>Solver Precision (80%): </string>
+                        <string notr="true">Solver Precision (80%): </string>
                        </property>
                       </widget>
                      </item>
@@ -2522,64 +2531,64 @@
                  </layout>
                 </widget>
                </item>
-              </layout>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="foxyface_config_lb">
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-               </font>
-              </property>
-              <property name="text">
-               <string>Config</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="Line" name="foxyface_config_line">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QWidget" name="foxyface_avatar_config_widget" native="true">
-              <layout class="QHBoxLayout" name="horizontalLayout_24">
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
                <item>
-                <widget class="QLabel" name="foxyface_avatar_config_lb">
+                <widget class="QLabel" name="foxyface_config_lb">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
-                  <string>Avatar Config File:</string>
+                  <string>Config</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="foxyface_avatar_config_le">
-                 <property name="placeholderText">
-                  <string>avatars/FoxyFace.json</string>
-                 </property>
+                <widget class="QWidget" name="foxyface_avatar_config_widget" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_24">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="foxyface_avatar_config_lb">
+                    <property name="text">
+                     <string>Avatar Config File:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="foxyface_avatar_config_le">
+                    <property name="placeholderText">
+                     <string>avatars/FoxyFace.json</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QToolButton" name="foxyface_avatar_config_btn">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="foxyface_avatar_config_btn">
-                 <property name="text">
-                  <string>...</string>
+                <widget class="Line" name="foxyface_config_line">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>

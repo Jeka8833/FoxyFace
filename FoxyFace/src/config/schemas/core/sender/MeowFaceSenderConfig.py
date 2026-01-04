@@ -5,7 +5,7 @@ from blendshape_router.facades.meowface import MeowFaceDefaultValue
 
 @dataclass(slots=True)
 class MeowFaceSenderConfig:
-    enabled: bool = True
+    enabled: bool = False
 
     auto_connect_enabled: bool = MeowFaceDefaultValue.AUTO_CONNECT_ENABLED
     ip: str = "localhost"

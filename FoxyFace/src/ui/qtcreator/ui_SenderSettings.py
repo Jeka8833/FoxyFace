@@ -41,7 +41,7 @@ class Ui_SenderSettings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -108, 352, 608))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 352, 608))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.vrchat_enable_cb = QCheckBox(self.scrollAreaWidgetContents)
@@ -94,26 +94,26 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_9.addWidget(self.vrchat_avatare_request_period_widget)
 
-        self.vrchat_error_sleep_tim_widget = QWidget(self.widget_2)
-        self.vrchat_error_sleep_tim_widget.setObjectName(u"vrchat_error_sleep_tim_widget")
-        self.horizontalLayout_12 = QHBoxLayout(self.vrchat_error_sleep_tim_widget)
+        self.vrchat_error_sleep_time_widget = QWidget(self.widget_2)
+        self.vrchat_error_sleep_time_widget.setObjectName(u"vrchat_error_sleep_time_widget")
+        self.horizontalLayout_12 = QHBoxLayout(self.vrchat_error_sleep_time_widget)
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.horizontalLayout_12.setContentsMargins(0, 0, 0, 0)
-        self.vrchat_error_sleep_tim_lb = QLabel(self.vrchat_error_sleep_tim_widget)
-        self.vrchat_error_sleep_tim_lb.setObjectName(u"vrchat_error_sleep_tim_lb")
+        self.vrchat_error_sleep_time_lb = QLabel(self.vrchat_error_sleep_time_widget)
+        self.vrchat_error_sleep_time_lb.setObjectName(u"vrchat_error_sleep_time_lb")
 
-        self.horizontalLayout_12.addWidget(self.vrchat_error_sleep_tim_lb)
+        self.horizontalLayout_12.addWidget(self.vrchat_error_sleep_time_lb)
 
-        self.vrchat_error_sleep_tim_sb = QDoubleSpinBox(self.vrchat_error_sleep_tim_widget)
-        self.vrchat_error_sleep_tim_sb.setObjectName(u"vrchat_error_sleep_tim_sb")
-        self.vrchat_error_sleep_tim_sb.setMinimum(0.010000000000000)
-        self.vrchat_error_sleep_tim_sb.setMaximum(60.000000000000000)
-        self.vrchat_error_sleep_tim_sb.setValue(5.000000000000000)
+        self.vrchat_error_sleep_time_sb = QDoubleSpinBox(self.vrchat_error_sleep_time_widget)
+        self.vrchat_error_sleep_time_sb.setObjectName(u"vrchat_error_sleep_time_sb")
+        self.vrchat_error_sleep_time_sb.setMinimum(0.010000000000000)
+        self.vrchat_error_sleep_time_sb.setMaximum(60.000000000000000)
+        self.vrchat_error_sleep_time_sb.setValue(5.000000000000000)
 
-        self.horizontalLayout_12.addWidget(self.vrchat_error_sleep_tim_sb)
+        self.horizontalLayout_12.addWidget(self.vrchat_error_sleep_time_sb)
 
 
-        self.verticalLayout_9.addWidget(self.vrchat_error_sleep_tim_widget)
+        self.verticalLayout_9.addWidget(self.vrchat_error_sleep_time_widget)
 
         self.vrchat_close_connectio_widget = QWidget(self.widget_2)
         self.vrchat_close_connectio_widget.setObjectName(u"vrchat_close_connectio_widget")
@@ -212,6 +212,7 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.vrchat_solver_sercision_lb = QLabel(self.vrchat_solver_sercision_widget)
         self.vrchat_solver_sercision_lb.setObjectName(u"vrchat_solver_sercision_lb")
+        self.vrchat_solver_sercision_lb.setText(u"Solver Precision (80%): ")
 
         self.horizontalLayout_5.addWidget(self.vrchat_solver_sercision_lb)
 
@@ -369,24 +370,21 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_9.addWidget(self.vrchat_cache_bundle_widget)
 
-
-        self.verticalLayout.addWidget(self.widget_2)
-
-        self.vrchat_config_lb = QLabel(self.scrollAreaWidgetContents)
+        self.vrchat_config_lb = QLabel(self.widget_2)
         self.vrchat_config_lb.setObjectName(u"vrchat_config_lb")
         self.vrchat_config_lb.setFont(font)
         self.vrchat_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout.addWidget(self.vrchat_config_lb)
+        self.verticalLayout_9.addWidget(self.vrchat_config_lb)
 
-        self.line = QFrame(self.scrollAreaWidgetContents)
+        self.line = QFrame(self.widget_2)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout.addWidget(self.line)
+        self.verticalLayout_9.addWidget(self.line)
 
-        self.vrchat_avatar_config_widget = QWidget(self.scrollAreaWidgetContents)
+        self.vrchat_avatar_config_widget = QWidget(self.widget_2)
         self.vrchat_avatar_config_widget.setObjectName(u"vrchat_avatar_config_widget")
         self.horizontalLayout_21 = QHBoxLayout(self.vrchat_avatar_config_widget)
         self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
@@ -407,7 +405,10 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_21.addWidget(self.vrchat_avatar_config_btn)
 
 
-        self.verticalLayout.addWidget(self.vrchat_avatar_config_widget)
+        self.verticalLayout_9.addWidget(self.vrchat_avatar_config_widget)
+
+
+        self.verticalLayout.addWidget(self.widget_2)
 
         self.vrchat_config_line = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -427,11 +428,12 @@ class Ui_SenderSettings(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, -99, 352, 599))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 352, 599))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.ifm_enable_cb = QCheckBox(self.scrollAreaWidgetContents_2)
         self.ifm_enable_cb.setObjectName(u"ifm_enable_cb")
+        self.ifm_enable_cb.setChecked(True)
 
         self.verticalLayout_3.addWidget(self.ifm_enable_cb)
 
@@ -441,10 +443,10 @@ class Ui_SenderSettings(object):
         self.verticalLayout_11 = QVBoxLayout(self.widget_4)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
-        self.use_facemotion3d_protocol = QCheckBox(self.widget_4)
-        self.use_facemotion3d_protocol.setObjectName(u"use_facemotion3d_protocol")
+        self.ifm_use_facemotion3d_protocol = QCheckBox(self.widget_4)
+        self.ifm_use_facemotion3d_protocol.setObjectName(u"ifm_use_facemotion3d_protocol")
 
-        self.verticalLayout_11.addWidget(self.use_facemotion3d_protocol)
+        self.verticalLayout_11.addWidget(self.ifm_use_facemotion3d_protocol)
 
         self.ifm_connection_lb = QLabel(self.widget_4)
         self.ifm_connection_lb.setObjectName(u"ifm_connection_lb")
@@ -562,6 +564,7 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_19.setContentsMargins(0, 0, 0, 0)
         self.ifm_solver_sercision_lb = QLabel(self.ifm_solver_sercision_widget)
         self.ifm_solver_sercision_lb.setObjectName(u"ifm_solver_sercision_lb")
+        self.ifm_solver_sercision_lb.setText(u"Solver Precision (80%): ")
 
         self.horizontalLayout_19.addWidget(self.ifm_solver_sercision_lb)
 
@@ -720,24 +723,21 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_11.addWidget(self.ifm_cache_float_percision_widget)
 
-
-        self.verticalLayout_3.addWidget(self.widget_4)
-
-        self.ifm_config_lb = QLabel(self.scrollAreaWidgetContents_2)
+        self.ifm_config_lb = QLabel(self.widget_4)
         self.ifm_config_lb.setObjectName(u"ifm_config_lb")
         self.ifm_config_lb.setFont(font)
         self.ifm_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_3.addWidget(self.ifm_config_lb)
+        self.verticalLayout_11.addWidget(self.ifm_config_lb)
 
-        self.ifm_config_line = QFrame(self.scrollAreaWidgetContents_2)
+        self.ifm_config_line = QFrame(self.widget_4)
         self.ifm_config_line.setObjectName(u"ifm_config_line")
         self.ifm_config_line.setFrameShape(QFrame.Shape.HLine)
         self.ifm_config_line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_3.addWidget(self.ifm_config_line)
+        self.verticalLayout_11.addWidget(self.ifm_config_line)
 
-        self.ifm_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_2)
+        self.ifm_avatar_config_widget = QWidget(self.widget_4)
         self.ifm_avatar_config_widget.setObjectName(u"ifm_avatar_config_widget")
         self.horizontalLayout_22 = QHBoxLayout(self.ifm_avatar_config_widget)
         self.horizontalLayout_22.setObjectName(u"horizontalLayout_22")
@@ -758,7 +758,10 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_22.addWidget(self.ifm_avatar_config_btn)
 
 
-        self.verticalLayout_3.addWidget(self.ifm_avatar_config_widget)
+        self.verticalLayout_11.addWidget(self.ifm_avatar_config_widget)
+
+
+        self.verticalLayout_3.addWidget(self.widget_4)
 
         self.verticalSpacer_2 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -778,11 +781,12 @@ class Ui_SenderSettings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_4 = QWidget()
         self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
-        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, -72, 352, 572))
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 352, 572))
         self.verticalLayout_7 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.meowface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_4)
         self.meowface_enable_cb.setObjectName(u"meowface_enable_cb")
+        self.meowface_enable_cb.setChecked(True)
 
         self.verticalLayout_7.addWidget(self.meowface_enable_cb)
 
@@ -901,27 +905,28 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_14.addWidget(self.meowface_solver_model_widget)
 
-        self.meowface_solver_sercision_widget = QWidget(self.widget_7)
-        self.meowface_solver_sercision_widget.setObjectName(u"meowface_solver_sercision_widget")
-        self.horizontalLayout_61 = QHBoxLayout(self.meowface_solver_sercision_widget)
+        self.meowface_solver_percision_widget = QWidget(self.widget_7)
+        self.meowface_solver_percision_widget.setObjectName(u"meowface_solver_percision_widget")
+        self.horizontalLayout_61 = QHBoxLayout(self.meowface_solver_percision_widget)
         self.horizontalLayout_61.setObjectName(u"horizontalLayout_61")
         self.horizontalLayout_61.setContentsMargins(0, 0, 0, 0)
-        self.meowface_solver_sercision_lb = QLabel(self.meowface_solver_sercision_widget)
-        self.meowface_solver_sercision_lb.setObjectName(u"meowface_solver_sercision_lb")
+        self.meowface_solver_percision_lb = QLabel(self.meowface_solver_percision_widget)
+        self.meowface_solver_percision_lb.setObjectName(u"meowface_solver_percision_lb")
+        self.meowface_solver_percision_lb.setText(u"Solver Precision (80%): ")
 
-        self.horizontalLayout_61.addWidget(self.meowface_solver_sercision_lb)
+        self.horizontalLayout_61.addWidget(self.meowface_solver_percision_lb)
 
-        self.meowface_solver_sercision_slider = QSlider(self.meowface_solver_sercision_widget)
-        self.meowface_solver_sercision_slider.setObjectName(u"meowface_solver_sercision_slider")
-        self.meowface_solver_sercision_slider.setMinimum(1)
-        self.meowface_solver_sercision_slider.setMaximum(100)
-        self.meowface_solver_sercision_slider.setValue(80)
-        self.meowface_solver_sercision_slider.setOrientation(Qt.Orientation.Horizontal)
+        self.meowface_solver_percision_slider = QSlider(self.meowface_solver_percision_widget)
+        self.meowface_solver_percision_slider.setObjectName(u"meowface_solver_percision_slider")
+        self.meowface_solver_percision_slider.setMinimum(1)
+        self.meowface_solver_percision_slider.setMaximum(100)
+        self.meowface_solver_percision_slider.setValue(80)
+        self.meowface_solver_percision_slider.setOrientation(Qt.Orientation.Horizontal)
 
-        self.horizontalLayout_61.addWidget(self.meowface_solver_sercision_slider)
+        self.horizontalLayout_61.addWidget(self.meowface_solver_percision_slider)
 
 
-        self.verticalLayout_14.addWidget(self.meowface_solver_sercision_widget)
+        self.verticalLayout_14.addWidget(self.meowface_solver_percision_widget)
 
         self.meowface_solver_threads_widget = QWidget(self.widget_7)
         self.meowface_solver_threads_widget.setObjectName(u"meowface_solver_threads_widget")
@@ -1066,24 +1071,21 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_13.addWidget(self.meowface_cache_float_percision_widget)
 
-
-        self.verticalLayout_7.addWidget(self.widget_6)
-
-        self.meowface_config_lb = QLabel(self.scrollAreaWidgetContents_4)
+        self.meowface_config_lb = QLabel(self.widget_6)
         self.meowface_config_lb.setObjectName(u"meowface_config_lb")
         self.meowface_config_lb.setFont(font)
         self.meowface_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_7.addWidget(self.meowface_config_lb)
+        self.verticalLayout_13.addWidget(self.meowface_config_lb)
 
-        self.line_3 = QFrame(self.scrollAreaWidgetContents_4)
+        self.line_3 = QFrame(self.widget_6)
         self.line_3.setObjectName(u"line_3")
         self.line_3.setFrameShape(QFrame.Shape.HLine)
         self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.verticalLayout_7.addWidget(self.line_3)
+        self.verticalLayout_13.addWidget(self.line_3)
 
-        self.meowface_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_4)
+        self.meowface_avatar_config_widget = QWidget(self.widget_6)
         self.meowface_avatar_config_widget.setObjectName(u"meowface_avatar_config_widget")
         self.horizontalLayout_23 = QHBoxLayout(self.meowface_avatar_config_widget)
         self.horizontalLayout_23.setObjectName(u"horizontalLayout_23")
@@ -1104,7 +1106,10 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_23.addWidget(self.meowface_avatar_config_btn)
 
 
-        self.verticalLayout_7.addWidget(self.meowface_avatar_config_widget)
+        self.verticalLayout_13.addWidget(self.meowface_avatar_config_widget)
+
+
+        self.verticalLayout_7.addWidget(self.widget_6)
 
         self.meowface_config_line = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -1124,11 +1129,12 @@ class Ui_SenderSettings(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollAreaWidgetContents_5 = QWidget()
         self.scrollAreaWidgetContents_5.setObjectName(u"scrollAreaWidgetContents_5")
-        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, -72, 352, 572))
+        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 352, 572))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.foxyface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_5)
         self.foxyface_enable_cb.setObjectName(u"foxyface_enable_cb")
+        self.foxyface_enable_cb.setChecked(True)
 
         self.verticalLayout_8.addWidget(self.foxyface_enable_cb)
 
@@ -1253,6 +1259,7 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_100.setContentsMargins(0, 0, 0, 0)
         self.foxyface_solver_sercision_lb = QLabel(self.foxyface_solver_sercision_widget)
         self.foxyface_solver_sercision_lb.setObjectName(u"foxyface_solver_sercision_lb")
+        self.foxyface_solver_sercision_lb.setText(u"Solver Precision (80%): ")
 
         self.horizontalLayout_100.addWidget(self.foxyface_solver_sercision_lb)
 
@@ -1411,24 +1418,14 @@ class Ui_SenderSettings(object):
 
         self.verticalLayout_15.addWidget(self.foxyface_cache_float_percision_widget)
 
-
-        self.verticalLayout_8.addWidget(self.widget_8)
-
-        self.foxyface_config_lb = QLabel(self.scrollAreaWidgetContents_5)
+        self.foxyface_config_lb = QLabel(self.widget_8)
         self.foxyface_config_lb.setObjectName(u"foxyface_config_lb")
         self.foxyface_config_lb.setFont(font)
         self.foxyface_config_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.verticalLayout_8.addWidget(self.foxyface_config_lb)
+        self.verticalLayout_15.addWidget(self.foxyface_config_lb)
 
-        self.foxyface_config_line = QFrame(self.scrollAreaWidgetContents_5)
-        self.foxyface_config_line.setObjectName(u"foxyface_config_line")
-        self.foxyface_config_line.setFrameShape(QFrame.Shape.HLine)
-        self.foxyface_config_line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.verticalLayout_8.addWidget(self.foxyface_config_line)
-
-        self.foxyface_avatar_config_widget = QWidget(self.scrollAreaWidgetContents_5)
+        self.foxyface_avatar_config_widget = QWidget(self.widget_8)
         self.foxyface_avatar_config_widget.setObjectName(u"foxyface_avatar_config_widget")
         self.horizontalLayout_24 = QHBoxLayout(self.foxyface_avatar_config_widget)
         self.horizontalLayout_24.setObjectName(u"horizontalLayout_24")
@@ -1449,7 +1446,17 @@ class Ui_SenderSettings(object):
         self.horizontalLayout_24.addWidget(self.foxyface_avatar_config_btn)
 
 
-        self.verticalLayout_8.addWidget(self.foxyface_avatar_config_widget)
+        self.verticalLayout_15.addWidget(self.foxyface_avatar_config_widget)
+
+        self.foxyface_config_line = QFrame(self.widget_8)
+        self.foxyface_config_line.setObjectName(u"foxyface_config_line")
+        self.foxyface_config_line.setFrameShape(QFrame.Shape.HLine)
+        self.foxyface_config_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_15.addWidget(self.foxyface_config_line)
+
+
+        self.verticalLayout_8.addWidget(self.widget_8)
 
         self.verticalSpacer_4 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -1515,8 +1522,8 @@ class Ui_SenderSettings(object):
         self.vrchat_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.vrchat_avatare_request_period_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Request Period:", None))
         self.vrchat_avatare_request_period_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
-        self.vrchat_error_sleep_tim_lb.setText(QCoreApplication.translate("SenderSettings", u"Sleep time after error:", None))
-        self.vrchat_error_sleep_tim_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
+        self.vrchat_error_sleep_time_lb.setText(QCoreApplication.translate("SenderSettings", u"Sleep time after error:", None))
+        self.vrchat_error_sleep_time_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.vrchat_close_connectio_lb.setText(QCoreApplication.translate("SenderSettings", u"Close connection after", None))
         self.vrchat_close_connectio_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" retries", None))
         self.vrchat_zeroconf_lb.setText(QCoreApplication.translate("SenderSettings", u"Zeroconf Timeout", None))
@@ -1526,7 +1533,6 @@ class Ui_SenderSettings(object):
         self.vrchat_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))
         self.vrchat_solver_model_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"Default Model", None))
         self.vrchat_solver_model_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
-        self.vrchat_solver_sercision_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver Precision (80%): ", None))
         self.vrchat_solver_threads_lb.setText(QCoreApplication.translate("SenderSettings", u"Thread Count:", None))
         self.vrchat_solver_max_fps_lb.setText(QCoreApplication.translate("SenderSettings", u"Max Solver FPS:", None))
         self.vrchat_cache_lb.setText(QCoreApplication.translate("SenderSettings", u"OSC Cache", None))
@@ -1543,7 +1549,7 @@ class Ui_SenderSettings(object):
         self.vrchat_avatar_config_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QCoreApplication.translate("SenderSettings", u"VRChat/ChilloutVR", None))
         self.ifm_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable iFacialMocap Router", None))
-        self.use_facemotion3d_protocol.setText(QCoreApplication.translate("SenderSettings", u"Use FaceMotion3D Protocol", None))
+        self.ifm_use_facemotion3d_protocol.setText(QCoreApplication.translate("SenderSettings", u"Use FaceMotion3D Protocol", None))
         self.ifm_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.ifm_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))
         self.ifm_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))
@@ -1554,7 +1560,6 @@ class Ui_SenderSettings(object):
         self.ifm_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))
         self.ifm_solver_model_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"Default Model", None))
         self.ifm_solver_model_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
-        self.ifm_solver_sercision_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver Precision (80%): ", None))
         self.ifm_solver_threads_lb.setText(QCoreApplication.translate("SenderSettings", u"Thread Count:", None))
         self.ifm_solver_max_fps_lb.setText(QCoreApplication.translate("SenderSettings", u"Max Solver FPS:", None))
         self.ifm_cache_lb.setText(QCoreApplication.translate("SenderSettings", u"UDP Cache", None))
@@ -1581,7 +1586,6 @@ class Ui_SenderSettings(object):
         self.meowface_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))
         self.meowface_solver_model_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"Default Model", None))
         self.meowface_solver_model_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
-        self.meowface_solver_sercision_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver Precision (80%): ", None))
         self.meowface_solver_threads_lb.setText(QCoreApplication.translate("SenderSettings", u"Thread Count:", None))
         self.meowface_solver_max_fps_lb.setText(QCoreApplication.translate("SenderSettings", u"Max Solver FPS:", None))
         self.meowface_cache_lb.setText(QCoreApplication.translate("SenderSettings", u"UDP Cache", None))
@@ -1608,7 +1612,6 @@ class Ui_SenderSettings(object):
         self.foxyface_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))
         self.foxyface_solver_model_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"Default Model", None))
         self.foxyface_solver_model_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
-        self.foxyface_solver_sercision_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver Precision (80%): ", None))
         self.foxyface_solver_threads_lb.setText(QCoreApplication.translate("SenderSettings", u"Thread Count:", None))
         self.foxyface_solver_max_fps_lb.setText(QCoreApplication.translate("SenderSettings", u"Max Solver FPS:", None))
         self.foxyface_cache_lb.setText(QCoreApplication.translate("SenderSettings", u"UDP Cache", None))

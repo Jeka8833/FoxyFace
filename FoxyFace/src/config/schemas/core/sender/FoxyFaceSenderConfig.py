@@ -5,7 +5,7 @@ from blendshape_router.facades.foxyface import FoxyFaceDefaultValue
 
 @dataclass(slots=True)
 class FoxyFaceSenderConfig:
-    enabled: bool = True
+    enabled: bool = False
 
     auto_connect_enabled: bool = FoxyFaceDefaultValue.UDP_AUTO_CONNECT_ENABLED
     ip: str = "localhost"

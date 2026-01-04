@@ -23,4 +23,4 @@ class Config(JSONWizard):
     media_pipe: MediaPipeConfig = field(default_factory=MediaPipeConfig)
     babble: BabbleConfig = field(default_factory=BabbleConfig)
     processing: ProcessingConfig = field(default_factory=ProcessingConfig)
-    sender_config: SenderConfig = field(default_factory=SenderConfig)
+    sender: SenderConfig = field(default_factory=SenderConfig)

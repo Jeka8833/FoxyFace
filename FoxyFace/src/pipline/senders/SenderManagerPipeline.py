@@ -35,16 +35,16 @@ class SenderManagerPipeline:
         self.__sender_update_listener.unregister()
 
     def __register_sender_toggle_update(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.sender_config.foxyface.enabled,
-                                                      lambda config: config.sender_config.ifacialmocap.enabled,
-                                                      lambda config: config.sender_config.meowface.enabled,
-                                                      lambda config: config.sender_config.vrchat.enabled]
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.sender.foxyface.enabled,
+                                                      lambda config: config.sender.ifacialmocap.enabled,
+                                                      lambda config: config.sender.meowface.enabled,
+                                                      lambda config: config.sender.vrchat.enabled]
 
         return self.__config_manager.create_update_listener(self.__sender_toggled_callback, watch_array, True)
 
     def __sender_toggled_callback(self, config_manager: ConfigManager):
         with self.__lock:
-            if config_manager.config.sender_config.foxyface.enabled:
+            if config_manager.config.sender.foxyface.enabled:
                 if "FoxyFace" not in self.__sender_active_set:
                     self.__sender_active_set["FoxyFace"] = FoxyFaceSenderPipeline(config_manager=config_manager)
             else:
@@ -53,7 +53,7 @@ class SenderManagerPipeline:
                 if value is not None:
                     value.close()
 
-            if config_manager.config.sender_config.ifacialmocap.enabled:
+            if config_manager.config.sender.ifacialmocap.enabled:
                 if "iFacialMocap" not in self.__sender_active_set:
                     self.__sender_active_set["iFacialMocap"] = None
             else:
@@ -63,7 +63,7 @@ class SenderManagerPipeline:
                     if value is not None:
                         value.close()
 
-            if config_manager.config.sender_config.meowface.enabled:
+            if config_manager.config.sender.meowface.enabled:
                 if "MeowFace" not in self.__sender_active_set:
                     self.__sender_active_set["MeowFace"] = None
             else:
@@ -73,7 +73,7 @@ class SenderManagerPipeline:
                     if value is not None:
                         value.close()
 
-            if config_manager.config.sender_config.vrchat.enabled:
+            if config_manager.config.sender.vrchat.enabled:
                 if "VRChat" not in self.__sender_active_set:
                     self.__sender_active_set["VRChat"] = None
             else:
