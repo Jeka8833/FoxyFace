@@ -37,6 +37,11 @@ from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.UdpPipeline import UdpPipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.config.ConfigManager import ConfigManager
+from config.schemas.avatar.AvatarConfig import AvatarConfig
+from config.schemas.avatar.AvatarConfigMigrationManager import AvatarConfigMigrationManager
+from config.schemas.main.Config import Config
+from config.schemas.main.ConfigMigrationManager import MainConfigMigrationManager
+from stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 
 _logger = logging.getLogger(__name__)
 
@@ -45,8 +50,29 @@ class RunMainStream:
     def __init__(self, splash_screen: QSplashScreen = None):
         _logger.info(f"Hello, I'm FoxyFace {str(AppConstants.VERSION)}")
 
-        self.__config_manager: ConfigManager = ConfigManager(Path("config.json"))
+        self.__config_manager: ConfigManager[Config] = ConfigManager[Config](path=Path("config.json"),
+                                                                             config_cls=Config,
+                                                                             migration_manager=MainConfigMigrationManager())
         self.__config_manager.load(wait=True)
+
+        self.__ifacialmocap_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
+            path=Path("avatars/ifacialmocap.json"), config_cls=AvatarConfig,
+            migration_manager=AvatarConfigMigrationManager())
+        self.__ifacialmocap_config.load(wait=True)
+
+        self.__foxyface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
+            path=Path("avatars/foxyface.json"), config_cls=AvatarConfig,
+            migration_manager=AvatarConfigMigrationManager()
+        )
+        self.__foxyface_config.load(wait=True)
+
+        self.__meowface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
+            path=Path("avatars/meowface.json"), config_cls=AvatarConfig,
+            migration_manager=AvatarConfigMigrationManager()
+        )
+        self.__meowface_config.load(wait=True)
+
+        self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(Path("avatars/vrchat"))
 
         self.__camera_pipeline: CameraPipeline = CameraPipeline(self.__config_manager)
         self.__media_pipe_pipeline: MediaPipePipeline = MediaPipePipeline(self.__config_manager, self.__camera_pipeline)
@@ -78,6 +104,10 @@ class RunMainStream:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.__config_manager.close()
+        self.__ifacialmocap_config.close()
+        self.__foxyface_config.close()
+        self.__meowface_config.close()
+        self.__vrchat_config.close()
 
         self.__babble_pipeline.close()
         self.__media_pipe_pipeline.close()

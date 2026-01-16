@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
-from src.config.schemas.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
+from config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from config.schemas.main.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 
 

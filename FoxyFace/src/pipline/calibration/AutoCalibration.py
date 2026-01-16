@@ -5,7 +5,7 @@ from statistics import median
 from threading import Event
 
 from src.config.ConfigManager import ConfigManager
-from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame

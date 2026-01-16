@@ -3,13 +3,13 @@ from dataclasses import dataclass, field
 from dataclass_wizard import JSONWizard
 
 from AppConstants import AppConstants
-from config.schemas.core.sender.SenderConfig import SenderConfig
-from src.config.schemas.core.AutoRunConfig import AutoRunConfig
-from src.config.schemas.core.BabbleConfig import BabbleConfig
-from src.config.schemas.core.CameraConfig import CameraConfig
-from src.config.schemas.core.MediaPipeConfig import MediaPipeConfig
-from src.config.schemas.core.ProcessingConfig import ProcessingConfig
-from src.config.schemas.gui.GuiConfig import GuiConfig
+from config.schemas.main.core.sender.SenderConfig import SenderConfig
+from config.schemas.main.core.AutoRunConfig import AutoRunConfig
+from config.schemas.main.core.BabbleConfig import BabbleConfig
+from config.schemas.main.core.CameraConfig import CameraConfig
+from config.schemas.main.core.MediaPipeConfig import MediaPipeConfig
+from config.schemas.main.core.ProcessingConfig import ProcessingConfig
+from config.schemas.main.gui.GuiConfig import GuiConfig
 
 
 @dataclass(slots=True)

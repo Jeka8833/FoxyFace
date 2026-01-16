@@ -9,7 +9,7 @@ from src.autorun.AutoRunOptions import AutoRunOptions
 from src.autorun.RunStrategyEnum import RunStrategyEnum
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
+from config.schemas.main.Config import Config
 
 _logger = logging.getLogger(__name__)
 

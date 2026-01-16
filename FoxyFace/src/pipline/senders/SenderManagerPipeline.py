@@ -5,18 +5,22 @@ from typing import Any
 
 from config.ConfigManager import ConfigManager
 from config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.Config import Config
+from config.schemas.main.Config import Config
 from pipline.ProcessingPipeline import ProcessingPipeline
 from pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
 from stream.core.StreamWriteOnly import StreamWriteOnly
 from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
+from stream.senders.config.AvatarConfigLoader import AvatarConfigLoader
+from stream.senders.vrchat.VRChatAvatarConfigLoader import VRChatAvatarConfigLoader
 
 _logger = logging.getLogger(__name__)
 
 
 class SenderManagerPipeline:
-    def __init__(self, config_manager: ConfigManager, processing_pipeline: ProcessingPipeline):
+    def __init__(self, config_manager: ConfigManager, processing_pipeline: ProcessingPipeline,
+                 vrchat_config_loader: VRChatAvatarConfigLoader, ifacialmocap_config_loader: AvatarConfigLoader,
+                 foxyface_config_loader: AvatarConfigLoader, meowface_config_loader: AvatarConfigLoader):
         self.__config_manager = config_manager
         self.__processing_pipeline = processing_pipeline
 

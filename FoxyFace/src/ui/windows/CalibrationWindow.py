@@ -6,7 +6,7 @@ from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QSizePolicy, QSpacerItem
 
 from src.config.ConfigManager import ConfigManager
-from src.config.schemas.core.ProcessingConfig import ProcessingConfig
+from config.schemas.main.core.ProcessingConfig import ProcessingConfig
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.ui.FoxyWindow import FoxyWindow

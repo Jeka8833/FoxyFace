@@ -1,8 +1,8 @@
 import copy
 import logging
-from typing import Any, Callable, TYPE_CHECKING
+from typing import Any, Callable, Generic, TYPE_CHECKING
 
-from src.config.schemas.Config import Config
+from src.config.AbstractConfig import T
 
 if TYPE_CHECKING:
     from src.config.ConfigManager import ConfigManager
@@ -10,12 +10,14 @@ if TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 
 
-class ConfigUpdateListener:
-    def __init__(self, config_manager: "ConfigManager", update_callback: Callable[["ConfigManager"], None],
-                 call_on_create: bool = False, watched_elements: list[Callable[[Config], Any]] = None):
+class ConfigUpdateListener(Generic[T]):
+    def __init__(self, config_manager: "ConfigManager[T]",
+                 update_callback: Callable[["ConfigManager[T]"], None],
+                 call_on_create: bool = False,
+                 watched_elements: list[Callable[[T], Any]] | None = None):
         self.__config_manager = config_manager
-        self.__update_callback: Callable[[ConfigManager], None] = update_callback
-        self.__watched_elements: list[Callable[[Config], Any]] | None = watched_elements
+        self.__update_callback = update_callback
+        self.__watched_elements = watched_elements
 
         self.__previous_values: list[Any] = [None] * (len(watched_elements) if watched_elements is not None else 0)
         self.__update_previous_values()
@@ -30,8 +32,9 @@ class ConfigUpdateListener:
         if self.__watched_elements is None:
             return
 
-        for i in range(len(self.__watched_elements)):
-            self.__previous_values[i] = copy.deepcopy(self.__watched_elements[i](self.__config_manager.config))
+        current_config = self.__config_manager.config
+        for i, watcher in enumerate(self.__watched_elements):
+            self.__previous_values[i] = copy.deepcopy(watcher(current_config))
 
     def call_update(self) -> bool:
         try:
@@ -39,11 +42,15 @@ class ConfigUpdateListener:
                 self.__update_callback(self.__config_manager)
                 return True
 
-            for i in range(len(self.__watched_elements)):
-                if self.__watched_elements[i](self.__config_manager.config) != self.__previous_values[i]:
+            current_config = self.__config_manager.config
+
+            for i, watcher in enumerate(self.__watched_elements):
+                new_val = watcher(current_config)
+                if new_val != self.__previous_values[i]:
                     self.__update_callback(self.__config_manager)
                     self.__update_previous_values()
                     return True
+
         except Exception:
             _logger.warning("Failed to call update", exc_info=True, stack_info=True)
 

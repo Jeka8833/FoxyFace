@@ -3,7 +3,7 @@ from typing import Any, Callable
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
+from config.schemas.main.Config import Config
 from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraPreview import CameraPreview
 from src.stream.camera.CameraProcessingOption import CameraProcessingOption

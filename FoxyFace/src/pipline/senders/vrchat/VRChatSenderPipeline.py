@@ -1,0 +1,2 @@
+class VRChatSenderPipeline:
+    pass

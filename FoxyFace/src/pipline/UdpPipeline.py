@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
+from config.schemas.main.Config import Config
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.stream.vrcft.VRCFTUdpSocket import VRCFTUdpSocket
 from src.stream.vrcft.VrcftAutoConnect import VrcftAutoConnect
