@@ -1,7 +1,9 @@
+from collections.abc import Callable
 from pathlib import Path
 
 from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
+from blendshape_router.util.ListenerManager import ListenerManager
 
 from config.ConfigManager import ConfigManager
 from config.schemas.avatar.AvatarConfig import AvatarConfig
@@ -13,6 +15,7 @@ class VRChatAvatarConfigManager:
         self.avatar_folder = avatar_folder
 
         self.__config_dict: dict[ConnectionNode, ConfigManager[AvatarConfig]] = {}
+        self.__listener_manager: ListenerManager = ListenerManager()
 
     def avatar_change(self, connection: ConnectionNode, avatar_info: AvatarInfo):
         comfig_manager = ConfigManager[AvatarConfig](path=self.avatar_folder / f"{avatar_info.avatar_id}.json",
@@ -23,11 +26,25 @@ class VRChatAvatarConfigManager:
 
         self.__config_dict[connection] = comfig_manager
 
+        self.__listener_manager.notify()
+
     def close_connection(self, connection: ConnectionNode):
         config_manager = self.__config_dict.pop(connection, None)
 
         if config_manager is not None:
             config_manager.close()
+
+        self.__listener_manager.notify()
+
+    @property
+    def configs(self) -> dict[ConnectionNode, ConfigManager[AvatarConfig]]:
+        return self.__config_dict
+
+    def subscribe_change(self, callback: Callable[[], None]):
+        self.__listener_manager.subscribe(callback)
+
+    def unsubscribe_change(self, callback: Callable[[], None]):
+        self.__listener_manager.unsubscribe(callback)
 
     def close(self):
         for config_manager in self.__config_dict.values():

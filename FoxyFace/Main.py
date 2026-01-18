@@ -26,6 +26,7 @@ else:
 # Do time-consuming things
 
 from pathlib import Path
+from util.PathUtil import PathUtil
 from AppConstants import AppConstants
 from src.UpdateChecker import UpdateChecker
 from src.autorun.SteamAutoRun import SteamAutoRun
@@ -56,23 +57,28 @@ class RunMainStream:
         self.__config_manager.load(wait=True)
 
         self.__ifacialmocap_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-            path=Path("avatars/ifacialmocap.json"), config_cls=AvatarConfig,
+            path=PathUtil.to_path_or_default(self.__config_manager.config.sender.ifacialmocap.avatar_config_file,
+                                             "avatars/ifacialmocap.json", strict=False), config_cls=AvatarConfig,
             migration_manager=AvatarConfigMigrationManager())
         self.__ifacialmocap_config.load(wait=True)
 
         self.__foxyface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-            path=Path("avatars/foxyface.json"), config_cls=AvatarConfig,
+            path=PathUtil.to_path_or_default(self.__config_manager.config.sender.foxyface.avatar_config_file,
+                                             "avatars/foxyface.json", strict=False), config_cls=AvatarConfig,
             migration_manager=AvatarConfigMigrationManager()
         )
         self.__foxyface_config.load(wait=True)
 
         self.__meowface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-            path=Path("avatars/meowface.json"), config_cls=AvatarConfig,
+            path=PathUtil.to_path_or_default(self.__config_manager.config.sender.meowface.avatar_config_file,
+                                             "avatars/meowface.json", strict=False), config_cls=AvatarConfig,
             migration_manager=AvatarConfigMigrationManager()
         )
         self.__meowface_config.load(wait=True)
 
-        self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(Path("avatars/vrchat"))
+        self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(
+            PathUtil.to_path_or_default(self.__config_manager.config.sender.vrchat.avatar_config_folder,
+                                        "avatars/vrchat", strict=False))
 
         self.__camera_pipeline: CameraPipeline = CameraPipeline(self.__config_manager)
         self.__media_pipe_pipeline: MediaPipePipeline = MediaPipePipeline(self.__config_manager, self.__camera_pipeline)

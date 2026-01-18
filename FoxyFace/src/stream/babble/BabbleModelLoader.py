@@ -7,6 +7,7 @@ from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
+from util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -41,10 +42,7 @@ class BabbleModelLoader:
         else:
             provider = ["CPUExecutionProvider"]
 
-        if not model_path or model_path.isspace():
-            path = BabbleModelLoader.get_base_model_path()
-        else:
-            path = Path(model_path).resolve(strict=True)
+        path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
 
         session = InferenceSession(path, opts, providers=provider)
 

@@ -5,11 +5,12 @@ from pathlib import Path
 from threading import Thread
 from typing import Any, Callable
 
+from config.schemas.main.Config import Config
 from src.autorun.AutoRunOptions import AutoRunOptions
 from src.autorun.RunStrategyEnum import RunStrategyEnum
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.main.Config import Config
+from util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -41,22 +42,20 @@ class SteamAutoRun:
                                                                             SteamAutoRun.__VRCHAT_STEAM_ID,
                                                                             self.__set_vrchat_error_message)
             elif self.__options.vrchat_strategy == RunStrategyEnum.USING_PATH:
-                if self.__options.vrchat_path and not self.__options.vrchat_path.isspace():
-                    path = Path(self.__options.vrchat_path).resolve(strict=True)
+                path = PathUtil.to_path(self.__options.vrchat_path)
+                if path is None:
+                    self.__last_error_message_vrchat = "VRChat path is invalid or empty"
 
-                    if path.is_file():
-                        self.__vrchat_thread = SteamAutoRun.__create_thread_and_run(self.__vrchat_thread,
-                                                                                    SteamAutoRun.__run_file_process,
-                                                                                    path,
-                                                                                    self.__set_vrchat_error_message)
-                    else:
-                        _logger.warning(f"Invalid file path: {path}")
-
-                        self.__last_error_message_vrchat = "VRChat path is invalid"
+                    _logger.warning("Process for VRChat failed, path is invalid")
+                elif path.is_file():
+                    self.__vrchat_thread = SteamAutoRun.__create_thread_and_run(self.__vrchat_thread,
+                                                                                SteamAutoRun.__run_file_process,
+                                                                                path,
+                                                                                self.__set_vrchat_error_message)
                 else:
-                    _logger.warning("Process for VRChat failed, path is empty")
+                    _logger.warning(f"Invalid file path: {path}")
 
-                    self.__last_error_message_vrchat = "VRChat path is empty"
+                    self.__last_error_message_vrchat = "VRChat path is not a file"
         except Exception as e:
             _logger.warning("Failed to run VRChat process", exc_info=True, stack_info=True)
 
@@ -69,21 +68,19 @@ class SteamAutoRun:
                                                                            SteamAutoRun.__VRCFACE_TRACKING_STEAM_ID,
                                                                            self.__set_vrcft_error_message)
             elif self.__options.vrcft_strategy == RunStrategyEnum.USING_PATH:
-                if self.__options.vrcft_path and not self.__options.vrcft_path.isspace():
-                    path = Path(self.__options.vrcft_path).resolve(strict=True)
+                path = PathUtil.to_path(self.__options.vrcft_path)
+                if path is None:
+                    self.__last_error_message_vrcft = "VRCFT path is invalid or empty"
 
-                    if path.is_file():
-                        self.__vrcft_thread = SteamAutoRun.__create_thread_and_run(self.__vrcft_thread,
-                                                                                   SteamAutoRun.__run_file_process,
-                                                                                   path, self.__set_vrcft_error_message)
-                    else:
-                        _logger.warning(f"Invalid file path: {path}")
-
-                        self.__last_error_message_vrcft = "VRCFT path is invalid"
+                    _logger.warning("Process for VRCFT failed, path is invalid")
+                elif path.is_file():
+                    self.__vrcft_thread = SteamAutoRun.__create_thread_and_run(self.__vrcft_thread,
+                                                                               SteamAutoRun.__run_file_process,
+                                                                               path, self.__set_vrcft_error_message)
                 else:
-                    _logger.warning("Process for VRCFT failed, path is empty")
+                    _logger.warning(f"Invalid file path: {path}")
 
-                    self.__last_error_message_vrcft = "VRCFT path is empty"
+                    self.__last_error_message_vrcft = "VRCFT path is not a file"
         except Exception as e:
             _logger.warning("Failed to run VRCFT process", exc_info=True, stack_info=True)
 
