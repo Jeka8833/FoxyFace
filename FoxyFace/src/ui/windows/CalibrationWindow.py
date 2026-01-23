@@ -5,16 +5,15 @@ import time
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QSizePolicy, QSpacerItem
 
-from src.config.ConfigManager import ConfigManager
 from config.schemas.main.core.ProcessingConfig import ProcessingConfig
+from src.config.ConfigManager import ConfigManager
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_CalibrationSettings import Ui_CalibrationWindow
 from src.ui.widgets.CalibrationWidget import CalibrationWidget
 
-_head_global: list[GeneralBlendShapeEnum] = [GeneralBlendShapeEnum.HeadPitch, GeneralBlendShapeEnum.HeadRoll,
-                                             GeneralBlendShapeEnum.HeadYaw, GeneralBlendShapeEnum.HeadX,
+_head_global: list[GeneralBlendShapeEnum] = [GeneralBlendShapeEnum.HeadX,
                                              GeneralBlendShapeEnum.HeadY, GeneralBlendShapeEnum.HeadZ]
 
 _head_upper: list[GeneralBlendShapeEnum] = [GeneralBlendShapeEnum.BrowDownLeft, GeneralBlendShapeEnum.BrowDownRight,
@@ -22,9 +21,11 @@ _head_upper: list[GeneralBlendShapeEnum] = [GeneralBlendShapeEnum.BrowDownLeft, 
                                             GeneralBlendShapeEnum.BrowOuterUpRight, GeneralBlendShapeEnum.EyeBlinkLeft,
                                             GeneralBlendShapeEnum.EyeBlinkRight, GeneralBlendShapeEnum.EyeSquintLeft,
                                             GeneralBlendShapeEnum.EyeSquintRight, GeneralBlendShapeEnum.EyeWideLeft,
-                                            GeneralBlendShapeEnum.EyeWideRight, GeneralBlendShapeEnum.EyeXLeft,
-                                            GeneralBlendShapeEnum.EyeXRight, GeneralBlendShapeEnum.EyeYLeft,
-                                            GeneralBlendShapeEnum.EyeYRight]
+                                            GeneralBlendShapeEnum.EyeWideRight, GeneralBlendShapeEnum.EyeLookDownLeft,
+                                            GeneralBlendShapeEnum.EyeLookDownRight, GeneralBlendShapeEnum.EyeLookInLeft,
+                                            GeneralBlendShapeEnum.EyeLookInRight, GeneralBlendShapeEnum.EyeLookOutLeft,
+                                            GeneralBlendShapeEnum.EyeLookOutRight, GeneralBlendShapeEnum.EyeLookUpLeft,
+                                            GeneralBlendShapeEnum.EyeLookUpRight]
 
 _head_bottom: list[GeneralBlendShapeEnum] = [GeneralBlendShapeEnum.CheekPuffLeft, GeneralBlendShapeEnum.CheekPuffRight,
                                              GeneralBlendShapeEnum.CheekSuckLeft, GeneralBlendShapeEnum.CheekSuckRight,

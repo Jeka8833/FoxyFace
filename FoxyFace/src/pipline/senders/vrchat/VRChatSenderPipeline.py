@@ -3,7 +3,9 @@ from collections.abc import Callable
 from typing import Any
 
 from blendshape_router.VRChatBuilder import VRChatBuilder
+from blendshape_router.facades.vrchat.VRChat import VRChat
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.VRChatConnectionPool import VRChatConnectionPool
+from blendshape_router.preset.ARKitGraph import ARKitGraph
 from blendshape_router.solver.SolverPath import SolverPath
 from blendshape_router.solver.model.loader.ModelLoader import ModelLoader
 from zeroconf import Zeroconf
@@ -30,9 +32,15 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
 
         self.__zeroconf: Zeroconf = Zeroconf()
         self.__connection_pool: VRChatConnectionPool = VRChatConnectionPool()
+        self.__vrchat: VRChat | None = None
 
     def put(self, value: BlendShapesFrame[GeneralBlendShapeEnum]) -> bool:
-        pass
+        vrchat = self.__vrchat
+        if vrchat is not None:
+            for key, value in value.blend_shapes.items():
+                vrchat.set_parameter()
+
+        return True
 
     def close(self):
         self.__main_config_listener.unregister()
@@ -52,6 +60,13 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
         return self.__
 
     def __main_config_changed(self, config_manager: ConfigManager[Config]):
+        if self.__vrchat is not None:
+            self.__vrchat.close()
+            self.__vrchat = None
+
+        if not config_manager.config.sender.vrchat.enabled:
+            return
+
         builder = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
                    .with_avatar_update_period(config_manager.config.sender.vrchat.avatar_update_period)
                    .with_avatar_error_sleep_time(config_manager.config.sender.vrchat.avatar_error_sleep_time)
@@ -62,11 +77,17 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
                    .with_osc_cache_full_sync_period(config_manager.config.sender.vrchat.cache_full_sync_period)
                    .with_osc_cache_float_precision(config_manager.config.sender.vrchat.cache_float_precision)
                    .with_osc_bundle_size(config_manager.config.sender.vrchat.osc_bundle_size)
+                   .with_legacy_graph(config_manager.config.sender.vrchat.allow_legacy_graph)
+                   .with_parser_max_binary_bits(config_manager.config.sender.vrchat.parser_max_binary_bits)
+                   .with_test_send_period(config_manager.config.sender.vrchat.test_send_period)
+                   .with_test_animation_period(config_manager.config.sender.vrchat.test_animation_period)
 
+                   .add_graph(ARKitGraph())
                    )
 
         if config_manager.config.sender.vrchat.solver_enabled:
-            model = self.__get_model(config_manager.config.sender.vrchat.solver_model_path)
+            model = ModelLoader(PathUtil.to_path_or_default(config_manager.config.sender.vrchat.solver_model_path,
+                                                            SolverPath.get_default_asset_path()))
 
             if model is not None:
                 clamped_percentage = max(0.0, min(1.0,
@@ -80,16 +101,7 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
                  .with_solver_max_cps(config_manager.config.sender.vrchat.solver_max_cps)
                  .with_solver_interleaved_vertices_count(vertices_count))
 
+        self.__vrchat = builder.build()
+
     def __avatar_config_changed(self, avatar_config_manager: ConfigManager):
         pass
-
-    @staticmethod
-    def __get_model(custom_model_path: str) -> ModelLoader | None:
-        model_path = PathUtil.to_path_or_default(custom_model_path, SolverPath.get_default_asset_path())
-
-        try:
-            return ModelLoader(model_path)
-        except Exception:
-            _logger.warning("Failed to load custom model", exc_info=True, stack_info=True)
-
-        return None

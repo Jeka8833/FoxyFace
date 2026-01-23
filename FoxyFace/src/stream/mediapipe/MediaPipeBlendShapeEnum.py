@@ -13,6 +13,14 @@ class MediaPipeBlendShapeEnum(Enum):
     CheekSquintRight = "cheekSquintRight"
     EyeBlinkLeft = "eyeBlinkLeft"
     EyeBlinkRight = "eyeBlinkRight"
+    EyeLookDownLeft = "eyeLookDownLeft",
+    EyeLookDownRight = "eyeLookDownRight"
+    EyeLookInLeft = "eyeLookInLeft"
+    EyeLookInRight = "eyeLookInRight"
+    EyeLookOutLeft = "eyeLookOutLeft"
+    EyeLookOutRight = "eyeLookOutRight"
+    EyeLookUpLeft = "eyeLookUpLeft"
+    EyeLookUpRight = "eyeLookUpRight"
     EyeSquintLeft = "eyeSquintLeft"
     EyeSquintRight = "eyeSquintRight"
     EyeWideLeft = "eyeWideLeft"
@@ -47,17 +55,9 @@ class MediaPipeBlendShapeEnum(Enum):
     NoseSneerLeft = "noseSneerLeft"
     NoseSneerRight = "noseSneerRight"
 
+    HeadRotation = "headRotation"  # not a float type, it's a Rotation class
+
     # Synthetic blend shapes
-    EyeXLeft = "EyeXLeft"
-    EyeXRight = "EyeXRight"
-
-    EyeYLeft = "EyeYLeft"
-    EyeYRight = "EyeYRight"
-
     HeadX = "HeadX"
     HeadY = "HeadY"
     HeadZ = "HeadZ"
-
-    HeadPitch = "HeadPitch"
-    HeadYaw = "HeadYaw"
-    HeadRoll = "HeadRoll"

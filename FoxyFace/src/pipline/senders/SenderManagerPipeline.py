@@ -11,8 +11,6 @@ from pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeli
 from stream.core.StreamWriteOnly import StreamWriteOnly
 from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
-from stream.senders.config.AvatarConfigLoader import AvatarConfigLoader
-from stream.senders.vrchat.VRChatAvatarConfigLoader import VRChatAvatarConfigLoader
 
 _logger = logging.getLogger(__name__)
 

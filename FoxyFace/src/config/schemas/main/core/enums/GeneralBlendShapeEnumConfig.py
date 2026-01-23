@@ -60,20 +60,22 @@ class GeneralBlendShapeEnumConfig(StrEnum):
     CheekSquintRight = GeneralBlendShapeEnum.CheekSquintRight.name
     EyeBlinkLeft = GeneralBlendShapeEnum.EyeBlinkLeft.name
     EyeBlinkRight = GeneralBlendShapeEnum.EyeBlinkRight.name
+    EyeLookDownLeft = GeneralBlendShapeEnum.EyeLookDownLeft.name
+    EyeLookDownRight =GeneralBlendShapeEnum.EyeLookDownRight.name
+    EyeLookInLeft = GeneralBlendShapeEnum.EyeLookInLeft.name
+    EyeLookInRight = GeneralBlendShapeEnum.EyeLookInRight.name
+    EyeLookOutLeft = GeneralBlendShapeEnum.EyeLookOutLeft.name
+    EyeLookOutRight = GeneralBlendShapeEnum.EyeLookOutRight.name
+    EyeLookUpLeft = GeneralBlendShapeEnum.EyeLookUpLeft.name
+    EyeLookUpRight = GeneralBlendShapeEnum.EyeLookUpRight.name
     EyeSquintLeft = GeneralBlendShapeEnum.EyeSquintLeft.name
     EyeSquintRight = GeneralBlendShapeEnum.EyeSquintRight.name
     EyeWideLeft = GeneralBlendShapeEnum.EyeWideLeft.name
     EyeWideRight = GeneralBlendShapeEnum.EyeWideRight.name
-    EyeXLeft = GeneralBlendShapeEnum.EyeXLeft.name
-    EyeXRight = GeneralBlendShapeEnum.EyeXRight.name
-    EyeYLeft = GeneralBlendShapeEnum.EyeYLeft.name
-    EyeYRight = GeneralBlendShapeEnum.EyeYRight.name
     HeadX = GeneralBlendShapeEnum.HeadX.name
     HeadY = GeneralBlendShapeEnum.HeadY.name
     HeadZ = GeneralBlendShapeEnum.HeadZ.name
-    HeadPitch = GeneralBlendShapeEnum.HeadPitch.name
-    HeadYaw = GeneralBlendShapeEnum.HeadYaw.name
-    HeadRoll = GeneralBlendShapeEnum.HeadRoll.name
+    HeadRotation = GeneralBlendShapeEnum.HeadRotation.name
 
     def to_original(self) -> GeneralBlendShapeEnum:
         return GeneralBlendShapeEnum[self.name]
