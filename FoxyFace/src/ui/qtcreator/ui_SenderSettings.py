@@ -25,7 +25,7 @@ class Ui_SenderSettings(object):
     def setupUi(self, SenderSettings):
         if not SenderSettings.objectName():
             SenderSettings.setObjectName(u"SenderSettings")
-        SenderSettings.resize(408, 598)
+        SenderSettings.resize(408, 589)
         self.centralwidget = QWidget(SenderSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_4 = QVBoxLayout(self.centralwidget)

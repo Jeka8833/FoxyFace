@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from blendshape_router.facades.vrchat import VRChatDefaultValue
 
@@ -6,6 +6,8 @@ from blendshape_router.facades.vrchat import VRChatDefaultValue
 @dataclass(slots=True)
 class VRChatSenderConfig:
     enabled: bool = True
+
+    blocked_ips: list[str] = field(default_factory=list)
 
     avatar_update_period: float = VRChatDefaultValue.AVATAR_UPDATE_PERIOD
     avatar_error_sleep_time: float = VRChatDefaultValue.AVATAR_ERROR_SLEEP_TIME

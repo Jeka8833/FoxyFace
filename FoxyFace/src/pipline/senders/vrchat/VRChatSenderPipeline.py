@@ -1,11 +1,17 @@
 import logging
 from collections.abc import Callable
+from ipaddress import ip_address
 from typing import Any
 
 from blendshape_router.VRChatBuilder import VRChatBuilder
 from blendshape_router.facades.vrchat.VRChat import VRChat
+from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
+from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.VRChatConnectionPool import VRChatConnectionPool
 from blendshape_router.preset.ARKitGraph import ARKitGraph
+from blendshape_router.preset.ARKitParameter import ARKitParameter
+from blendshape_router.preset.BaseParameter import BaseParameter
+from blendshape_router.router.EndpointEncoderInterface import EndpointEncoderInterface
 from blendshape_router.solver.SolverPath import SolverPath
 from blendshape_router.solver.model.loader.ModelLoader import ModelLoader
 from zeroconf import Zeroconf
@@ -16,14 +22,13 @@ from config.schemas.avatar.AvatarConfig import AvatarConfig
 from config.schemas.main.Config import Config
 from stream.core.StreamWriteOnly import StreamWriteOnly
 from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 from util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
 
-class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnum]]):
+class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKitParameter]]):
     def __init__(self, config_manager: ConfigManager, avatar_config_manager: VRChatAvatarConfigManager):
         self.__config_manager: ConfigManager = config_manager
         self.__avatar_config_manager: VRChatAvatarConfigManager = avatar_config_manager
@@ -34,18 +39,21 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
         self.__connection_pool: VRChatConnectionPool = VRChatConnectionPool()
         self.__vrchat: VRChat | None = None
 
-    def put(self, value: BlendShapesFrame[GeneralBlendShapeEnum]) -> bool:
+    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
         vrchat = self.__vrchat
         if vrchat is not None:
-            for key, value in value.blend_shapes.items():
-                vrchat.set_parameter()
+            for node, node_value in value.blend_shapes.items():
+                vrchat.set_parameter(node, node_value)
 
         return True
 
     def close(self):
         self.__main_config_listener.unregister()
 
+        self.__vrchat.close()
+
         self.__zeroconf.close()
+        self.__connection_pool.close()
 
     def __register_main_config_change_update(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.sender.vrchat]
@@ -68,6 +76,10 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
             return
 
         builder = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
+                   .with_ip_filter(self.__ip_filter)
+                   .with_avatar_parameter_filter(self.__avatar_parameter_filter)
+                   .with_connection_closed_listener(self.__connection_closed)
+
                    .with_avatar_update_period(config_manager.config.sender.vrchat.avatar_update_period)
                    .with_avatar_error_sleep_time(config_manager.config.sender.vrchat.avatar_error_sleep_time)
                    .with_avatar_close_connection_after_retries(
@@ -105,3 +117,26 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnu
 
     def __avatar_config_changed(self, avatar_config_manager: ConfigManager):
         pass
+
+    def __ip_filter(self, node: ConnectionNode) -> bool:
+        for ip in self.__config_manager.config.sender.vrchat.blocked_ips:
+            try:
+                parsed_ip = ip_address(ip)
+
+                if parsed_ip is node.send_address.host:
+                    _logger.info(f"Ip {parsed_ip} is blocked")
+
+                    return False
+            except Exception:
+                _logger.warning("Fail to parse VRChat blocked IP")
+
+        return True
+
+    def __avatar_parameter_filter(self, node: ConnectionNode, avatar: AvatarInfo) -> frozenset[
+        EndpointEncoderInterface[dict[str, float | bool | list[float]]]]:
+        _logger.info(f"Found avatar: {avatar.avatar_id}, connection: {node.name}, endpoints: {avatar.endpoints}")
+
+        return avatar.endpoints
+
+    def __connection_closed(self, node: ConnectionNode):
+        self.__avatar_config_manager.close_connection(node)
