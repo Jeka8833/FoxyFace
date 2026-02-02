@@ -1,7 +1,9 @@
 from collections.abc import Callable
 from pathlib import Path
+from threading import Lock
 
 from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
+from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
 from blendshape_router.util.ListenerManager import ListenerManager
 
 from config.ConfigManager import ConfigManager
@@ -13,41 +15,47 @@ class VRChatAvatarConfigManager:
     def __init__(self, avatar_folder: Path):
         self.avatar_folder = avatar_folder
 
-        self.__config_dict: dict[str, ConfigManager[AvatarConfig]] = {}
+        self.__lock: Lock = Lock()
+        self.__config_dict: dict[ConnectionNode, ConfigManager[AvatarConfig]] = {}
         self.__listener_manager: ListenerManager = ListenerManager()
 
-    def avatar_change(self, avatar: str, avatar_info: AvatarInfo):
-        comfig_manager = ConfigManager[AvatarConfig](path=self.avatar_folder / f"{avatar_info.avatar_id}.json",
-                                                     config_cls=AvatarConfig,
-                                                     migration_manager=AvatarConfigMigrationManager())
+    def get_config_or_load(self, connection: ConnectionNode, avatar_info: AvatarInfo):
+        with self.__lock:
+            config = self.__config_dict.get(connection)
 
-        comfig_manager.load(wait=True)
+            if config is not None:
+                return config
 
-        self.__config_dict[avatar] = comfig_manager
+            config_manager = ConfigManager[AvatarConfig](path=self.avatar_folder / f"{avatar_info.avatar_id}.json",
+                                                         config_cls=AvatarConfig,
+                                                         migration_manager=AvatarConfigMigrationManager())
 
-        self.__listener_manager.notify()
+            config_manager.load(wait=True)
 
-    def close_connection(self, avatar: str):
-        config_manager = self.__config_dict.pop(avatar, None)
+            self.__config_dict[connection] = config_manager
 
-        if config_manager is not None:
-            config_manager.close()
+            self.__listener_manager.notify(connection, config_manager, True)
 
-        self.__listener_manager.notify()
+            return config_manager
 
-    @property
-    def configs(self) -> dict[str, ConfigManager[AvatarConfig]]:
-        return self.__config_dict
+    def close_connection(self, connection: ConnectionNode):
+        with self.__lock:
+            config_manager = self.__config_dict.pop(connection, None)
 
-    def subscribe_change(self, callback: Callable[[], None]):
+            if config_manager is not None:
+                config_manager.close()
+
+                self.__listener_manager.notify(connection, config_manager, False)
+
+    def subscribe_change(self, callback: Callable[[ConnectionNode, ConfigManager, bool], None]):
         self.__listener_manager.subscribe(callback)
 
-    def unsubscribe_change(self, callback: Callable[[], None]):
+    def unsubscribe_change(self, callback: Callable[[ConnectionNode, ConfigManager, bool], None]):
         self.__listener_manager.unsubscribe(callback)
 
     def close(self):
-        for config_manager in self.__config_dict.values():
-            config_manager.close()
+        for connection in frozenset(self.__config_dict.keys()):
+            self.close_connection(connection)
 
     def __enter__(self):
         return self

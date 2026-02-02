@@ -9,7 +9,7 @@ from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 
 
 class FoxyFaceSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnum]]):
-    def __init__(self, config_manager: ConfigManager):
+    def __init__(self, config_manager: ConfigManager, foxyface_config_manager: ConfigManager):
         self.__config_manager: ConfigManager = config_manager
 
         self.__stream_listener: ConfigUpdateListener = self.__register_change_update()
