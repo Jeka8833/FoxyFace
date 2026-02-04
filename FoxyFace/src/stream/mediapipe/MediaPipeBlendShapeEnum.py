@@ -13,7 +13,7 @@ class MediaPipeBlendShapeEnum(Enum):
     CheekSquintRight = "cheekSquintRight"
     EyeBlinkLeft = "eyeBlinkLeft"
     EyeBlinkRight = "eyeBlinkRight"
-    EyeLookDownLeft = "eyeLookDownLeft",
+    EyeLookDownLeft = "eyeLookDownLeft"
     EyeLookDownRight = "eyeLookDownRight"
     EyeLookInLeft = "eyeLookInLeft"
     EyeLookInRight = "eyeLookInRight"

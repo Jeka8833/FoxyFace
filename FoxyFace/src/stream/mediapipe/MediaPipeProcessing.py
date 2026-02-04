@@ -32,7 +32,7 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
             shapes[MediaPipeBlendShapeEnum.HeadRotation] = rotation
 
         for shape in value.face_landmarker_result.face_blendshapes[0]:
-            if shape.category_name is "_neutral":
+            if shape.category_name == "_neutral":
                 continue
 
             shapes[MediaPipeBlendShapeEnum(shape.category_name)] = shape.score

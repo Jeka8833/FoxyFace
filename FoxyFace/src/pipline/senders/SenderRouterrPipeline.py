@@ -1,13 +1,13 @@
 import logging
 from threading import Event, Thread
 
-from config.ConfigManager import ConfigManager
-from pipline.ProcessingPipeline import ProcessingPipeline
-from pipline.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
-from pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
-from pipline.senders.vrchat.VRChatSenderPipeline import VRChatSenderPipeline
-from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
+from src.config.ConfigManager import ConfigManager
+from src.pipline.ProcessingPipeline import ProcessingPipeline
+from src.pipline.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
+from src.pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
+from src.pipline.senders.vrchat.VRChatSenderPipeline import VRChatSenderPipeline
+from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 
 _logger = logging.getLogger(__name__)
 
@@ -50,6 +50,8 @@ class SenderRouterPipeline:
                         sender.put(blendshape_frame)
                     except Exception:
                         _logger.warning("Exception in sender", exc_info=True, stack_info=True)
+            except InterruptedError:
+                return
             except Exception:
                 _logger.warning("Sender pipeline error", exc_info=True, stack_info=True)
 

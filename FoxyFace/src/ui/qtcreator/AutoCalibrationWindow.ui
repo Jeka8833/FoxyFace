@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
+    <width>312</width>
     <height>397</height>
    </rect>
   </property>
@@ -121,6 +121,46 @@
           </item>
           <item>
            <property name="text">
+            <string>EyeLookDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookInLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookInRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookOutLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookOutRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>EyeSquintLeft</string>
            </property>
           </item>
@@ -137,26 +177,6 @@
           <item>
            <property name="text">
             <string>EyeWideRight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeXLeft</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeXRight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeYLeft</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeYRight</string>
            </property>
           </item>
           <item>
@@ -530,6 +550,46 @@
           </item>
           <item>
            <property name="text">
+            <string>EyeLookDownLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookDownRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookInLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookInRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookOutLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookOutRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookUpLeft</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>EyeLookUpRight</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>EyeSquintLeft</string>
            </property>
           </item>
@@ -546,26 +606,6 @@
           <item>
            <property name="text">
             <string>EyeWideRight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeXLeft</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeXRight</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeYLeft</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>EyeYRight</string>
            </property>
           </item>
           <item>

@@ -103,4 +103,4 @@ class GeneralBlendShapeEnum(Enum):
     HeadX = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadX], min_value=-1.0, has_center=True)
     HeadY = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadY], min_value=-1.0, has_center=True)
     HeadZ = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadZ], min_value=-1.0, has_center=True)
-    HeadRotation = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadRotation])
+    HeadRotation = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadRotation], disable_calibration=True)

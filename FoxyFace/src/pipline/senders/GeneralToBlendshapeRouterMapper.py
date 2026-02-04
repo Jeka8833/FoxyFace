@@ -3,7 +3,7 @@ from blendshape_router.preset.BaseParameter import BaseParameter
 from blendshape_router.preset.EyeCalculations import EyeCalculations
 from scipy.spatial.transform import Rotation
 
-from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
+from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 
 
 class GeneralToBlendshapeRouterMapper:

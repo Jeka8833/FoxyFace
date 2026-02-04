@@ -38,8 +38,6 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         self.__config_manager: ConfigManager[Config] = config_manager
         self.__avatar_config_manager: VRChatAvatarConfigManager = avatar_config_manager
 
-        self.__main_config_listener: ConfigUpdateListener = self.__register_main_config_change_update()
-
         self.__zeroconf: Zeroconf = Zeroconf()
         self.__connection_pool: VRChatConnectionPool = VRChatConnectionPool()
         self.__vrchat: VRChat | None = None
@@ -54,13 +52,19 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
                                                      name="Find VRChat Instance Thread")
         self.__find_instance_thread.start()
 
+        self.__main_config_listener: ConfigUpdateListener = self.__register_main_config_change_update()
         avatar_config_manager.subscribe_change(self.__avatar_config_list_changed)
 
     def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
         vrchat = self.__vrchat
         if vrchat is not None:
             for node, node_value in value.blend_shapes.items():
+                if node_value is None:
+                    continue
+
                 vrchat.set_parameter(node, node_value)
+
+            vrchat.flush()
 
         return True
 
@@ -214,7 +218,8 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
                                                 max_cps=self.__config_manager.config.sender.vrchat.solver_max_cps,
                                                 disable_input_nodes=disabled_inputs,
                                                 disable_output_nodes=disabled_outputs)
-
+            except InterruptedError:
+                return
             except Exception:
                 _logger.warning("VRchat find thread error", exc_info=True, stack_info=True)
 

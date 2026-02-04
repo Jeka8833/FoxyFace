@@ -5,8 +5,9 @@ from dataclasses import dataclass, field
 class GuiAutoCalibrationWindowConfig:
     selection_neutral_position: list[str] = field(
         default_factory=lambda: ["CheekPuffLeft", "CheekPuffRight", "CheekSuckLeft", "CheekSuckRight", "TongueOut",
-                                 "EyeXLeft", "EyeXRight", "EyeYLeft", "EyeYRight", "HeadX", "HeadY", "HeadZ",
-                                 "HeadRotation"])
+                                 "EyeLookDownLeft", "EyeLookDownRight", "EyeLookInLeft", "EyeLookInRight",
+                                 "EyeLookOutLeft", "EyeLookOutRight", "EyeLookUpLeft", "EyeLookUpRight", "HeadX",
+                                 "HeadY", "HeadZ", "HeadRotation"])
     selection_max_position: list[str] = field(
         default_factory=lambda: ["CheekPuffLeft", "CheekPuffRight", "CheekSuckLeft", "CheekSuckRight", "TongueOut",
                                  "TongueUp", "TongueDown", "TongueLeft", "TongueRight", "TongueRoll", "TongueBendDown",

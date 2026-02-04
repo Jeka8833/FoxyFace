@@ -13,7 +13,6 @@ from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.CameraPipeline import CameraPipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
-from src.pipline.UdpPipeline import UdpPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.ui import UiImageUtil
 from src.ui.FoxyWindow import FoxyWindow
@@ -41,8 +40,8 @@ class MainWindow(FoxyWindow):
 
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
                  mediapipe_pipeline: MediaPipePipeline, babble_pipeline: BabblePipeline,
-                 processing_pipeline: ProcessingPipeline, udp_pipeline: UdpPipeline,
-                 auto_calibration_endpoint: AutoCalibrationEndpoint, steam_auto_run: SteamAutoRun):
+                 processing_pipeline: ProcessingPipeline, auto_calibration_endpoint: AutoCalibrationEndpoint,
+                 steam_auto_run: SteamAutoRun):
         super().__init__()
 
         self.is_closed: threading.Event = threading.Event()
@@ -52,7 +51,6 @@ class MainWindow(FoxyWindow):
         self.__media_pipe_pipeline = mediapipe_pipeline
         self.__babble_pipeline = babble_pipeline
         self.__processing_pipeline = processing_pipeline
-        self.__udp_pipeline = udp_pipeline
         self.__auto_calibration_endpoint = auto_calibration_endpoint
         self.__steam_auto_run = steam_auto_run
 
