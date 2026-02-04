@@ -3,7 +3,7 @@ from typing import Any, Callable
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.main.Config import Config
+from src.config.schemas.main.Config import Config
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader

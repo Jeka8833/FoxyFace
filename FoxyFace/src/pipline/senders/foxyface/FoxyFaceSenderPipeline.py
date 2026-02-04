@@ -1,11 +1,11 @@
 from typing import Callable, Any
 
-from config.ConfigManager import ConfigManager
-from config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.main.Config import Config
-from stream.core.StreamWriteOnly import StreamWriteOnly
-from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
+from src.config.ConfigManager import ConfigManager
+from src.config.ConfigUpdateListener import ConfigUpdateListener
+from src.config.schemas.main.Config import Config
+from src.stream.core.StreamWriteOnly import StreamWriteOnly
+from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 
 
 class FoxyFaceSenderPipeline(StreamWriteOnly[BlendShapesFrame[GeneralBlendShapeEnum]]):

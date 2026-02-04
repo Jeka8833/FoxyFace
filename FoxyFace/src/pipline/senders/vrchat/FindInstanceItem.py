@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from config.ConfigManager import ConfigManager
-from config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.config.ConfigManager import ConfigManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 
 
 @dataclass(slots=True)

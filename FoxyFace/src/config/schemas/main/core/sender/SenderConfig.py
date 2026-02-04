@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
-from config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
-from config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
-from config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
+from src.config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
+from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
+from src.config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
+from src.config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
 
 
 @dataclass(slots=True)

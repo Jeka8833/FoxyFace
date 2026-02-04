@@ -2,9 +2,9 @@ import logging
 
 from PySide6.QtWidgets import QFileDialog
 
-from config.ConfigManager import ConfigManager
-from ui.FoxyWindow import FoxyWindow
-from ui.qtcreator.ui_SenderSettings import Ui_SenderSettings
+from src.config.ConfigManager import ConfigManager
+from src.ui.FoxyWindow import FoxyWindow
+from src.ui.qtcreator.ui_SenderSettings import Ui_SenderSettings
 
 _logger = logging.getLogger(__name__)
 

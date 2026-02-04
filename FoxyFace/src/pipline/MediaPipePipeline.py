@@ -6,7 +6,7 @@ from scipy.spatial.transform import Rotation
 from AppConstants import AppConstants
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.main.Config import Config
+from src.config.schemas.main.Config import Config
 from src.pipline.CameraPipeline import CameraPipeline
 from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraProcessing import CameraProcessing

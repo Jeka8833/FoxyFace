@@ -61,7 +61,7 @@ class GeneralBlendShapeEnumConfig(StrEnum):
     EyeBlinkLeft = GeneralBlendShapeEnum.EyeBlinkLeft.name
     EyeBlinkRight = GeneralBlendShapeEnum.EyeBlinkRight.name
     EyeLookDownLeft = GeneralBlendShapeEnum.EyeLookDownLeft.name
-    EyeLookDownRight =GeneralBlendShapeEnum.EyeLookDownRight.name
+    EyeLookDownRight = GeneralBlendShapeEnum.EyeLookDownRight.name
     EyeLookInLeft = GeneralBlendShapeEnum.EyeLookInLeft.name
     EyeLookInRight = GeneralBlendShapeEnum.EyeLookInRight.name
     EyeLookOutLeft = GeneralBlendShapeEnum.EyeLookOutLeft.name

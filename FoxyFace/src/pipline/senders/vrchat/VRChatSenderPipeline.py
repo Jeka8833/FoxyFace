@@ -18,15 +18,15 @@ from blendshape_router.solver.graph.SolverNode import SolverNode
 from blendshape_router.solver.model.loader.ModelLoader import ModelLoader
 from zeroconf import Zeroconf
 
-from config.ConfigManager import ConfigManager
-from config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.avatar.AvatarConfig import AvatarConfig
-from config.schemas.main.Config import Config
-from pipline.senders.vrchat.FindInstanceItem import FindInstanceItem
-from stream.core.StreamWriteOnly import StreamWriteOnly
-from stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
-from util.PathUtil import PathUtil
+from src.config.ConfigManager import ConfigManager
+from src.config.ConfigUpdateListener import ConfigUpdateListener
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.config.schemas.main.Config import Config
+from src.pipline.senders.vrchat.FindInstanceItem import FindInstanceItem
+from src.stream.core.StreamWriteOnly import StreamWriteOnly
+from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
+from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 

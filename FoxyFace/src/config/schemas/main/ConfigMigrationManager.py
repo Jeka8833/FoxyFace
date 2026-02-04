@@ -4,7 +4,7 @@ from packaging.version import Version
 
 from AppConstants import AppConstants
 from src.config.AbstractConfig import MigrationManager
-from config.schemas.main.Config import Config
+from src.config.schemas.main.Config import Config
 
 _logger = logging.getLogger(__name__)
 

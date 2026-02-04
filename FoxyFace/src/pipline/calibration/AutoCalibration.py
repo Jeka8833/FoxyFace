@@ -5,7 +5,7 @@ from statistics import median
 from threading import Event
 
 from src.config.ConfigManager import ConfigManager
-from config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from src.config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
@@ -69,7 +69,7 @@ class AutoCalibration:
                     self.__media_pipe_stream.poll(average_time).face_landmarker_result.facial_transformation_matrixes[0]
 
                 self.__config_manager.config.media_pipe.head_rotation_transformation = transformation_matrix[0:3,
-                                                                                       0:3].transpose().tolist()
+                0:3].transpose().tolist()
             except TimeoutError:
                 return False
             except InterruptedError:

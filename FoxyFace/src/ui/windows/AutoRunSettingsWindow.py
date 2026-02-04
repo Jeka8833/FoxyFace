@@ -7,7 +7,7 @@ from src.autorun.RunStrategyEnum import RunStrategyEnum
 from src.autorun.SteamAutoRun import SteamAutoRun
 from src.config.ConfigManager import ConfigManager
 from src.ui.FoxyWindow import FoxyWindow
-from ui.qtcreator.ui_AutoRunSettings import Ui_AutoRunSettings
+from src.ui.qtcreator.ui_AutoRunSettings import Ui_AutoRunSettings
 
 _logger = logging.getLogger(__name__)
 

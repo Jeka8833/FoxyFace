@@ -7,7 +7,7 @@ from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
-from util.PathUtil import PathUtil
+from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 

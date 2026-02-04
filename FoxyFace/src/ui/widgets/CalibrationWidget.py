@@ -5,9 +5,9 @@ from PySide6.QtWidgets import QWidget
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from config.schemas.main.Config import Config
-from config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
-from config.schemas.main.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
+from src.config.schemas.main.Config import Config
+from src.config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from src.config.schemas.main.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum

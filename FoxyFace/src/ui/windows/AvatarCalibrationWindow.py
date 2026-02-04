@@ -1,6 +1,6 @@
-from config.ConfigManager import ConfigManager
-from ui.FoxyWindow import FoxyWindow
-from ui.qtcreator.ui_AvatarCalibration import Ui_AvatarCalibration
+from src.config.ConfigManager import ConfigManager
+from src.ui.FoxyWindow import FoxyWindow
+from src.ui.qtcreator.ui_AvatarCalibration import Ui_AvatarCalibration
 
 
 class AvatarCalibrationWindow(FoxyWindow):

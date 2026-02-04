@@ -4,7 +4,7 @@ from PySide6.QtCore import QTimer, Qt
 from PySide6.QtWidgets import QFileDialog
 
 from src.config.ConfigManager import ConfigManager
-from config.schemas.main.core.BabbleConfig import BabbleConfig
+from src.config.schemas.main.core.BabbleConfig import BabbleConfig
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_BabbleSettings import Ui_BabbleSettings

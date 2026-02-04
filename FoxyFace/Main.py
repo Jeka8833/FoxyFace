@@ -1,7 +1,5 @@
 import sys
 
-from pipline.senders.SenderRouterrPipeline import SenderRouterPipeline
-
 if __name__ != '__main__':
     sys.exit(0)  # You're doing something wrong, think about it
 
@@ -28,22 +26,24 @@ else:
 # Do time-consuming things
 
 from pathlib import Path
-from util.PathUtil import PathUtil
+
 from AppConstants import AppConstants
-from src.UpdateChecker import UpdateChecker
 from src.autorun.SteamAutoRun import SteamAutoRun
-from src.ui.windows.MainWindow import MainWindow
-from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
+from src.config.ConfigManager import ConfigManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.config.schemas.avatar.AvatarConfigMigrationManager import AvatarConfigMigrationManager
+from src.config.schemas.main.Config import Config
+from src.config.schemas.main.ConfigMigrationManager import MainConfigMigrationManager
 from src.pipline.BabblePipeline import BabblePipeline
+from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.pipline.CameraPipeline import CameraPipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
-from src.config.ConfigManager import ConfigManager
-from config.schemas.avatar.AvatarConfig import AvatarConfig
-from config.schemas.avatar.AvatarConfigMigrationManager import AvatarConfigMigrationManager
-from config.schemas.main.Config import Config
-from config.schemas.main.ConfigMigrationManager import MainConfigMigrationManager
+from src.pipline.senders.SenderRouterPipeline import SenderRouterPipeline
 from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
+from src.ui.windows.MainWindow import MainWindow
+from src.UpdateChecker import UpdateChecker
+from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 

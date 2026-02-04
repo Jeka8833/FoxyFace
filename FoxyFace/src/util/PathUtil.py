@@ -3,6 +3,7 @@ from pathlib import Path
 
 _logger = logging.getLogger(__name__)
 
+
 class PathUtil:
     @staticmethod
     def to_path_or_default(path: str | Path | None, default: str | Path, strict: bool = True) -> Path:

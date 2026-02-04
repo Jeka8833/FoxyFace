@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from config.schemas.main.gui.GuiAutoCalibrationWindowConfig import GuiAutoCalibrationWindowConfig
+from src.config.schemas.main.gui.GuiAutoCalibrationWindowConfig import GuiAutoCalibrationWindowConfig
 
 
 @dataclass(slots=True)

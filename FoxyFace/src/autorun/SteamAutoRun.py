@@ -5,12 +5,12 @@ from pathlib import Path
 from threading import Thread
 from typing import Any, Callable
 
-from config.schemas.main.Config import Config
 from src.autorun.AutoRunOptions import AutoRunOptions
 from src.autorun.RunStrategyEnum import RunStrategyEnum
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from util.PathUtil import PathUtil
+from src.config.schemas.main.Config import Config
+from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 

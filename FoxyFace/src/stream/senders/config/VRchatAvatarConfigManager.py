@@ -6,9 +6,9 @@ from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
 from blendshape_router.util.ListenerManager import ListenerManager
 
-from config.ConfigManager import ConfigManager
-from config.schemas.avatar.AvatarConfig import AvatarConfig
-from config.schemas.avatar.AvatarConfigMigrationManager import AvatarConfigMigrationManager
+from src.config.ConfigManager import ConfigManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.config.schemas.avatar.AvatarConfigMigrationManager import AvatarConfigMigrationManager
 
 
 class VRChatAvatarConfigManager:

@@ -3,8 +3,8 @@ import logging
 from packaging.version import Version
 
 from AppConstants import AppConstants
-from config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.AbstractConfig import MigrationManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 
 _logger = logging.getLogger(__name__)
 

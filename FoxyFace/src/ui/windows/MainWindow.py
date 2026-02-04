@@ -16,16 +16,16 @@ from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.ui import UiImageUtil
 from src.ui.FoxyWindow import FoxyWindow
+from src.ui.qtcreator.ui_MainWindow import Ui_MainWindow
 from src.ui.windows.AutoCalibrationWindow import AutoCalibrationWindow
+from src.ui.windows.AutoRunSettingsWindow import AutoRunSettingsWindow
+from src.ui.windows.AvatarCalibrationWindow import AvatarCalibrationWindow
 from src.ui.windows.BabbleSettingsWindow import BabbleSettingsWindow
 from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
-from ui.qtcreator.ui_MainWindow import Ui_MainWindow
-from ui.windows.AutoRunSettingsWindow import AutoRunSettingsWindow
-from ui.windows.AvatarCalibrationWindow import AvatarCalibrationWindow
-from ui.windows.SenderSettingsWindow import SenderSettingsWindow
+from src.ui.windows.SenderSettingsWindow import SenderSettingsWindow
 
 _logger = logging.getLogger(__name__)
 

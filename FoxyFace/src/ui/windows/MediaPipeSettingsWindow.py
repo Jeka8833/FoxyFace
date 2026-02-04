@@ -3,7 +3,7 @@ import platform
 
 from src.config.ConfigManager import ConfigManager
 from src.ui.FoxyWindow import FoxyWindow
-from ui.qtcreator.ui_MediaPipeSettings import Ui_MediaPipeSettings
+from src.ui.qtcreator.ui_MediaPipeSettings import Ui_MediaPipeSettings
 
 _logger = logging.getLogger(__name__)
 
