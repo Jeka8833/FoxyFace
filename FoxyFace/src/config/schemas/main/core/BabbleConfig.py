@@ -12,8 +12,8 @@ class BabbleConfig:
     intra_op_num_threads: int = 1
     allow_spinning: bool = False
 
-    max_head_rotation_x: float = 30
-    max_head_rotation_y: float = 50
+    max_head_rotation_x: float = 30.0
+    max_head_rotation_y: float = 50.0
 
     mincutoff: float = 0.9
     beta: float = 0.9

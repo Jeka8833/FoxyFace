@@ -8,7 +8,7 @@ class MeowFaceSenderConfig:
     enabled: bool = False
 
     auto_connect_enabled: bool = MeowFaceDefaultValue.AUTO_CONNECT_ENABLED
-    ip: str = "localhost"
+    ip: str = "127.0.0.1"
     port: int = 12345
 
     solver_enabled: bool = True

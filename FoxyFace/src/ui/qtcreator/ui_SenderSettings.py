@@ -25,7 +25,7 @@ class Ui_SenderSettings(object):
     def setupUi(self, SenderSettings):
         if not SenderSettings.objectName():
             SenderSettings.setObjectName(u"SenderSettings")
-        SenderSettings.resize(408, 589)
+        SenderSettings.resize(408, 520)
         self.centralwidget = QWidget(SenderSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_4 = QVBoxLayout(self.centralwidget)
@@ -1129,7 +1129,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollAreaWidgetContents_5 = QWidget()
         self.scrollAreaWidgetContents_5.setObjectName(u"scrollAreaWidgetContents_5")
-        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 352, 572))
+        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 352, 603))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.foxyface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_5)
@@ -1203,6 +1203,27 @@ class Ui_SenderSettings(object):
 
 
         self.verticalLayout_15.addWidget(self.foxyface_port_widget)
+
+        self.host_read_timeout_widget = QWidget(self.widget_8)
+        self.host_read_timeout_widget.setObjectName(u"host_read_timeout_widget")
+        self.horizontalLayout_25 = QHBoxLayout(self.host_read_timeout_widget)
+        self.horizontalLayout_25.setObjectName(u"horizontalLayout_25")
+        self.horizontalLayout_25.setContentsMargins(0, 0, 0, 0)
+        self.host_read_timeout_lb = QLabel(self.host_read_timeout_widget)
+        self.host_read_timeout_lb.setObjectName(u"host_read_timeout_lb")
+
+        self.horizontalLayout_25.addWidget(self.host_read_timeout_lb)
+
+        self.host_read_timeout_sb = QDoubleSpinBox(self.host_read_timeout_widget)
+        self.host_read_timeout_sb.setObjectName(u"host_read_timeout_sb")
+        self.host_read_timeout_sb.setMinimum(0.010000000000000)
+        self.host_read_timeout_sb.setMaximum(60.000000000000000)
+        self.host_read_timeout_sb.setValue(1.000000000000000)
+
+        self.horizontalLayout_25.addWidget(self.host_read_timeout_sb)
+
+
+        self.verticalLayout_15.addWidget(self.host_read_timeout_widget)
 
         self.foxyface_solver_lb = QLabel(self.widget_8)
         self.foxyface_solver_lb.setObjectName(u"foxyface_solver_lb")
@@ -1553,7 +1574,7 @@ class Ui_SenderSettings(object):
         self.ifm_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.ifm_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))
         self.ifm_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))
-        self.ifm_ip_le.setText(QCoreApplication.translate("SenderSettings", u"localhost", None))
+        self.ifm_ip_le.setText(QCoreApplication.translate("SenderSettings", u"127.0.0.1", None))
         self.ifm_port_lb.setText(QCoreApplication.translate("SenderSettings", u"Port:", None))
         self.ifm_solver_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver", None))
         self.ifm_enable_solver_cb.setText(QCoreApplication.translate("SenderSettings", u"Solver Enabled", None))
@@ -1579,7 +1600,7 @@ class Ui_SenderSettings(object):
         self.meowface_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.meowface_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))
         self.meowface_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))
-        self.meowface_ip_le.setText(QCoreApplication.translate("SenderSettings", u"localhost", None))
+        self.meowface_ip_le.setText(QCoreApplication.translate("SenderSettings", u"127.0.0.1", None))
         self.meowface_port_lb.setText(QCoreApplication.translate("SenderSettings", u"Port:", None))
         self.meowface_solver_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver", None))
         self.meowface_enable_solver_cb.setText(QCoreApplication.translate("SenderSettings", u"Solver Enabled", None))
@@ -1605,8 +1626,10 @@ class Ui_SenderSettings(object):
         self.foxyface_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.foxyface_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))
         self.foxyface_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))
-        self.foxyface_ip_le.setText(QCoreApplication.translate("SenderSettings", u"localhost", None))
+        self.foxyface_ip_le.setText(QCoreApplication.translate("SenderSettings", u"127.0.0.1", None))
         self.foxyface_port_lb.setText(QCoreApplication.translate("SenderSettings", u"Port:", None))
+        self.host_read_timeout_lb.setText(QCoreApplication.translate("SenderSettings", u"Host Read Timeout:", None))
+        self.host_read_timeout_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.foxyface_solver_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver", None))
         self.foxyface_enable_solver_cb.setText(QCoreApplication.translate("SenderSettings", u"Solver Enabled", None))
         self.foxyface_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))

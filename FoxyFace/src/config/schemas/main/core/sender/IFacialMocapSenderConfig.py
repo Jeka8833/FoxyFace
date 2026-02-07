@@ -10,7 +10,7 @@ class IFacialMocapSenderConfig:
     facemotion3d_compatibility: bool = IFacialMocapDefaultValue.FACEMOTION3D_COMPATIBILITY
 
     auto_connect_enabled: bool = IFacialMocapDefaultValue.AUTO_CONNECT_ENABLED
-    ip: str = "localhost"
+    ip: str = "127.0.0.1"
     port: int = 49983
 
     solver_enabled: bool = True

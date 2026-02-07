@@ -3,6 +3,10 @@ import logging
 from PySide6.QtWidgets import QFileDialog
 
 from src.config.ConfigManager import ConfigManager
+from src.config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
+from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
+from src.config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
+from src.config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_SenderSettings import Ui_SenderSettings
 
@@ -123,150 +127,158 @@ class SenderSettingsWindow(FoxyWindow):
             widget.wheelEvent = self.__wheel_event
 
     def __set_default_values(self):
-        self.__ui.vrchat_enable_cb.setChecked(self.__config_manager.config.sender.vrchat.enabled)
+        vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
+
+        self.__ui.vrchat_enable_cb.setChecked(vrchat_config.enabled)
         self.__ui.vrchat_avatare_request_period_sb.setValue(
-            self.__config_manager.config.sender.vrchat.avatar_update_period)
+            vrchat_config.avatar_update_period)
         self.__ui.vrchat_error_sleep_time_sb.setValue(
-            self.__config_manager.config.sender.vrchat.avatar_error_sleep_time)
+            vrchat_config.avatar_error_sleep_time)
         self.__ui.vrchat_close_connectio_sb.setValue(
-            self.__config_manager.config.sender.vrchat.avatar_close_connection_after_retries)
-        self.__ui.vrchat_zeroconf_sb.setValue(self.__config_manager.config.sender.vrchat.zeroconf_timeout)
-        self.__ui.vrchat_enable_solver_cb.setChecked(self.__config_manager.config.sender.vrchat.solver_enabled)
-        self.__ui.vrchat_solver_model_le.setText(self.__config_manager.config.sender.vrchat.solver_model_path)
+            vrchat_config.avatar_close_connection_after_retries)
+        self.__ui.vrchat_zeroconf_sb.setValue(vrchat_config.zeroconf_timeout)
+        self.__ui.vrchat_enable_solver_cb.setChecked(vrchat_config.solver_enabled)
+        self.__ui.vrchat_solver_model_le.setText(vrchat_config.solver_model_path)
         self.__ui.vrchat_solver_sercision_slider.setValue(
-            int(self.__config_manager.config.sender.vrchat.solver_interleaved_vertices_percentage * 100))
-        self.__ui.vrchat_solver_threads_sb.setValue(self.__config_manager.config.sender.vrchat.solver_threads)
-        self.__ui.vrchat_solver_max_fps_sb.setValue(self.__config_manager.config.sender.vrchat.solver_max_cps)
+            int(vrchat_config.solver_interleaved_vertices_percentage * 100))
+        self.__ui.vrchat_solver_threads_sb.setValue(vrchat_config.solver_threads)
+        self.__ui.vrchat_solver_max_fps_sb.setValue(vrchat_config.solver_max_cps)
         self.__ui.vrchat_cache_invalidate_sb.setValue(
-            self.__config_manager.config.sender.vrchat.cache_invalidate_timeout)
-        self.__ui.vrchat_cache_sync_sb.setValue(self.__config_manager.config.sender.vrchat.cache_full_sync_period)
+            vrchat_config.cache_invalidate_timeout)
+        self.__ui.vrchat_cache_sync_sb.setValue(vrchat_config.cache_full_sync_period)
         self.__ui.vrchat_cache_float_percision_sb.setValue(
-            self.__config_manager.config.sender.vrchat.cache_float_precision)
-        self.__ui.vrchat_cache_bundle_sb.setValue(self.__config_manager.config.sender.vrchat.osc_bundle_size)
-        self.__ui.vrchat_avatar_config_le.setText(self.__config_manager.config.sender.vrchat.avatar_config_folder)
+            vrchat_config.cache_float_precision)
+        self.__ui.vrchat_cache_bundle_sb.setValue(vrchat_config.osc_bundle_size)
+        self.__ui.vrchat_avatar_config_le.setText(vrchat_config.avatar_config_folder)
 
-        self.__ui.ifm_enable_cb.setChecked(self.__config_manager.config.sender.ifacialmocap.enabled)
-        self.__ui.ifm_use_facemotion3d_protocol.setChecked(
-            self.__config_manager.config.sender.ifacialmocap.facemotion3d_compatibility)
-        self.__ui.ifm_ip_auto_find_cb.setChecked(self.__config_manager.config.sender.ifacialmocap.auto_connect_enabled)
-        self.__ui.ifm_ip_le.setText(self.__config_manager.config.sender.ifacialmocap.ip)
-        self.__ui.ifm_port_sb.setValue(self.__config_manager.config.sender.ifacialmocap.port)
-        self.__ui.ifm_enable_solver_cb.setChecked(self.__config_manager.config.sender.ifacialmocap.solver_enabled)
-        self.__ui.ifm_solver_model_le.setText(self.__config_manager.config.sender.ifacialmocap.solver_model_path)
+        ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
+
+        self.__ui.ifm_enable_cb.setChecked(ifacialmocap_config.enabled)
+        self.__ui.ifm_use_facemotion3d_protocol.setChecked(ifacialmocap_config.facemotion3d_compatibility)
+        self.__ui.ifm_ip_auto_find_cb.setChecked(ifacialmocap_config.auto_connect_enabled)
+        self.__ui.ifm_ip_le.setText(ifacialmocap_config.ip)
+        self.__ui.ifm_port_sb.setValue(ifacialmocap_config.port)
+        self.__ui.ifm_enable_solver_cb.setChecked(ifacialmocap_config.solver_enabled)
+        self.__ui.ifm_solver_model_le.setText(ifacialmocap_config.solver_model_path)
         self.__ui.ifm_solver_sercision_slider.setValue(
-            int(self.__config_manager.config.sender.ifacialmocap.solver_interleaved_vertices_percentage * 100))
-        self.__ui.ifm_solver_threads_sb.setValue(self.__config_manager.config.sender.ifacialmocap.solver_threads)
-        self.__ui.ifm_solver_max_fps_sb.setValue(self.__config_manager.config.sender.ifacialmocap.solver_max_cps)
-        self.__ui.ifm_cache_invalidate_sb.setValue(
-            self.__config_manager.config.sender.ifacialmocap.cache_invalidate_timeout)
-        self.__ui.ifm_cache_sync_sb.setValue(self.__config_manager.config.sender.ifacialmocap.cache_full_sync_period)
-        self.__ui.ifm_cache_ping_sb.setValue(
-            self.__config_manager.config.sender.ifacialmocap.udp_ping_interval)
-        self.__ui.ifm_cache_float_percision_sb.setValue(
-            self.__config_manager.config.sender.ifacialmocap.cache_float_precision)
-        self.__ui.ifm_avatar_config_le.setText(self.__config_manager.config.sender.ifacialmocap.avatar_config_file)
+            int(ifacialmocap_config.solver_interleaved_vertices_percentage * 100))
+        self.__ui.ifm_solver_threads_sb.setValue(ifacialmocap_config.solver_threads)
+        self.__ui.ifm_solver_max_fps_sb.setValue(ifacialmocap_config.solver_max_cps)
+        self.__ui.ifm_cache_invalidate_sb.setValue(ifacialmocap_config.cache_invalidate_timeout)
+        self.__ui.ifm_cache_sync_sb.setValue(ifacialmocap_config.cache_full_sync_period)
+        self.__ui.ifm_cache_ping_sb.setValue(ifacialmocap_config.udp_ping_interval)
+        self.__ui.ifm_cache_float_percision_sb.setValue(ifacialmocap_config.cache_float_precision)
+        self.__ui.ifm_avatar_config_le.setText(ifacialmocap_config.avatar_config_file)
 
-        self.__ui.meowface_enable_cb.setChecked(self.__config_manager.config.sender.meowface.enabled)
-        self.__ui.meowface_ip_auto_find_cb.setChecked(self.__config_manager.config.sender.meowface.auto_connect_enabled)
-        self.__ui.meowface_ip_le.setText(self.__config_manager.config.sender.meowface.ip)
-        self.__ui.meowface_port_sb.setValue(self.__config_manager.config.sender.meowface.port)
-        self.__ui.meowface_enable_solver_cb.setChecked(self.__config_manager.config.sender.meowface.solver_enabled)
-        self.__ui.meowface_solver_model_le.setText(self.__config_manager.config.sender.meowface.solver_model_path)
+        meowface_config: MeowFaceSenderConfig = self.__config_manager.config.sender.meowface
+
+        self.__ui.meowface_enable_cb.setChecked(meowface_config.enabled)
+        self.__ui.meowface_ip_auto_find_cb.setChecked(meowface_config.auto_connect_enabled)
+        self.__ui.meowface_ip_le.setText(meowface_config.ip)
+        self.__ui.meowface_port_sb.setValue(meowface_config.port)
+        self.__ui.meowface_enable_solver_cb.setChecked(meowface_config.solver_enabled)
+        self.__ui.meowface_solver_model_le.setText(meowface_config.solver_model_path)
         self.__ui.meowface_solver_percision_slider.setValue(
-            int(self.__config_manager.config.sender.meowface.solver_interleaved_vertices_percentage * 100))
-        self.__ui.meowface_solver_threads_sb.setValue(self.__config_manager.config.sender.meowface.solver_threads)
-        self.__ui.meowface_solver_max_fps_sb.setValue(self.__config_manager.config.sender.meowface.solver_max_cps)
-        self.__ui.meowface_cache_invalidate_sb.setValue(
-            self.__config_manager.config.sender.meowface.cache_invalidate_timeout)
-        self.__ui.meowface_cache_sync_sb.setValue(self.__config_manager.config.sender.meowface.cache_full_sync_period)
-        self.__ui.meowface_cache_ping_sb.setValue(
-            self.__config_manager.config.sender.meowface.udp_ping_interval)
-        self.__ui.meowface_cache_float_percision_sb.setValue(
-            self.__config_manager.config.sender.meowface.cache_float_precision)
-        self.__ui.meowface_avatar_config_le.setText(self.__config_manager.config.sender.meowface.avatar_config_file)
+            int(meowface_config.solver_interleaved_vertices_percentage * 100))
+        self.__ui.meowface_solver_threads_sb.setValue(meowface_config.solver_threads)
+        self.__ui.meowface_solver_max_fps_sb.setValue(meowface_config.solver_max_cps)
+        self.__ui.meowface_cache_invalidate_sb.setValue(meowface_config.cache_invalidate_timeout)
+        self.__ui.meowface_cache_sync_sb.setValue(meowface_config.cache_full_sync_period)
+        self.__ui.meowface_cache_ping_sb.setValue(meowface_config.udp_ping_interval)
+        self.__ui.meowface_cache_float_percision_sb.setValue(meowface_config.cache_float_precision)
+        self.__ui.meowface_avatar_config_le.setText(meowface_config.avatar_config_file)
 
-        self.__ui.foxyface_enable_cb.setChecked(self.__config_manager.config.sender.foxyface.enabled)
-        self.__ui.foxyface_ip_auto_find_cb.setChecked(self.__config_manager.config.sender.foxyface.auto_connect_enabled)
-        self.__ui.foxyface_ip_le.setText(self.__config_manager.config.sender.foxyface.ip)
-        self.__ui.foxyface_port_sb.setValue(self.__config_manager.config.sender.foxyface.port)
-        self.__ui.foxyface_enable_solver_cb.setChecked(self.__config_manager.config.sender.foxyface.solver_enabled)
-        self.__ui.foxyface_solver_model_le.setText(self.__config_manager.config.sender.foxyface.solver_model_path)
+        foxyface_config: FoxyFaceSenderConfig = self.__config_manager.config.sender.foxyface
+
+        self.__ui.foxyface_enable_cb.setChecked(foxyface_config.enabled)
+        self.__ui.foxyface_ip_auto_find_cb.setChecked(foxyface_config.auto_connect_enabled)
+        self.__ui.foxyface_ip_le.setText(foxyface_config.ip)
+        self.__ui.foxyface_port_sb.setValue(foxyface_config.port)
+        self.__ui.host_read_timeout_sb.setValue(foxyface_config.host_read_timeout)
+        self.__ui.foxyface_enable_solver_cb.setChecked(foxyface_config.solver_enabled)
+        self.__ui.foxyface_solver_model_le.setText(foxyface_config.solver_model_path)
         self.__ui.foxyface_solver_sercision_slider.setValue(
-            int(self.__config_manager.config.sender.foxyface.solver_interleaved_vertices_percentage * 100))
-        self.__ui.foxyface_solver_threads_sb.setValue(self.__config_manager.config.sender.foxyface.solver_threads)
-        self.__ui.foxyface_solver_max_fps_sb.setValue(self.__config_manager.config.sender.foxyface.solver_max_cps)
-        self.__ui.foxyface_cache_invalidate_sb.setValue(
-            self.__config_manager.config.sender.vrchat.cache_invalidate_timeout)
-        self.__ui.foxyface_cache_sync_sb.setValue(self.__config_manager.config.sender.foxyface.cache_full_sync_period)
-        self.__ui.foxyface_cache_ping_sb.setValue(
-            self.__config_manager.config.sender.foxyface.udp_ping_interval)
-        self.__ui.foxyface_cache_float_percision_sb.setValue(
-            self.__config_manager.config.sender.foxyface.cache_float_precision)
-        self.__ui.foxyface_avatar_config_le.setText(self.__config_manager.config.sender.foxyface.avatar_config_file)
+            int(foxyface_config.solver_interleaved_vertices_percentage * 100))
+        self.__ui.foxyface_solver_threads_sb.setValue(foxyface_config.solver_threads)
+        self.__ui.foxyface_solver_max_fps_sb.setValue(foxyface_config.solver_max_cps)
+        self.__ui.foxyface_cache_invalidate_sb.setValue(foxyface_config.cache_invalidate_timeout)
+        self.__ui.foxyface_cache_sync_sb.setValue(foxyface_config.cache_full_sync_period)
+        self.__ui.foxyface_cache_ping_sb.setValue(foxyface_config.udp_ping_interval)
+        self.__ui.foxyface_cache_float_percision_sb.setValue(foxyface_config.cache_float_precision)
+        self.__ui.foxyface_avatar_config_le.setText(foxyface_config.avatar_config_file)
 
     def __save(self):
         try:
-            self.__config_manager.config.sender.vrchat.enabled = self.__ui.vrchat_enable_cb.isChecked()
-            self.__config_manager.config.sender.vrchat.avatar_update_period = self.__ui.vrchat_avatare_request_period_sb.value()
-            self.__config_manager.config.sender.vrchat.avatar_error_sleep_time = self.__ui.vrchat_error_sleep_time_sb.value()
-            self.__config_manager.config.sender.vrchat.avatar_close_connection_after_retries = self.__ui.vrchat_close_connectio_sb.value()
-            self.__config_manager.config.sender.vrchat.zeroconf_timeout = self.__ui.vrchat_zeroconf_sb.value()
-            self.__config_manager.config.sender.vrchat.solver_enabled = self.__ui.vrchat_enable_solver_cb.isChecked()
-            self.__config_manager.config.sender.vrchat.solver_model_path = self.__ui.vrchat_solver_model_le.text()
-            self.__config_manager.config.sender.vrchat.solver_interleaved_vertices_percentage = self.__ui.vrchat_solver_sercision_slider.value() / 100.0
-            self.__config_manager.config.sender.vrchat.solver_threads = self.__ui.vrchat_solver_threads_sb.value()
-            self.__config_manager.config.sender.vrchat.solver_max_cps = self.__ui.vrchat_solver_max_fps_sb.value()
-            self.__config_manager.config.sender.vrchat.cache_invalidate_timeout = self.__ui.vrchat_cache_invalidate_sb.value()
-            self.__config_manager.config.sender.vrchat.cache_full_sync_period = self.__ui.vrchat_cache_sync_sb.value()
-            self.__config_manager.config.sender.vrchat.cache_float_precision = self.__ui.vrchat_cache_float_percision_sb.value()
-            self.__config_manager.config.sender.vrchat.osc_bundle_size = self.__ui.vrchat_cache_bundle_sb.value()
-            self.__config_manager.config.sender.vrchat.avatar_config_folder = self.__ui.vrchat_avatar_config_le.text()
+            vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
 
-            self.__config_manager.config.sender.ifacialmocap.enabled = self.__ui.ifm_enable_cb.isChecked()
-            self.__config_manager.config.sender.ifacialmocap.facemotion3d_compatibility = self.__ui.ifm_use_facemotion3d_protocol.isChecked()
-            self.__config_manager.config.sender.ifacialmocap.auto_connect_enabled = self.__ui.ifm_ip_auto_find_cb.isChecked()
-            self.__config_manager.config.sender.ifacialmocap.ip = self.__ui.ifm_ip_le.text()
-            self.__config_manager.config.sender.ifacialmocap.port = self.__ui.ifm_port_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.solver_enabled = self.__ui.ifm_enable_solver_cb.isChecked()
-            self.__config_manager.config.sender.ifacialmocap.solver_model_path = self.__ui.ifm_solver_model_le.text()
-            self.__config_manager.config.sender.ifacialmocap.solver_interleaved_vertices_percentage = self.__ui.ifm_solver_sercision_slider.value() / 100.0
-            self.__config_manager.config.sender.ifacialmocap.solver_threads = self.__ui.ifm_solver_threads_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.solver_max_cps = self.__ui.ifm_solver_max_fps_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.cache_invalidate_timeout = self.__ui.ifm_cache_invalidate_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.cache_full_sync_period = self.__ui.ifm_cache_sync_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.udp_ping_interval = self.__ui.ifm_cache_ping_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.cache_float_precision = self.__ui.ifm_cache_float_percision_sb.value()
-            self.__config_manager.config.sender.ifacialmocap.avatar_config_file = self.__ui.ifm_avatar_config_le.text()
+            vrchat_config.enabled = self.__ui.vrchat_enable_cb.isChecked()
+            vrchat_config.avatar_update_period = self.__ui.vrchat_avatare_request_period_sb.value()
+            vrchat_config.avatar_error_sleep_time = self.__ui.vrchat_error_sleep_time_sb.value()
+            vrchat_config.avatar_close_connection_after_retries = self.__ui.vrchat_close_connectio_sb.value()
+            vrchat_config.zeroconf_timeout = self.__ui.vrchat_zeroconf_sb.value()
+            vrchat_config.solver_enabled = self.__ui.vrchat_enable_solver_cb.isChecked()
+            vrchat_config.solver_model_path = self.__ui.vrchat_solver_model_le.text()
+            vrchat_config.solver_interleaved_vertices_percentage = self.__ui.vrchat_solver_sercision_slider.value() / 100.0
+            vrchat_config.solver_threads = self.__ui.vrchat_solver_threads_sb.value()
+            vrchat_config.solver_max_cps = self.__ui.vrchat_solver_max_fps_sb.value()
+            vrchat_config.cache_invalidate_timeout = self.__ui.vrchat_cache_invalidate_sb.value()
+            vrchat_config.cache_full_sync_period = self.__ui.vrchat_cache_sync_sb.value()
+            vrchat_config.cache_float_precision = self.__ui.vrchat_cache_float_percision_sb.value()
+            vrchat_config.osc_bundle_size = self.__ui.vrchat_cache_bundle_sb.value()
+            vrchat_config.avatar_config_folder = self.__ui.vrchat_avatar_config_le.text()
 
-            self.__config_manager.config.sender.meowface.enabled = self.__ui.meowface_enable_cb.isChecked()
-            self.__config_manager.config.sender.meowface.auto_connect_enabled = self.__ui.meowface_ip_auto_find_cb.isChecked()
-            self.__config_manager.config.sender.meowface.ip = self.__ui.meowface_ip_le.text()
-            self.__config_manager.config.sender.meowface.port = self.__ui.meowface_port_sb.value()
-            self.__config_manager.config.sender.meowface.solver_enabled = self.__ui.meowface_enable_solver_cb.isChecked()
-            self.__config_manager.config.sender.meowface.solver_model_path = self.__ui.meowface_solver_model_le.text()
-            self.__config_manager.config.sender.meowface.solver_interleaved_vertices_percentage = self.__ui.meowface_solver_percision_slider.value() / 100.0
-            self.__config_manager.config.sender.meowface.solver_threads = self.__ui.meowface_solver_threads_sb.value()
-            self.__config_manager.config.sender.meowface.solver_max_cps = self.__ui.meowface_solver_max_fps_sb.value()
-            self.__config_manager.config.sender.meowface.cache_invalidate_timeout = self.__ui.meowface_cache_invalidate_sb.value()
-            self.__config_manager.config.sender.meowface.cache_full_sync_period = self.__ui.meowface_cache_sync_sb.value()
-            self.__config_manager.config.sender.meowface.udp_ping_interval = self.__ui.meowface_cache_ping_sb.value()
-            self.__config_manager.config.sender.meowface.cache_float_precision = self.__ui.meowface_cache_float_percision_sb.value()
-            self.__config_manager.config.sender.meowface.avatar_config_file = self.__ui.meowface_avatar_config_le.text()
+            ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
 
-            self.__config_manager.config.sender.foxyface.enabled = self.__ui.foxyface_enable_cb.isChecked()
-            self.__config_manager.config.sender.foxyface.auto_connect_enabled = self.__ui.foxyface_ip_auto_find_cb.isChecked()
-            self.__config_manager.config.sender.foxyface.ip = self.__ui.foxyface_ip_le.text()
-            self.__config_manager.config.sender.foxyface.port = self.__ui.foxyface_port_sb.value()
-            self.__config_manager.config.sender.foxyface.solver_enabled = self.__ui.foxyface_enable_solver_cb.isChecked()
-            self.__config_manager.config.sender.foxyface.solver_model_path = self.__ui.foxyface_solver_model_le.text()
-            self.__config_manager.config.sender.foxyface.solver_interleaved_vertices_percentage = self.__ui.foxyface_solver_sercision_slider.value() / 100.0
-            self.__config_manager.config.sender.foxyface.solver_threads = self.__ui.foxyface_solver_threads_sb.value()
-            self.__config_manager.config.sender.foxyface.solver_max_cps = self.__ui.foxyface_solver_max_fps_sb.value()
-            self.__config_manager.config.sender.foxyface.cache_invalidate_timeout = self.__ui.foxyface_cache_invalidate_sb.value()
-            self.__config_manager.config.sender.foxyface.cache_full_sync_period = self.__ui.foxyface_cache_sync_sb.value()
-            self.__config_manager.config.sender.foxyface.udp_ping_interval = self.__ui.foxyface_cache_ping_sb.value()
-            self.__config_manager.config.sender.foxyface.cache_float_precision = self.__ui.foxyface_cache_float_percision_sb.value()
-            self.__config_manager.config.sender.foxyface.avatar_config_file = self.__ui.foxyface_avatar_config_le.text()
+            ifacialmocap_config.enabled = self.__ui.ifm_enable_cb.isChecked()
+            ifacialmocap_config.facemotion3d_compatibility = self.__ui.ifm_use_facemotion3d_protocol.isChecked()
+            ifacialmocap_config.auto_connect_enabled = self.__ui.ifm_ip_auto_find_cb.isChecked()
+            ifacialmocap_config.ip = self.__ui.ifm_ip_le.text()
+            ifacialmocap_config.port = self.__ui.ifm_port_sb.value()
+            ifacialmocap_config.solver_enabled = self.__ui.ifm_enable_solver_cb.isChecked()
+            ifacialmocap_config.solver_model_path = self.__ui.ifm_solver_model_le.text()
+            ifacialmocap_config.solver_interleaved_vertices_percentage = self.__ui.ifm_solver_sercision_slider.value() / 100.0
+            ifacialmocap_config.solver_threads = self.__ui.ifm_solver_threads_sb.value()
+            ifacialmocap_config.solver_max_cps = self.__ui.ifm_solver_max_fps_sb.value()
+            ifacialmocap_config.cache_invalidate_timeout = self.__ui.ifm_cache_invalidate_sb.value()
+            ifacialmocap_config.cache_full_sync_period = self.__ui.ifm_cache_sync_sb.value()
+            ifacialmocap_config.udp_ping_interval = self.__ui.ifm_cache_ping_sb.value()
+            ifacialmocap_config.cache_float_precision = self.__ui.ifm_cache_float_percision_sb.value()
+            ifacialmocap_config.avatar_config_file = self.__ui.ifm_avatar_config_le.text()
+
+            meowface_config: MeowFaceSenderConfig = self.__config_manager.config.sender.meowface
+
+            meowface_config.enabled = self.__ui.meowface_enable_cb.isChecked()
+            meowface_config.auto_connect_enabled = self.__ui.meowface_ip_auto_find_cb.isChecked()
+            meowface_config.ip = self.__ui.meowface_ip_le.text()
+            meowface_config.port = self.__ui.meowface_port_sb.value()
+            meowface_config.solver_enabled = self.__ui.meowface_enable_solver_cb.isChecked()
+            meowface_config.solver_model_path = self.__ui.meowface_solver_model_le.text()
+            meowface_config.solver_interleaved_vertices_percentage = self.__ui.meowface_solver_percision_slider.value() / 100.0
+            meowface_config.solver_threads = self.__ui.meowface_solver_threads_sb.value()
+            meowface_config.solver_max_cps = self.__ui.meowface_solver_max_fps_sb.value()
+            meowface_config.cache_invalidate_timeout = self.__ui.meowface_cache_invalidate_sb.value()
+            meowface_config.cache_full_sync_period = self.__ui.meowface_cache_sync_sb.value()
+            meowface_config.udp_ping_interval = self.__ui.meowface_cache_ping_sb.value()
+            meowface_config.cache_float_precision = self.__ui.meowface_cache_float_percision_sb.value()
+            meowface_config.avatar_config_file = self.__ui.meowface_avatar_config_le.text()
+
+            foxyface_config: FoxyFaceSenderConfig = self.__config_manager.config.sender.foxyface
+
+            foxyface_config.enabled = self.__ui.foxyface_enable_cb.isChecked()
+            foxyface_config.auto_connect_enabled = self.__ui.foxyface_ip_auto_find_cb.isChecked()
+            foxyface_config.ip = self.__ui.foxyface_ip_le.text()
+            foxyface_config.port = self.__ui.foxyface_port_sb.value()
+            foxyface_config.host_read_timeout = self.__ui.host_read_timeout_sb.value()
+            foxyface_config.solver_enabled = self.__ui.foxyface_enable_solver_cb.isChecked()
+            foxyface_config.solver_model_path = self.__ui.foxyface_solver_model_le.text()
+            foxyface_config.solver_interleaved_vertices_percentage = self.__ui.foxyface_solver_sercision_slider.value() / 100.0
+            foxyface_config.solver_threads = self.__ui.foxyface_solver_threads_sb.value()
+            foxyface_config.solver_max_cps = self.__ui.foxyface_solver_max_fps_sb.value()
+            foxyface_config.cache_invalidate_timeout = self.__ui.foxyface_cache_invalidate_sb.value()
+            foxyface_config.cache_full_sync_period = self.__ui.foxyface_cache_sync_sb.value()
+            foxyface_config.udp_ping_interval = self.__ui.foxyface_cache_ping_sb.value()
+            foxyface_config.cache_float_precision = self.__ui.foxyface_cache_float_percision_sb.value()
+            foxyface_config.avatar_config_file = self.__ui.foxyface_avatar_config_le.text()
 
             self.__config_manager.write()
         except Exception:

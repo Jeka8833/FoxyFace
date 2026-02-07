@@ -2,9 +2,13 @@ import logging
 from threading import Event, Thread
 
 from src.config.ConfigManager import ConfigManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.config.schemas.main.Config import Config
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
 from src.pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
+from src.pipline.senders.ifacialmocap.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
+from src.pipline.senders.meowface.MeowFaceSenderPipeline import MeowFaceSenderPipeline
 from src.pipline.senders.vrchat.VRChatSenderPipeline import VRChatSenderPipeline
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
@@ -13,13 +17,17 @@ _logger = logging.getLogger(__name__)
 
 
 class SenderRouterPipeline:
-    def __init__(self, config_manager: ConfigManager, processing_pipeline: ProcessingPipeline,
-                 vrchat_config_manager: VRChatAvatarConfigManager, ifacialmocap_config_manager: ConfigManager,
-                 foxyface_config_manager: ConfigManager, meowface_config_manager: ConfigManager):
+    def __init__(self, config_manager: ConfigManager[Config], processing_pipeline: ProcessingPipeline,
+                 vrchat_config_manager: VRChatAvatarConfigManager,
+                 ifacialmocap_config_manager: ConfigManager[AvatarConfig],
+                 foxyface_config_manager: ConfigManager[AvatarConfig],
+                 meowface_config_manager: ConfigManager[AvatarConfig]):
         self.__processing_pipeline = processing_pipeline
 
-        self.__sender_list = [FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
-                              VRChatSenderPipeline(config_manager, vrchat_config_manager)
+        self.__sender_list = [VRChatSenderPipeline(config_manager, vrchat_config_manager),
+                              IFacialMocapSenderPipeline(config_manager, ifacialmocap_config_manager),
+                              FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
+                              MeowFaceSenderPipeline(config_manager, meowface_config_manager),
                               ]
 
         self.__close_event: Event = Event()

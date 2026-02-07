@@ -22,6 +22,7 @@ from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
+from src.config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
 from src.pipline.senders.vrchat.FindInstanceItem import FindInstanceItem
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
@@ -53,7 +54,7 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         self.__find_instance_thread.start()
 
         self.__main_config_listener: ConfigUpdateListener = self.__register_main_config_change_update()
-        avatar_config_manager.subscribe_change(self.__avatar_config_list_changed)
+        self.__avatar_config_manager.subscribe_change(self.__avatar_config_list_changed)
 
     def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
         vrchat = self.__vrchat
@@ -69,9 +70,17 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         return True
 
     def close(self):
-        self.__main_config_listener.unregister()
+        self.__find_instance_close_event.set()
 
-        self.__vrchat.close()
+        self.__main_config_listener.unregister()
+        self.__avatar_config_manager.unsubscribe_change(self.__avatar_config_list_changed)
+
+        with self.__config_list_changed_lock:
+            for listener in self.__config_listeners.values():
+                listener.unregister()
+
+        if self.__vrchat is not None:
+            self.__vrchat.close()
 
         self.__zeroconf.close()
         self.__connection_pool.close()
@@ -86,7 +95,9 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
             self.__vrchat.close()
             self.__vrchat = None
 
-        if not config_manager.config.sender.vrchat.enabled:
+        vrchat_config: VRChatSenderConfig = config_manager.config.sender.vrchat
+
+        if not vrchat_config.enabled:
             return
 
         self.__vrchat = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
@@ -94,20 +105,19 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
                          .with_avatar_parameter_filter(self.__avatar_parameter_filter)
                          .with_connection_closed_listener(self.__connection_closed)
 
-                         .with_avatar_update_period(config_manager.config.sender.vrchat.avatar_update_period)
-                         .with_avatar_error_sleep_time(config_manager.config.sender.vrchat.avatar_error_sleep_time)
+                         .with_avatar_update_period(vrchat_config.avatar_update_period)
+                         .with_avatar_error_sleep_time(vrchat_config.avatar_error_sleep_time)
                          .with_avatar_close_connection_after_retries(
-            config_manager.config.sender.vrchat.avatar_close_connection_after_retries)
-                         .with_zeroconf_timeout(config_manager.config.sender.vrchat.zeroconf_timeout)
-                         .with_osc_cache_invalidate_timeout(
-            config_manager.config.sender.vrchat.cache_invalidate_timeout)
-                         .with_osc_cache_full_sync_period(config_manager.config.sender.vrchat.cache_full_sync_period)
-                         .with_osc_cache_float_precision(config_manager.config.sender.vrchat.cache_float_precision)
-                         .with_osc_bundle_size(config_manager.config.sender.vrchat.osc_bundle_size)
-                         .with_legacy_graph(config_manager.config.sender.vrchat.allow_legacy_graph)
-                         .with_parser_max_binary_bits(config_manager.config.sender.vrchat.parser_max_binary_bits)
-                         .with_test_send_period(config_manager.config.sender.vrchat.test_send_period)
-                         .with_test_animation_period(config_manager.config.sender.vrchat.test_animation_period)
+            vrchat_config.avatar_close_connection_after_retries)
+                         .with_zeroconf_timeout(vrchat_config.zeroconf_timeout)
+                         .with_osc_cache_invalidate_timeout(vrchat_config.cache_invalidate_timeout)
+                         .with_osc_cache_full_sync_period(vrchat_config.cache_full_sync_period)
+                         .with_osc_cache_float_precision(vrchat_config.cache_float_precision)
+                         .with_osc_bundle_size(vrchat_config.osc_bundle_size)
+                         .with_legacy_graph(vrchat_config.allow_legacy_graph)
+                         .with_parser_max_binary_bits(vrchat_config.parser_max_binary_bits)
+                         .with_test_send_period(vrchat_config.test_send_period)
+                         .with_test_animation_period(vrchat_config.test_animation_period)
 
                          .add_graph(ARKitGraph())
 
@@ -185,14 +195,15 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
 
                         continue
 
-                    if self.__config_manager.config.sender.vrchat.solver_enabled:
-                        model = ModelLoader(
-                            PathUtil.to_path_or_default(self.__config_manager.config.sender.vrchat.solver_model_path,
-                                                        SolverPath.get_default_asset_path()))
+                    vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
+
+                    if vrchat_config.solver_enabled:
+                        model = ModelLoader(PathUtil.to_path_or_default(vrchat_config.solver_model_path,
+                                                                        SolverPath.get_default_asset_path()))
 
                         if model is not None:
                             clamped_percentage = max(0.0, min(1.0,
-                                                              self.__config_manager.config.sender.vrchat.solver_interleaved_vertices_percentage))
+                                                              vrchat_config.solver_interleaved_vertices_percentage))
 
                             vertices_count = max(1, int(model.get_vertices_count() * clamped_percentage))
 
@@ -213,14 +224,14 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
                                     _logger.warning(f"Failed to disable output node {node_id}")
 
                             instance.set_solver(solver_model=model,
-                                                threads=self.__config_manager.config.sender.vrchat.solver_threads,
+                                                threads=vrchat_config.solver_threads,
                                                 interleaved_vertices_count=vertices_count,
-                                                max_cps=self.__config_manager.config.sender.vrchat.solver_max_cps,
+                                                max_cps=vrchat_config.solver_max_cps,
                                                 disable_input_nodes=disabled_inputs,
                                                 disable_output_nodes=disabled_outputs)
             except InterruptedError:
                 return
             except Exception:
-                _logger.warning("VRchat find thread error", exc_info=True, stack_info=True)
+                _logger.warning("VRChat find thread error", exc_info=True, stack_info=True)
 
             self.__find_instance_close_event.wait(0.01)
