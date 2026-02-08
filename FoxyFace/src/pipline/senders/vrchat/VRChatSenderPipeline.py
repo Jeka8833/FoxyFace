@@ -41,6 +41,7 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
 
         self.__zeroconf: Zeroconf = Zeroconf()
         self.__connection_pool: VRChatConnectionPool = VRChatConnectionPool()
+        self.__vrchat_lock: Lock = Lock()
         self.__vrchat: VRChat | None = None
 
         self.__config_list_changed_lock: Lock = Lock()
@@ -57,15 +58,15 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         self.__avatar_config_manager.subscribe_change(self.__avatar_config_list_changed)
 
     def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
-        vrchat = self.__vrchat
-        if vrchat is not None:
-            for node, node_value in value.blend_shapes.items():
-                if node_value is None:
-                    continue
+        with self.__vrchat_lock:
+            if self.__vrchat is not None:
+                for node, node_value in value.blend_shapes.items():
+                    if node_value is None:
+                        continue
 
-                vrchat.set_parameter(node, node_value)
+                    self.__vrchat.set_parameter(node, node_value)
 
-            vrchat.flush()
+                self.__vrchat.flush()
 
         return True
 
@@ -79,8 +80,9 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
             for listener in self.__config_listeners.values():
                 listener.unregister()
 
-        if self.__vrchat is not None:
-            self.__vrchat.close()
+        with self.__vrchat_lock:
+            if self.__vrchat is not None:
+                self.__vrchat.close()
 
         self.__zeroconf.close()
         self.__connection_pool.close()
@@ -91,37 +93,38 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         return self.__config_manager.create_update_listener(self.__main_config_changed, watch_array, True)
 
     def __main_config_changed(self, config_manager: ConfigManager[Config]):
-        if self.__vrchat is not None:
-            self.__vrchat.close()
-            self.__vrchat = None
+        with self.__vrchat_lock:
+            if self.__vrchat is not None:
+                self.__vrchat.close()
+                self.__vrchat = None
 
-        vrchat_config: VRChatSenderConfig = config_manager.config.sender.vrchat
+            vrchat_config: VRChatSenderConfig = config_manager.config.sender.vrchat
 
-        if not vrchat_config.enabled:
-            return
+            if not vrchat_config.enabled:
+                return
 
-        self.__vrchat = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
-                         .with_ip_filter(self.__ip_filter)
-                         .with_avatar_parameter_filter(self.__avatar_parameter_filter)
-                         .with_connection_closed_listener(self.__connection_closed)
+            self.__vrchat = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
+                             .with_ip_filter(self.__ip_filter)
+                             .with_avatar_parameter_filter(self.__avatar_parameter_filter)
+                             .with_connection_closed_listener(self.__connection_closed)
 
-                         .with_avatar_update_period(vrchat_config.avatar_update_period)
-                         .with_avatar_error_sleep_time(vrchat_config.avatar_error_sleep_time)
-                         .with_avatar_close_connection_after_retries(
-            vrchat_config.avatar_close_connection_after_retries)
-                         .with_zeroconf_timeout(vrchat_config.zeroconf_timeout)
-                         .with_osc_cache_invalidate_timeout(vrchat_config.cache_invalidate_timeout)
-                         .with_osc_cache_full_sync_period(vrchat_config.cache_full_sync_period)
-                         .with_osc_cache_float_precision(vrchat_config.cache_float_precision)
-                         .with_osc_bundle_size(vrchat_config.osc_bundle_size)
-                         .with_legacy_graph(vrchat_config.allow_legacy_graph)
-                         .with_parser_max_binary_bits(vrchat_config.parser_max_binary_bits)
-                         .with_test_send_period(vrchat_config.test_send_period)
-                         .with_test_animation_period(vrchat_config.test_animation_period)
+                             .with_avatar_update_period(vrchat_config.avatar_update_period)
+                             .with_avatar_error_sleep_time(vrchat_config.avatar_error_sleep_time)
+                             .with_avatar_close_connection_after_retries(
+                vrchat_config.avatar_close_connection_after_retries)
+                             .with_zeroconf_timeout(vrchat_config.zeroconf_timeout)
+                             .with_osc_cache_invalidate_timeout(vrchat_config.cache_invalidate_timeout)
+                             .with_osc_cache_full_sync_period(vrchat_config.cache_full_sync_period)
+                             .with_osc_cache_float_precision(vrchat_config.cache_float_precision)
+                             .with_osc_bundle_size(vrchat_config.osc_bundle_size)
+                             .with_legacy_graph(vrchat_config.allow_legacy_graph)
+                             .with_parser_max_binary_bits(vrchat_config.parser_max_binary_bits)
+                             .with_test_send_period(vrchat_config.test_send_period)
+                             .with_test_animation_period(vrchat_config.test_animation_period)
 
-                         .add_graph(ARKitGraph())
+                             .add_graph(ARKitGraph())
 
-                         .build())
+                             .build())
 
     def __avatar_config_list_changed(self, connection: ConnectionNode,
                                      avatar_config_manager: ConfigManager[AvatarConfig],
@@ -185,50 +188,53 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
         while not self.__find_instance_close_event.is_set():
             try:
                 for key, value in self.__config_find_instance.copy().items():
-                    instance = self.__vrchat.get_instances().get(key)
+                    with self.__vrchat_lock:
+                        instance = self.__vrchat.get_instances().get(key)
 
-                    if instance is None:
-                        value.retry_count += 1
+                        if instance is None:
+                            value.retry_count += 1
 
-                        if value.retry_count >= self.__FIND_RETRY_COUNT:
+                            if value.retry_count >= self.__FIND_RETRY_COUNT:
+                                self.__config_find_instance.pop(key)
+
+                            continue
+
+                        vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
+
+                        if vrchat_config.solver_enabled:
+                            model = ModelLoader(PathUtil.to_path_or_default(vrchat_config.solver_model_path,
+                                                                            SolverPath.get_default_asset_path()))
+
+                            if model is not None:
+                                clamped_percentage = max(0.0, min(1.0,
+                                                                  vrchat_config.solver_interleaved_vertices_percentage))
+
+                                vertices_count = max(1, int(model.get_vertices_count() * clamped_percentage))
+
+                                id_to_node: dict[str, SolverNode] = {node.id: node for node in model.get_blendshapes()}
+
+                                disabled_inputs: set[SolverNode] = set()
+                                for node_id in value.config.config.disable_solver_input_nodes:
+                                    try:
+                                        disabled_inputs.add(id_to_node[node_id])
+                                    except Exception:
+                                        _logger.warning(f"Failed to disable input node {node_id}")
+
+                                disabled_outputs: set[SolverNode] = set()
+                                for node_id in value.config.config.disable_solver_output_nodes:
+                                    try:
+                                        disabled_outputs.add(id_to_node[node_id])
+                                    except Exception:
+                                        _logger.warning(f"Failed to disable output node {node_id}")
+
+                                instance.set_solver(solver_model=model,
+                                                    threads=vrchat_config.solver_threads,
+                                                    interleaved_vertices_count=vertices_count,
+                                                    max_cps=vrchat_config.solver_max_cps,
+                                                    disable_input_nodes=disabled_inputs,
+                                                    disable_output_nodes=disabled_outputs)
+
                             self.__config_find_instance.pop(key)
-
-                        continue
-
-                    vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
-
-                    if vrchat_config.solver_enabled:
-                        model = ModelLoader(PathUtil.to_path_or_default(vrchat_config.solver_model_path,
-                                                                        SolverPath.get_default_asset_path()))
-
-                        if model is not None:
-                            clamped_percentage = max(0.0, min(1.0,
-                                                              vrchat_config.solver_interleaved_vertices_percentage))
-
-                            vertices_count = max(1, int(model.get_vertices_count() * clamped_percentage))
-
-                            id_to_node: dict[str, SolverNode] = {node.id: node for node in model.get_blendshapes()}
-
-                            disabled_inputs: set[SolverNode] = set()
-                            for node_id in value.config.config.disable_solver_input_nodes:
-                                try:
-                                    disabled_inputs.add(id_to_node[node_id])
-                                except Exception:
-                                    _logger.warning(f"Failed to disable input node {node_id}")
-
-                            disabled_outputs: set[SolverNode] = set()
-                            for node_id in value.config.config.disable_solver_output_nodes:
-                                try:
-                                    disabled_outputs.add(id_to_node[node_id])
-                                except Exception:
-                                    _logger.warning(f"Failed to disable output node {node_id}")
-
-                            instance.set_solver(solver_model=model,
-                                                threads=vrchat_config.solver_threads,
-                                                interleaved_vertices_count=vertices_count,
-                                                max_cps=vrchat_config.solver_max_cps,
-                                                disable_input_nodes=disabled_inputs,
-                                                disable_output_nodes=disabled_outputs)
             except InterruptedError:
                 return
             except Exception:

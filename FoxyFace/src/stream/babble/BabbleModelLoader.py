@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 
+import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
@@ -42,9 +43,19 @@ class BabbleModelLoader:
         else:
             provider = ["CPUExecutionProvider"]
 
+        available_providers = onnxruntime.get_available_providers()
+
+        _logger.info(f"Available providers: {available_providers}")
+
+        final_providers = []
+        for p in provider:
+            name = p[0] if isinstance(p, tuple) else p
+            if name in available_providers:
+                final_providers.append(p)
+
         path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
 
-        session = InferenceSession(path, opts, providers=provider)
+        session = InferenceSession(path, opts, providers=final_providers)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
