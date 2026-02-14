@@ -24,8 +24,6 @@ class IFacialMocapSenderConfig:
     cache_float_precision: float = IFacialMocapDefaultValue.UDP_CACHE_FLOAT_PRECISION
     udp_ping_interval: float = IFacialMocapDefaultValue.UDP_PING_INTERVAL
 
-    avatar_config_file: str = ""
-
     auto_connect_port: int = IFacialMocapDefaultValue.AUTO_CONNECT_PORT
     test_send_period: float = IFacialMocapDefaultValue.ENCODER_TEST_SEND_PERIOD
     test_animation_period: float = IFacialMocapDefaultValue.ENCODER_TEST_ANIMATION_PERIOD

@@ -1,17 +1,23 @@
 import logging
 from threading import Event, Thread
 
+from blendshape_router.facades.foxyface.FoxyFace import FoxyFace
+from blendshape_router.facades.ifacialmocap.IFacialMocap import IFacialMocap
+from blendshape_router.facades.meowface.MeowFace import MeowFace
+from blendshape_router.facades.vrchat.VRChat import VRChat
+
 from src.config.ConfigManager import ConfigManager
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
 from src.pipline.ProcessingPipeline import ProcessingPipeline
-from src.pipline.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
-from src.pipline.senders.foxyface.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
-from src.pipline.senders.ifacialmocap.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
-from src.pipline.senders.meowface.MeowFaceSenderPipeline import MeowFaceSenderPipeline
-from src.pipline.senders.vrchat.VRChatSenderPipeline import VRChatSenderPipeline
+from src.stream.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
+from src.stream.senders.SenderInterface import SenderInterface
+from src.pipline.senders.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
+from src.pipline.senders.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
+from src.pipline.senders.MeowFaceSenderPipeline import MeowFaceSenderPipeline
+from src.pipline.senders.VRChatSenderPipeline import VRChatSenderPipeline
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
+from src.stream.senders.vrchat.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 
 _logger = logging.getLogger(__name__)
 
@@ -24,16 +30,20 @@ class SenderRouterPipeline:
                  meowface_config_manager: ConfigManager[AvatarConfig]):
         self.__processing_pipeline = processing_pipeline
 
-        self.__sender_list = [VRChatSenderPipeline(config_manager, vrchat_config_manager),
-                              IFacialMocapSenderPipeline(config_manager, ifacialmocap_config_manager),
-                              FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
-                              MeowFaceSenderPipeline(config_manager, meowface_config_manager),
-                              ]
+        self.__sender_list: list[SenderInterface] = [
+            VRChatSenderPipeline(config_manager, vrchat_config_manager),
+            IFacialMocapSenderPipeline(config_manager, ifacialmocap_config_manager),
+            FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
+            MeowFaceSenderPipeline(config_manager, meowface_config_manager),
+        ]
 
         self.__close_event: Event = Event()
 
         self.__thread: Thread = Thread(target=self.__start_loop, daemon=True, name="Sender Manager Pipeline")
         self.__thread.start()
+
+    def get_enabled_instances(self) -> list[VRChat | IFacialMocap | FoxyFace | MeowFace]:
+        return [sender.get_instance() for sender in self.__sender_list if sender.get_instance() is not None]
 
     def close(self):
         self.__close_event.set()

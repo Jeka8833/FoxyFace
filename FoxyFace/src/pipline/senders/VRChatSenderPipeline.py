@@ -2,10 +2,14 @@ import logging
 from collections.abc import Callable
 from ipaddress import ip_address
 from threading import Lock, Event, Thread
-from typing import Any
+from typing import Any, Iterable
 
 from blendshape_router.VRChatBuilder import VRChatBuilder
+from blendshape_router.facades.foxyface.FoxyFace import FoxyFace
+from blendshape_router.facades.ifacialmocap.IFacialMocap import IFacialMocap
+from blendshape_router.facades.meowface.MeowFace import MeowFace
 from blendshape_router.facades.vrchat.VRChat import VRChat
+from blendshape_router.facades.vrchat.VRChatInstance import VRChatInstance
 from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.VRChatConnectionPool import VRChatConnectionPool
@@ -23,16 +27,16 @@ from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
 from src.config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
-from src.pipline.senders.vrchat.FindInstanceItem import FindInstanceItem
-from src.stream.core.StreamWriteOnly import StreamWriteOnly
+from src.stream.senders.SenderInterface import SenderInterface
+from src.stream.senders.vrchat.FindInstanceItem import FindInstanceItem
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
-from src.stream.senders.config.VRchatAvatarConfigManager import VRChatAvatarConfigManager
+from src.stream.senders.vrchat.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
 
-class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKitParameter]]):
+class VRChatSenderPipeline(SenderInterface):
     __FIND_RETRY_COUNT: int = 10
 
     def __init__(self, config_manager: ConfigManager[Config], avatar_config_manager: VRChatAvatarConfigManager):
@@ -69,6 +73,18 @@ class VRChatSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKi
                 self.__vrchat.flush()
 
         return True
+
+    def get_endpoints(self) -> frozenset[EndpointEncoderInterface]:
+        pass
+
+    def get_solver_inputs(self) -> Iterable[SolverNode]:
+        return super().get_solver_inputs()
+
+    def get_solver_outputs(self) -> Iterable[SolverNode]:
+        return super().get_solver_outputs()
+
+    def get_instances(self) -> list[VRChatInstance | IFacialMocap | FoxyFace | MeowFace]:
+        return super().get_instances()
 
     def close(self):
         self.__find_instance_close_event.set()

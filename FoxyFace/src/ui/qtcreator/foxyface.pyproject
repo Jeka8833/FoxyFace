@@ -11,6 +11,7 @@
         "CalibrationSettingsItem.ui",
         "HasUpdateWindow.ui",
         "SenderSettings.ui",
-        "AvatarCalibration.ui"
+        "AvatarCalibration.ui",
+        "AvatarCalibrationWidget.ui"
     ]
 }

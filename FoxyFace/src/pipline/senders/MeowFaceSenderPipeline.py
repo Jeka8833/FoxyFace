@@ -4,8 +4,11 @@ from collections.abc import Callable
 from threading import Lock
 from typing import Any
 
-from blendshape_router.IFacialMocapBuilder import IFacialMocapBuilder
+from blendshape_router.MeowFaceBuilder import MeowFaceBuilder
+from blendshape_router.facades.foxyface.FoxyFace import FoxyFace
 from blendshape_router.facades.ifacialmocap.IFacialMocap import IFacialMocap
+from blendshape_router.facades.meowface.MeowFace import MeowFace
+from blendshape_router.facades.vrchat.VRChat import VRChat
 from blendshape_router.preset.ARKitGraph import ARKitGraph
 from blendshape_router.preset.ARKitParameter import ARKitParameter
 from blendshape_router.preset.BaseParameter import BaseParameter
@@ -19,50 +22,53 @@ from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
-from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
-from src.stream.core.StreamWriteOnly import StreamWriteOnly
+from src.config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
+from src.stream.senders.SenderInterface import SenderInterface
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
 
-class IFacialMocapSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter | ARKitParameter]]):
-    def __init__(self, config_manager: ConfigManager[Config], ifacialmocap_config_manager: ConfigManager[AvatarConfig]):
+class MeowFaceSenderPipeline(SenderInterface):
+    def __init__(self, config_manager: ConfigManager[Config], meowface_config_manager: ConfigManager[AvatarConfig]):
         self.__config_manager: ConfigManager[Config] = config_manager
-        self.__avatar_config_manager: ConfigManager[AvatarConfig] = ifacialmocap_config_manager
+        self.__avatar_config_manager: ConfigManager[AvatarConfig] = meowface_config_manager
 
         self.__create_lock: Lock = Lock()
-        self.__ifacialmocap: IFacialMocap | None = None
+        self.__meowface: MeowFace | None = None
 
         self.__main_config_listener: ConfigUpdateListener = self.__register_change_update()
         self.__avatar_config_listener: ConfigUpdateListener = self.__register_avatar_change_update()
 
     def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
-        ifacialmocap = self.__ifacialmocap
-        if ifacialmocap is not None:
+        meowface = self.__meowface
+        if meowface is not None:
             for node, node_value in value.blend_shapes.items():
                 if node_value is None:
                     continue
 
-                ifacialmocap.set_parameter(node, node_value)
+                meowface.set_parameter(node, node_value)
 
-            ifacialmocap.flush()
+            meowface.flush()
 
         return True
+
+    def get_instance(self) -> VRChat | IFacialMocap | FoxyFace | MeowFace | None:
+        return self.__meowface
 
     def close(self):
         self.__main_config_listener.unregister()
         self.__avatar_config_listener.unregister()
 
         with self.__create_lock:
-            if self.__ifacialmocap is not None:
-                self.__ifacialmocap.close()
+            if self.__meowface is not None:
+                self.__meowface.close()
 
     def __register_change_update(self) -> ConfigUpdateListener[Config]:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.sender.ifacialmocap]
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.sender.meowface]
 
-        return self.__config_manager.create_update_listener(lambda config: self.__ifacialmocap_changed(),
+        return self.__config_manager.create_update_listener(lambda config: self.__meowface_changed(),
                                                             watch_array, False)
 
     def __register_avatar_change_update(self) -> ConfigUpdateListener[AvatarConfig]:
@@ -70,18 +76,18 @@ class IFacialMocapSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter 
                                                             lambda config: config.disable_solver_output_nodes,
                                                             lambda config: config.disable_output_encoders]
 
-        return self.__avatar_config_manager.create_update_listener(lambda config: self.__ifacialmocap_changed(),
+        return self.__avatar_config_manager.create_update_listener(lambda config: self.__meowface_changed(),
                                                                    watch_array, True)
 
-    def __ifacialmocap_changed(self):
+    def __meowface_changed(self):
         with self.__create_lock:
-            if self.__ifacialmocap is not None:
-                self.__ifacialmocap.close()
-                self.__ifacialmocap = None
+            if self.__meowface is not None:
+                self.__meowface.close()
+                self.__meowface = None
 
-            ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
+            meowface_config: MeowFaceSenderConfig = self.__config_manager.config.sender.meowface
 
-            if not ifacialmocap_config.enabled:
+            if not meowface_config.enabled:
                 return
 
             solver_model: ModelLoader | None = None
@@ -89,13 +95,13 @@ class IFacialMocapSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter 
             disabled_inputs: set[SolverNode] = set()
             disabled_outputs: set[SolverNode] = set()
 
-            if ifacialmocap_config.solver_enabled:
+            if meowface_config.solver_enabled:
                 solver_model = ModelLoader(
-                    PathUtil.to_path_or_default(ifacialmocap_config.solver_model_path,
+                    PathUtil.to_path_or_default(meowface_config.solver_model_path,
                                                 SolverPath.get_default_asset_path()))
 
                 clamped_percentage = max(0.0, min(1.0,
-                                                  ifacialmocap_config.solver_interleaved_vertices_percentage))
+                                                  meowface_config.solver_interleaved_vertices_percentage))
 
                 vertices_count = max(1, int(solver_model.get_vertices_count() * clamped_percentage))
 
@@ -113,29 +119,29 @@ class IFacialMocapSenderPipeline(StreamWriteOnly[BlendShapesFrame[BaseParameter 
                     except Exception:
                         _logger.warning(f"Failed to disable output node {node_id}")
 
-            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = set(IFacialMocap.get_all_endpoints())
+            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = set(MeowFace.get_all_endpoints())
             for encoder in disabled_encoders.copy():
                 if encoder.id_str() not in self.__avatar_config_manager.config.disable_output_encoders:
                     disabled_encoders.remove(encoder)
 
-            self.__ifacialmocap = (IFacialMocapBuilder(
-                HostAddress(ipaddress.ip_address(ifacialmocap_config.ip), ifacialmocap_config.port))
-                                   .with_auto_connect(ifacialmocap_config.auto_connect_enabled)
-                                   .with_auto_connect_port(ifacialmocap_config.auto_connect_port)
-                                   .with_udp_ping_interval(ifacialmocap_config.udp_ping_interval)
-                                   .with_udp_cache_invalidate_timeout(ifacialmocap_config.cache_invalidate_timeout)
-                                   .with_udp_cache_full_sync_period(ifacialmocap_config.cache_full_sync_period)
-                                   .with_udp_cache_float_precision(ifacialmocap_config.cache_float_precision)
-                                   .with_test_send_period(ifacialmocap_config.test_send_period)
-                                   .with_test_animation_period(ifacialmocap_config.test_animation_period)
-                                   .with_solver_model(solver_model)
-                                   .with_solver_threads(ifacialmocap_config.solver_threads)
-                                   .with_solver_interleaved_vertices_count(vertices_count)
-                                   .with_solver_max_cps(ifacialmocap_config.solver_max_cps)
-                                   .disable_solver_input_nodes(disabled_inputs)
-                                   .disable_solver_output_nodes(disabled_outputs)
-                                   .disable_output_endpoints(disabled_encoders)
+            self.__meowface = (MeowFaceBuilder(
+                HostAddress(ipaddress.ip_address(meowface_config.ip), meowface_config.port))
+                               .with_auto_connect(meowface_config.auto_connect_enabled)
+                               .with_auto_connect_port(meowface_config.auto_connect_port)
+                               .with_udp_ping_interval(meowface_config.udp_ping_interval)
+                               .with_udp_cache_invalidate_timeout(meowface_config.cache_invalidate_timeout)
+                               .with_udp_cache_full_sync_period(meowface_config.cache_full_sync_period)
+                               .with_udp_cache_float_precision(meowface_config.cache_float_precision)
+                               .with_test_send_period(meowface_config.test_send_period)
+                               .with_test_animation_period(meowface_config.test_animation_period)
+                               .with_solver_model(solver_model)
+                               .with_solver_threads(meowface_config.solver_threads)
+                               .with_solver_interleaved_vertices_count(vertices_count)
+                               .with_solver_max_cps(meowface_config.solver_max_cps)
+                               .disable_solver_input_nodes(disabled_inputs)
+                               .disable_solver_output_nodes(disabled_outputs)
+                               .disable_output_endpoints(disabled_encoders)
 
-                                   .add_graph(ARKitGraph())
+                               .add_graph(ARKitGraph())
 
-                                   .build())
+                               .build())

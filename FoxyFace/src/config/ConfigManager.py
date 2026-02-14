@@ -11,6 +11,9 @@ _logger = logging.getLogger(__name__)
 
 class ConfigManager[T]:
     def __init__(self, path: Path, config_cls: Type[T], migration_manager: MigrationManager[T] | None = None):
+        if not isinstance(path, Path):
+            raise TypeError("path must be Path")
+
         self.__path: Path = path
         self.__config_cls: Type[T] = config_cls
         self.__migration_manager = migration_manager
@@ -21,6 +24,17 @@ class ConfigManager[T]:
         self.config: T = self.__config_cls()
 
         self.__update_listeners: set[ConfigUpdateListener[T]] = set()
+
+    @property
+    def path(self) -> Path:
+        return self.__path
+
+    @path.setter
+    def path(self, path: Path):
+        if not isinstance(path, Path):
+            raise TypeError("path must be Path")
+
+        self.__path = path
 
     def load(self, wait: bool = False):
         try:

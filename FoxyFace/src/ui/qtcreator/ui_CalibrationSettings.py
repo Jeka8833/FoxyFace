@@ -158,6 +158,6 @@ class Ui_CalibrationWindow(object):
         self.reset_head_center_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Reset", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.head_global), QCoreApplication.translate("CalibrationWindow", u"Head Global", None))
         self.full_reset_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Full Reset", None))
-        self.save_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Apply and Save", None))
+        self.save_btn.setText(QCoreApplication.translate("CalibrationWindow", u"Save", None))
     # retranslateUi
 

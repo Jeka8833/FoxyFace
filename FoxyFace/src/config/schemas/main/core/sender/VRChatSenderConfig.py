@@ -25,8 +25,6 @@ class VRChatSenderConfig:
     cache_float_precision: float = VRChatDefaultValue.OSC_CACHE_FLOAT_PRECISION
     osc_bundle_size: int = VRChatDefaultValue.OSC_BUNDLE_SIZE
 
-    avatar_config_folder: str = ""
-
     allow_legacy_graph: bool = VRChatDefaultValue.ALLOW_LEGACY_GRAPH
     parser_max_binary_bits: int = VRChatDefaultValue.PARSER_MAX_BINARY_BITS
     test_send_period: float = VRChatDefaultValue.ENCODER_TEST_SEND_PERIOD

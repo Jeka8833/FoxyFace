@@ -9,11 +9,14 @@ from packaging.version import Version
 from AppConstants import AppConstants
 from src.autorun.SteamAutoRun import SteamAutoRun
 from src.config.ConfigManager import ConfigManager
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.CameraPipeline import CameraPipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
+from src.pipline.senders.SenderRouterPipeline import SenderRouterPipeline
+from src.stream.senders.vrchat.VRchatAvatarConfigManager import VRChatAvatarConfigManager
 from src.ui import UiImageUtil
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_MainWindow import Ui_MainWindow
@@ -41,7 +44,11 @@ class MainWindow(FoxyWindow):
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
                  mediapipe_pipeline: MediaPipePipeline, babble_pipeline: BabblePipeline,
                  processing_pipeline: ProcessingPipeline, auto_calibration_endpoint: AutoCalibrationEndpoint,
-                 steam_auto_run: SteamAutoRun):
+                 steam_auto_run: SteamAutoRun, sender_manager: SenderRouterPipeline,
+                 vrchat_config_manager: VRChatAvatarConfigManager,
+                 ifacialmocap_config_manager: ConfigManager[AvatarConfig],
+                 foxyface_config_manager: ConfigManager[AvatarConfig],
+                 meowface_config_manager: ConfigManager[AvatarConfig]):
         super().__init__()
 
         self.is_closed: threading.Event = threading.Event()
@@ -53,6 +60,11 @@ class MainWindow(FoxyWindow):
         self.__processing_pipeline = processing_pipeline
         self.__auto_calibration_endpoint = auto_calibration_endpoint
         self.__steam_auto_run = steam_auto_run
+        self.__sender_manager = sender_manager
+        self.__vrchat_config_manager = vrchat_config_manager
+        self.__ifacialmocap_config_manager = ifacialmocap_config_manager
+        self.__foxyface_config_manager = foxyface_config_manager
+        self.__meowface_config_manager = meowface_config_manager
 
         self.__ui = Ui_MainWindow()
         self.__ui.setupUi(self)
@@ -79,15 +91,13 @@ class MainWindow(FoxyWindow):
         self.show()
 
     def closeEvent(self, event):
-        self.is_closed.set()
+        super().closeEvent(event)
 
         self.__unregister_signals()
 
         self.__timer.stop()
 
         QApplication.closeAllWindows()
-
-        event.accept()
 
     def __update_thread(self):
         try:
@@ -227,8 +237,17 @@ class MainWindow(FoxyWindow):
 
     def __open_avatar_calibration(self):
         try:
-            if self.__sender_avatar_calibration_window is None or self.__sender_avatar_calibration_window.is_closed.is_set():
-                self.__sender_avatar_calibration_window = AvatarCalibrationWindow(self.__config_manager)
+            if (self.__sender_avatar_calibration_window is None or
+                    self.__sender_avatar_calibration_window.is_closed.is_set()):
+                self.__sender_avatar_calibration_window = AvatarCalibrationWindow(
+                    config_manager=self.__config_manager,
+                    open_connection_setting=self.__open_sender_settings,
+                    sender_manager=self.__sender_manager,
+                    vrchat_config_manager=self.__vrchat_config_manager,
+                    ifacialmocap_config_manager=self.__ifacialmocap_config_manager,
+                    meowface_config_manager=self.__meowface_config_manager,
+                    foxyface_config_manager=self.__foxyface_config_manager,
+                )
             else:
                 self.__sender_avatar_calibration_window.close_event.emit()
         except Exception:
