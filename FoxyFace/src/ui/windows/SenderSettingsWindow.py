@@ -33,12 +33,12 @@ class SenderSettingsWindow(FoxyWindow):
         self.show()
 
     def __bind_file_buttons(self):
-        # Solvers (File Selection)
         self.__ui.vrchat_solver_model_btn.clicked.connect(
             lambda: self.__open_file_dialog(self.__ui.vrchat_solver_model_le, 'Open Solver Model',
                                             'JSON Files (*.json)'))
         self.__ui.ifm_solver_model_btn.clicked.connect(
-            lambda: self.__open_file_dialog(self.__ui.ifm_solver_model_le, 'Open Solver Model', 'JSON Files (*.json)'))
+            lambda: self.__open_file_dialog(self.__ui.ifm_solver_model_le, 'Open Solver Model',
+                                            'JSON Files (*.json)'))
         self.__ui.meowface_solver_model_btn.clicked.connect(
             lambda: self.__open_file_dialog(self.__ui.meowface_solver_model_le, 'Open Solver Model',
                                             'JSON Files (*.json)'))
@@ -46,30 +46,10 @@ class SenderSettingsWindow(FoxyWindow):
             lambda: self.__open_file_dialog(self.__ui.foxyface_solver_model_le, 'Open Solver Model',
                                             'JSON Files (*.json)'))
 
-        # Avatar Configs (File Selection)
-        self.__ui.ifm_avatar_config_btn.clicked.connect(
-            lambda: self.__open_file_dialog(self.__ui.ifm_avatar_config_le, 'Open Avatar Config',
-                                            'JSON Files (*.json)'))
-        self.__ui.meowface_avatar_config_btn.clicked.connect(
-            lambda: self.__open_file_dialog(self.__ui.meowface_avatar_config_le, 'Open Avatar Config',
-                                            'JSON Files (*.json)'))
-        self.__ui.foxyface_avatar_config_btn.clicked.connect(
-            lambda: self.__open_file_dialog(self.__ui.foxyface_avatar_config_le, 'Open Avatar Config',
-                                            'JSON Files (*.json)'))
-
-        # Avatar Configs (Folder Selection)
-        self.__ui.vrchat_avatar_config_btn.clicked.connect(
-            lambda: self.__open_folder_dialog(self.__ui.vrchat_avatar_config_le, 'Open Avatar Config Folder'))
-
     def __open_file_dialog(self, line_edit, caption, file_filter):
         filename, _ = QFileDialog.getOpenFileName(parent=self, caption=caption, dir='.', filter=file_filter)
         if filename:
             line_edit.setText(filename)
-
-    def __open_folder_dialog(self, line_edit, caption):
-        folder = QFileDialog.getExistingDirectory(parent=self, caption=caption, dir='.')
-        if folder:
-            line_edit.setText(folder)
 
     def __bind_sliders_labels(self):
         self.__ui.vrchat_solver_sercision_slider.valueChanged.connect(
@@ -149,7 +129,6 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.vrchat_cache_float_percision_sb.setValue(
             vrchat_config.cache_float_precision)
         self.__ui.vrchat_cache_bundle_sb.setValue(vrchat_config.osc_bundle_size)
-        self.__ui.vrchat_avatar_config_le.setText(vrchat_config.avatar_config_folder)
 
         ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
 
@@ -168,7 +147,6 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.ifm_cache_sync_sb.setValue(ifacialmocap_config.cache_full_sync_period)
         self.__ui.ifm_cache_ping_sb.setValue(ifacialmocap_config.udp_ping_interval)
         self.__ui.ifm_cache_float_percision_sb.setValue(ifacialmocap_config.cache_float_precision)
-        self.__ui.ifm_avatar_config_le.setText(ifacialmocap_config.avatar_config_file)
 
         meowface_config: MeowFaceSenderConfig = self.__config_manager.config.sender.meowface
 
@@ -186,7 +164,6 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.meowface_cache_sync_sb.setValue(meowface_config.cache_full_sync_period)
         self.__ui.meowface_cache_ping_sb.setValue(meowface_config.udp_ping_interval)
         self.__ui.meowface_cache_float_percision_sb.setValue(meowface_config.cache_float_precision)
-        self.__ui.meowface_avatar_config_le.setText(meowface_config.avatar_config_file)
 
         foxyface_config: FoxyFaceSenderConfig = self.__config_manager.config.sender.foxyface
 
@@ -205,7 +182,6 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.foxyface_cache_sync_sb.setValue(foxyface_config.cache_full_sync_period)
         self.__ui.foxyface_cache_ping_sb.setValue(foxyface_config.udp_ping_interval)
         self.__ui.foxyface_cache_float_percision_sb.setValue(foxyface_config.cache_float_precision)
-        self.__ui.foxyface_avatar_config_le.setText(foxyface_config.avatar_config_file)
 
     def __save(self):
         try:
@@ -225,7 +201,6 @@ class SenderSettingsWindow(FoxyWindow):
             vrchat_config.cache_full_sync_period = self.__ui.vrchat_cache_sync_sb.value()
             vrchat_config.cache_float_precision = self.__ui.vrchat_cache_float_percision_sb.value()
             vrchat_config.osc_bundle_size = self.__ui.vrchat_cache_bundle_sb.value()
-            vrchat_config.avatar_config_folder = self.__ui.vrchat_avatar_config_le.text()
 
             ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
 
@@ -243,7 +218,6 @@ class SenderSettingsWindow(FoxyWindow):
             ifacialmocap_config.cache_full_sync_period = self.__ui.ifm_cache_sync_sb.value()
             ifacialmocap_config.udp_ping_interval = self.__ui.ifm_cache_ping_sb.value()
             ifacialmocap_config.cache_float_precision = self.__ui.ifm_cache_float_percision_sb.value()
-            ifacialmocap_config.avatar_config_file = self.__ui.ifm_avatar_config_le.text()
 
             meowface_config: MeowFaceSenderConfig = self.__config_manager.config.sender.meowface
 
@@ -260,7 +234,6 @@ class SenderSettingsWindow(FoxyWindow):
             meowface_config.cache_full_sync_period = self.__ui.meowface_cache_sync_sb.value()
             meowface_config.udp_ping_interval = self.__ui.meowface_cache_ping_sb.value()
             meowface_config.cache_float_precision = self.__ui.meowface_cache_float_percision_sb.value()
-            meowface_config.avatar_config_file = self.__ui.meowface_avatar_config_le.text()
 
             foxyface_config: FoxyFaceSenderConfig = self.__config_manager.config.sender.foxyface
 
@@ -278,7 +251,6 @@ class SenderSettingsWindow(FoxyWindow):
             foxyface_config.cache_full_sync_period = self.__ui.foxyface_cache_sync_sb.value()
             foxyface_config.udp_ping_interval = self.__ui.foxyface_cache_ping_sb.value()
             foxyface_config.cache_float_precision = self.__ui.foxyface_cache_float_percision_sb.value()
-            foxyface_config.avatar_config_file = self.__ui.foxyface_avatar_config_le.text()
 
             self.__config_manager.write()
         except Exception:

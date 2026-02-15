@@ -5,9 +5,7 @@ from typing import Callable, Any
 
 from blendshape_router.FoxyFaceBuilder import FoxyFaceBuilder
 from blendshape_router.facades.foxyface.FoxyFace import FoxyFace
-from blendshape_router.facades.ifacialmocap.IFacialMocap import IFacialMocap
-from blendshape_router.facades.meowface.MeowFace import MeowFace
-from blendshape_router.facades.vrchat.VRChat import VRChat
+from blendshape_router.plugin.endpoints.foxyface.graph.FoxyFaceGraph import FoxyFaceGraph
 from blendshape_router.preset.ARKitGraph import ARKitGraph
 from blendshape_router.preset.ARKitParameter import ARKitParameter
 from blendshape_router.preset.BaseParameter import BaseParameter
@@ -22,8 +20,9 @@ from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
 from src.config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
-from src.stream.senders.SenderInterface import SenderInterface
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.senders.AvatarEndpoint import AvatarEndpoint
+from src.stream.senders.SenderInterface import SenderInterface
 from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
@@ -36,6 +35,7 @@ class FoxyFaceSenderPipeline(SenderInterface):
 
         self.__create_lock: Lock = Lock()
         self.__foxyface: FoxyFace | None = None
+        self.__avatar_endpoint: frozenset[AvatarEndpoint] = frozenset()
 
         self.__main_config_listener: ConfigUpdateListener = self.__register_change_update()
         self.__avatar_config_listener: ConfigUpdateListener = self.__register_avatar_change_update()
@@ -53,8 +53,8 @@ class FoxyFaceSenderPipeline(SenderInterface):
 
         return True
 
-    def get_instance(self) -> VRChat | IFacialMocap | FoxyFace | MeowFace | None:
-        return self.__foxyface
+    def get_endpoints(self) -> frozenset[AvatarEndpoint]:
+        return self.__avatar_endpoint
 
     def close(self):
         self.__main_config_listener.unregister()
@@ -82,7 +82,9 @@ class FoxyFaceSenderPipeline(SenderInterface):
         with self.__create_lock:
             if self.__foxyface is not None:
                 self.__foxyface.close()
+
                 self.__foxyface = None
+                self.__avatar_endpoint = frozenset()
 
             foxyface_config: FoxyFaceSenderConfig = self.__config_manager.config.sender.foxyface
 
@@ -117,7 +119,7 @@ class FoxyFaceSenderPipeline(SenderInterface):
                     except Exception:
                         _logger.warning(f"Failed to disable output node {node_id}")
 
-            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = set(FoxyFace.get_all_endpoints())
+            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = set(FoxyFace.get_available_endpoints())
             for encoder in disabled_encoders.copy():
                 if encoder.id_str() not in self.__avatar_config_manager.config.disable_output_encoders:
                     disabled_encoders.remove(encoder)
@@ -145,3 +147,13 @@ class FoxyFaceSenderPipeline(SenderInterface):
                                .add_graph(ARKitGraph())
 
                                .build())
+
+            all_nodes = (FoxyFaceGraph() + ARKitGraph()).get_all_nodes()
+            all_solver_inputs = frozenset(solver_model.load_input_functions(all_nodes))
+            all_solver_outputs = frozenset(solver_model.load_output_functions(all_nodes))
+
+            self.__avatar_endpoint = frozenset(
+                [AvatarEndpoint(endpoint_name="FoxyFace", config_manager=self.__avatar_config_manager,
+                                endpoints=FoxyFace.get_available_endpoints(),
+                                solver_inputs=all_solver_inputs,
+                                solver_outputs=all_solver_outputs)])

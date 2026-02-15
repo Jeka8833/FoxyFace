@@ -97,11 +97,7 @@ class RunMainStream:
                                                     processing_pipeline=self.__processing_pipeline,
                                                     auto_calibration_endpoint=self.__auto_calibration_endpoint,
                                                     steam_auto_run=self.__steam_auto_run,
-                                                    sender_manager=self.__sender_router_pipeline,
-                                                    vrchat_config_manager=self.__vrchat_config,
-                                                    ifacialmocap_config_manager=self.__ifacialmocap_config,
-                                                    foxyface_config_manager=self.__foxyface_config,
-                                                    meowface_config_manager=self.__meowface_config)
+                                                    sender_manager=self.__sender_router_pipeline)
 
         if splash_screen is not None:
             splash_screen.finish(self.__main_window)

@@ -11,9 +11,6 @@ _logger = logging.getLogger(__name__)
 
 class ConfigManager[T]:
     def __init__(self, path: Path, config_cls: Type[T], migration_manager: MigrationManager[T] | None = None):
-        if not isinstance(path, Path):
-            raise TypeError("path must be Path")
-
         self.__path: Path = path
         self.__config_cls: Type[T] = config_cls
         self.__migration_manager = migration_manager
@@ -24,17 +21,6 @@ class ConfigManager[T]:
         self.config: T = self.__config_cls()
 
         self.__update_listeners: set[ConfigUpdateListener[T]] = set()
-
-    @property
-    def path(self) -> Path:
-        return self.__path
-
-    @path.setter
-    def path(self, path: Path):
-        if not isinstance(path, Path):
-            raise TypeError("path must be Path")
-
-        self.__path = path
 
     def load(self, wait: bool = False):
         try:
@@ -61,7 +47,16 @@ class ConfigManager[T]:
             if wait:
                 future.result()
         except Exception:
-            pass
+            _logger.warning(f"Failed to hard reset config {self.__path}", exc_info=True, stack_info=True)
+
+    def import_file_or_crash(self, file: Path):
+        future = self.__thread_pool.submit(self.__import_task, file)
+        future.result()
+
+    def export_file(self, file: Path):
+        json_text = self.config.to_json(indent=2)
+
+        file.write_text(json_text, encoding="utf-8")
 
     def close(self):
         self.__thread_pool.shutdown(wait=True, cancel_futures=True)
@@ -89,9 +84,6 @@ class ConfigManager[T]:
         self.close()
 
     def __read_task(self):
-        for listener in self.__update_listeners:
-            listener.call_update()
-
         try:
             if self.__path.exists():
                 json_text = self.__path.read_text(encoding="utf-8")
@@ -109,6 +101,20 @@ class ConfigManager[T]:
 
         self.__write_task()
 
+    def __import_task(self, path: Path):
+        json_text = path.read_text(encoding="utf-8")
+
+        config = self.__config_cls.from_json(json_text)
+
+        if self.__migration_manager:
+            self.__migration_manager.try_migrate(config)
+
+        self.config = config
+
+        self.__last_hash = hash(json_text)
+
+        self.__write_task()
+
     def __write_task(self):
         try:
             self.__path.parent.mkdir(parents=True, exist_ok=True)
@@ -116,7 +122,7 @@ class ConfigManager[T]:
             _logger.info("Failed to create config directory", exc_info=True, stack_info=True)
 
         try:
-            json_text = self.config.to_json(indent=2)
+            json_text = self.config.to_json(indent=2, sort_keys=True)
 
             if hash(json_text) == self.__last_hash:
                 _logger.info(f"Config {self.__path.name} did not change")
