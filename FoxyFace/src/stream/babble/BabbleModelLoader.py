@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 try:
     import torch
 except Exception:
-    _logger.warning("Failed to import torch", exc_info=True, stack_info=True)
+    _logger.warning("Failed to import torch. Compute acceleration may not work")
 
 
 class BabbleModelLoader:

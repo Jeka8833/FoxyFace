@@ -19,7 +19,7 @@ class VRChatAvatarConfigManager:
         self.__config_dict: dict[ConnectionNode, ConfigManager[AvatarConfig]] = {}
         self.__listener_manager: ListenerManager = ListenerManager()
 
-    def get_config_or_load(self, connection: ConnectionNode, avatar_info: AvatarInfo):
+    def get_config_or_load(self, connection: ConnectionNode, avatar_info: AvatarInfo) -> ConfigManager[AvatarConfig]:
         with self.__lock:
             config = self.__config_dict.get(connection)
 
@@ -37,6 +37,10 @@ class VRChatAvatarConfigManager:
             self.__listener_manager.notify(connection, config_manager, True)
 
             return config_manager
+
+    def get_config(self, connection: ConnectionNode) -> ConfigManager[AvatarConfig] | None:
+        with self.__lock:
+            return self.__config_dict.get(connection)
 
     def close_connection(self, connection: ConnectionNode):
         with self.__lock:

@@ -6,11 +6,10 @@ from typing import Any
 
 from blendshape_router.VRChatBuilder import VRChatBuilder
 from blendshape_router.facades.vrchat.VRChat import VRChat
+from blendshape_router.graph.Node import Node
 from blendshape_router.plugin.endpoints.vrchat.AvatarInfo import AvatarInfo
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.ConnectionNode import ConnectionNode
 from blendshape_router.plugin.endpoints.vrchat.connection.receive.VRChatConnectionPool import VRChatConnectionPool
-from blendshape_router.plugin.endpoints.vrchat.graph.VrcftGraph import VrcftGraph
-from blendshape_router.plugin.endpoints.vrchat.graph.VrcftLegacyGraph import VrcftLegacyGraph
 from blendshape_router.preset.ARKitGraph import ARKitGraph
 from blendshape_router.preset.ARKitParameter import ARKitParameter
 from blendshape_router.preset.BaseParameter import BaseParameter
@@ -46,9 +45,6 @@ class VRChatSenderPipeline(SenderInterface):
         self.__connection_pool: VRChatConnectionPool = VRChatConnectionPool()
         self.__vrchat_lock: Lock = Lock()
         self.__vrchat: VRChat | None = None
-        self.__model: ModelLoader | None = None
-        self.__all_solver_inputs: frozenset[SolverNode] = frozenset()
-        self.__all_solver_outputs: frozenset[SolverNode] = frozenset()
 
         self.__avatar_endpoint_dict: dict[ConnectionNode, AvatarEndpoint] = {}
 
@@ -79,11 +75,29 @@ class VRChatSenderPipeline(SenderInterface):
         return True
 
     def get_endpoints(self) -> frozenset[AvatarEndpoint]:
-        with self.__vrchat_lock:
-            if self.__vrchat is None:
-                return frozenset()
+        vrchat = self.__vrchat
+        if vrchat is None:
+            return frozenset()
 
-            return frozenset(self.__avatar_endpoint_dict.values())
+        endpoints: set[AvatarEndpoint] = set()
+        for connection, instance in vrchat.get_instances().items():
+            avatar = instance.get_avatar_info()
+            if avatar is None:
+                continue
+
+            config_manager = self.__avatar_config_manager.get_config(connection)
+            if config_manager is None:
+                continue
+
+            all_solver_inputs = frozenset(instance.get_all_solver_input_functions())
+            all_solver_outputs = frozenset(instance.get_all_solver_output_functions())
+
+            endpoints.add(AvatarEndpoint(f"{connection.name}/{avatar.avatar_id}", config_manager,
+                                         avatar.endpoints, all_solver_inputs, all_solver_outputs,
+                                         test_endpoint_callable=instance.enable_parameter_testing,
+                                         stop_all_test_endpoint_callable=instance.disable_parameter_testing))
+
+        return frozenset(endpoints)
 
     def close(self):
         self.__find_instance_close_event.set()
@@ -112,12 +126,11 @@ class VRChatSenderPipeline(SenderInterface):
             if self.__vrchat is not None:
                 self.__vrchat.close()
 
-                self.__vrchat = None
-                self.__model = None
-
             vrchat_config: VRChatSenderConfig = config_manager.config.sender.vrchat
 
             if not vrchat_config.enabled:
+                self.__vrchat = None
+
                 return
 
             self.__vrchat = (VRChatBuilder(self.__zeroconf, self.__connection_pool)
@@ -142,13 +155,6 @@ class VRChatSenderPipeline(SenderInterface):
                              .add_graph(ARKitGraph())
 
                              .build())
-
-            self.__model = ModelLoader(PathUtil.to_path_or_default(vrchat_config.solver_model_path,
-                                                                   SolverPath.get_default_asset_path()))
-
-            all_nodes = (VrcftLegacyGraph() + VrcftGraph() + ARKitGraph()).get_all_nodes()
-            self.__all_solver_inputs = frozenset(self.__model.load_input_functions(all_nodes))
-            self.__all_solver_outputs = frozenset(self.__model.load_output_functions(all_nodes))
 
     def __avatar_config_list_changed(self, connection: ConnectionNode,
                                      avatar_config_manager: ConfigManager[AvatarConfig],
@@ -192,20 +198,14 @@ class VRChatSenderPipeline(SenderInterface):
 
     def __avatar_parameter_filter(self, node: ConnectionNode, avatar: AvatarInfo) -> frozenset[
         EndpointEncoderInterface[dict[str, float | bool | list[float]]]]:
-        _logger.info(f"Get or load avatar config {avatar.avatar_id}, connection: {node.name}")
-
         config_manager = self.__avatar_config_manager.get_config_or_load(node, avatar)
 
-        encoders: set[EndpointEncoderInterface[dict[str, float | bool | list[float]]]] = set(avatar.endpoints)
-        for encoder in avatar.endpoints:
-            if encoder.id_str() in config_manager.config.disable_output_encoders:
-                encoders.remove(encoder)
+        encoders: set[EndpointEncoderInterface[dict[str, float | bool | list[float]]]] = {
+            encoder for encoder in avatar.endpoints
+            if encoder.id_str() not in config_manager.config.disable_output_encoders
+        }
 
-        _logger.info(f"For avatar {avatar.avatar_id} filtered endpoints: {encoders}")
-
-        self.__avatar_endpoint_dict[node] = AvatarEndpoint(f"{node.name}/{avatar.avatar_id}", config_manager,
-                                                           avatar.endpoints, self.__all_solver_inputs,
-                                                           self.__all_solver_outputs)
+        _logger.debug(f"For avatar {avatar.avatar_id}, connection: {node.name}, filtered endpoints: {encoders}")
 
         return avatar.endpoints
 
@@ -232,29 +232,21 @@ class VRChatSenderPipeline(SenderInterface):
                         vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
 
                         if vrchat_config.solver_enabled:
+                            disabled_inputs = {SolverNode(node_id) for node_id in
+                                               value.config.config.disable_solver_input_nodes}
+                            disabled_outputs = {Node(node_id) for node_id in
+                                                value.config.config.disable_solver_output_nodes}
+
+                            solver_model = ModelLoader(
+                                PathUtil.to_path_or_default(vrchat_config.solver_model_path,
+                                                            SolverPath.get_default_asset_path()))
+
                             clamped_percentage = max(0.0, min(1.0,
                                                               vrchat_config.solver_interleaved_vertices_percentage))
 
-                            vertices_count = max(1, int(self.__model.get_vertices_count() * clamped_percentage))
+                            vertices_count = max(1, int(solver_model.get_vertices_count() * clamped_percentage))
 
-                            id_to_node: dict[str, SolverNode] = {node.id: node for node in
-                                                                 self.__model.get_blendshapes()}
-
-                            disabled_inputs: set[SolverNode] = set()
-                            for node_id in value.config.config.disable_solver_input_nodes:
-                                try:
-                                    disabled_inputs.add(id_to_node[node_id])
-                                except Exception:
-                                    _logger.warning(f"Failed to disable input node {node_id}")
-
-                            disabled_outputs: set[SolverNode] = set()
-                            for node_id in value.config.config.disable_solver_output_nodes:
-                                try:
-                                    disabled_outputs.add(id_to_node[node_id])
-                                except Exception:
-                                    _logger.warning(f"Failed to disable output node {node_id}")
-
-                            instance.set_solver(solver_model=self.__model,
+                            instance.set_solver(solver_model=solver_model,
                                                 threads=vrchat_config.solver_threads,
                                                 interleaved_vertices_count=vertices_count,
                                                 max_cps=vrchat_config.solver_max_cps,

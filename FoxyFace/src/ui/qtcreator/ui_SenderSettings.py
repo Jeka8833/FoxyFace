@@ -41,7 +41,7 @@ class Ui_SenderSettings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 352, 542))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 352, 572))
         self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.vrchat_enable_cb = QCheckBox(self.scrollAreaWidgetContents)
@@ -155,6 +155,24 @@ class Ui_SenderSettings(object):
 
 
         self.verticalLayout_9.addWidget(self.vrchat_zeroconf_widget)
+
+        self.widget_10 = QWidget(self.widget_2)
+        self.widget_10.setObjectName(u"widget_10")
+        self.horizontalLayout_21 = QHBoxLayout(self.widget_10)
+        self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
+        self.horizontalLayout_21.setContentsMargins(0, 0, 0, 0)
+        self.label = QLabel(self.widget_10)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_21.addWidget(self.label)
+
+        self.pushButton = QPushButton(self.widget_10)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.horizontalLayout_21.addWidget(self.pushButton)
+
+
+        self.verticalLayout_9.addWidget(self.widget_10)
 
         self.vrchat_solver_lb = QLabel(self.widget_2)
         self.vrchat_solver_lb.setObjectName(u"vrchat_solver_lb")
@@ -391,7 +409,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, -111, 352, 533))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 352, 533))
         self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.ifm_enable_cb = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -707,7 +725,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_4 = QWidget()
         self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
-        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, -84, 352, 506))
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 352, 506))
         self.verticalLayout_7 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.meowface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_4)
@@ -1018,7 +1036,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_4.setWidgetResizable(True)
         self.scrollAreaWidgetContents_5 = QWidget()
         self.scrollAreaWidgetContents_5.setObjectName(u"scrollAreaWidgetContents_5")
-        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, -115, 352, 537))
+        self.scrollAreaWidgetContents_5.setGeometry(QRect(0, 0, 352, 537))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents_5)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.foxyface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_5)
@@ -1401,6 +1419,8 @@ class Ui_SenderSettings(object):
         self.vrchat_close_connectio_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" retries", None))
         self.vrchat_zeroconf_lb.setText(QCoreApplication.translate("SenderSettings", u"Zeroconf Timeout", None))
         self.vrchat_zeroconf_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
+        self.label.setText(QCoreApplication.translate("SenderSettings", u"Block IP list:", None))
+        self.pushButton.setText(QCoreApplication.translate("SenderSettings", u"Open List", None))
         self.vrchat_solver_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver", None))
         self.vrchat_enable_solver_cb.setText(QCoreApplication.translate("SenderSettings", u"Solver Enabled", None))
         self.vrchat_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))

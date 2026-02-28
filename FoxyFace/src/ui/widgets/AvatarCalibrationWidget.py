@@ -1,16 +1,166 @@
-from PySide6.QtWidgets import QWidget
+import logging
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QFileDialog
 from blendshape_router.router.EndpointEncoderInterface import EndpointEncoderInterface
 
+from src.config.ConfigManager import ConfigManager
+from src.config.ConfigUpdateListener import ConfigUpdateListener
+from src.config.schemas.avatar.AvatarConfig import AvatarConfig
+from src.stream.senders.AvatarEndpoint import AvatarEndpoint
 from src.ui.qtcreator.ui_AvatarCalibrationWidget import Ui_AvatarCalibrationWidget
+
+_logger = logging.getLogger(__name__)
 
 
 class AvatarCalibrationWidget(QWidget):
+    __update_signal: Signal = Signal()
 
-    def __init__(self, endpoints: list[EndpointEncoderInterface], solver):
+    def __init__(self, avatar_endpoint: AvatarEndpoint):
         super().__init__()
+
+        self.avatar_endpoint = avatar_endpoint
 
         self.__ui = Ui_AvatarCalibrationWidget()
         self.__ui.setupUi(self)
 
+        self.__endpoints_names: dict[str, EndpointEncoderInterface] = {}
+        self.__input_checkboxes: dict[str, QCheckBox] = {}
+        self.__output_checkboxes: dict[str, QCheckBox] = {}
+
+        self.__build_checkbox_lists()
+        self.__build_endpoint_list()
+
+        self.__update_signal.connect(self.__solvers_update)
+        self.__avatar_config_changes: ConfigUpdateListener = self.__register_avatar_config_changes()
+        self.__register_events()
+
+    def update_endpoint(self, endpoint: AvatarEndpoint):
+        self.avatar_endpoint = endpoint
+
     def closeEvent(self, event, /):
         super().closeEvent(event)
+
+        self.__avatar_config_changes.unregister()
+        self.__update_signal.disconnect(self.__solvers_update)
+        self.__unregister_events()
+
+    def __register_events(self):
+        self.__ui.apply_btn.clicked.connect(self.__apply_btn)
+        self.__ui.avatar_reset_btn.clicked.connect(self.__reset_avatar_but)
+        self.__ui.avatar_import_btn.clicked.connect(self.__import_avatar_but)
+        self.__ui.avatar_export_btn.clicked.connect(self.__export_avatar_but)
+
+    def __unregister_events(self):
+        self.__ui.apply_btn.clicked.disconnect(self.__apply_btn)
+        self.__ui.avatar_reset_btn.clicked.disconnect(self.__reset_avatar_but)
+        self.__ui.avatar_import_btn.clicked.disconnect(self.__import_avatar_but)
+        self.__ui.avatar_export_btn.clicked.disconnect(self.__export_avatar_but)
+
+    def __build_endpoint_list(self):
+        for endpoint in self.avatar_endpoint.endpoints:
+            self.__endpoints_names[endpoint.id_str()] = endpoint
+
+            self.__ui.endpoint_list_lw.addItem(endpoint.id_str())
+
+    def __build_checkbox_lists(self):
+        self.__build_solver_checkboxes(
+            self.avatar_endpoint.solver_inputs,
+            self.__ui.solver_input_scroll_widget,
+            self.__input_checkboxes,
+            lambda: self.avatar_endpoint.config_manager.config.disable_solver_input_nodes
+        )
+        self.__build_solver_checkboxes(
+            self.avatar_endpoint.solver_outputs,
+            self.__ui.solver_output_scroll_area_widget,
+            self.__output_checkboxes,
+            lambda: self.avatar_endpoint.config_manager.config.disable_solver_output_nodes
+        )
+
+    def __build_solver_checkboxes(self, nodes, widget, storage_dict, get_disabled_nodes: Callable[[], set[str]]):
+        layout = QVBoxLayout()
+        for node in sorted(nodes, key=lambda x: x.id):
+            checkbox = QCheckBox(node.id, parent=self)
+
+            checkbox.toggled.connect(
+                lambda checked, id_=node.id, getter=get_disabled_nodes:
+                self.__checkbox_changed(checked, id_, getter)
+            )
+            layout.addWidget(checkbox)
+            storage_dict[node.id] = checkbox
+
+        widget.setLayout(layout)
+
+    def __solvers_update(self):
+        disabled_inputs = self.avatar_endpoint.config_manager.config.disable_solver_input_nodes
+        self.__update_checkbox_states(self.__input_checkboxes, disabled_inputs)
+
+        disabled_outputs = self.avatar_endpoint.config_manager.config.disable_solver_output_nodes
+        self.__update_checkbox_states(self.__output_checkboxes, disabled_outputs)
+
+    @staticmethod
+    def __update_checkbox_states(storage_dict: dict[str, QCheckBox], disabled_nodes: set[str]):
+        for node_id, checkbox in storage_dict.items():
+            is_enabled = node_id not in disabled_nodes
+
+            if checkbox.isChecked() != is_enabled:
+                checkbox.blockSignals(True)
+                checkbox.setChecked(is_enabled)
+                checkbox.blockSignals(False)
+
+    @staticmethod
+    def __checkbox_changed(checked: bool, id_: str, get_disabled_nodes: Callable[[], set[str]]):
+        if checked:
+            get_disabled_nodes().discard(id_)
+        else:
+            get_disabled_nodes().add(id_)
+
+    def __register_avatar_config_changes(self) -> ConfigUpdateListener[AvatarConfig]:
+        watch_array: list[Callable[[AvatarConfig], Any]] = [
+            lambda config: config.disable_solver_input_nodes,
+            lambda config: config.disable_solver_output_nodes,
+            lambda config: config.disable_output_encoders
+        ]
+
+        return self.avatar_endpoint.config_manager.create_update_listener(self.__avatar_config_changed, watch_array,
+                                                                          True)
+
+    def __avatar_config_changed(self, config_manager: ConfigManager[AvatarConfig]):
+        self.__update_signal.emit()
+
+    def __apply_btn(self):
+        self.avatar_endpoint.config_manager.write()
+
+    def __reset_avatar_but(self):
+        self.avatar_endpoint.config_manager.hard_reset()
+
+    def __import_avatar_but(self):
+        try:
+            file_path, _ = QFileDialog.getOpenFileName(
+                self,
+                "Open Avatar Config File",
+                "",
+                "JSON Files (*.json)"
+            )
+
+            if file_path:
+                self.avatar_endpoint.config_manager.import_file_or_crash(Path(file_path))
+        except Exception:
+            _logger.warning("Failed to import avatar config", exc_info=True, stack_info=True)
+
+    def __export_avatar_but(self):
+        try:
+            file_path, _ = QFileDialog.getSaveFileName(
+                self,
+                "Export Avatar Config File",
+                "",
+                "JSON Files (*.json)"
+            )
+
+            if file_path:
+                self.avatar_endpoint.config_manager.export_file(Path(file_path))
+        except Exception:
+            _logger.warning("Failed to export avatar config", exc_info=True, stack_info=True)

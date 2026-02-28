@@ -6,7 +6,7 @@ from typing import Any
 
 from blendshape_router.IFacialMocapBuilder import IFacialMocapBuilder
 from blendshape_router.facades.ifacialmocap.IFacialMocap import IFacialMocap
-from blendshape_router.plugin.endpoints.ifacialmocap.graph.IFacialMocapGraph import IFacialMocapGraph
+from blendshape_router.graph.Node import Node
 from blendshape_router.preset.ARKitGraph import ARKitGraph
 from blendshape_router.preset.ARKitParameter import ARKitParameter
 from blendshape_router.preset.BaseParameter import BaseParameter
@@ -84,18 +84,21 @@ class IFacialMocapSenderPipeline(SenderInterface):
             if self.__ifacialmocap is not None:
                 self.__ifacialmocap.close()
 
-                self.__ifacialmocap = None
-                self.__avatar_endpoint = frozenset()
-
             ifacialmocap_config: IFacialMocapSenderConfig = self.__config_manager.config.sender.ifacialmocap
 
             if not ifacialmocap_config.enabled:
+                self.__ifacialmocap = None
+                self.__avatar_endpoint = frozenset()
+
                 return
 
             solver_model: ModelLoader | None = None
-            vertices_count = 1
-            disabled_inputs: set[SolverNode] = set()
-            disabled_outputs: set[SolverNode] = set()
+            vertices_count: int = 1
+
+            disabled_inputs = {SolverNode(node_id) for node_id in
+                               self.__avatar_config_manager.config.disable_solver_input_nodes}
+            disabled_outputs = {Node(node_id) for node_id in
+                                self.__avatar_config_manager.config.disable_solver_output_nodes}
 
             if ifacialmocap_config.solver_enabled:
                 solver_model = ModelLoader(
@@ -107,24 +110,10 @@ class IFacialMocapSenderPipeline(SenderInterface):
 
                 vertices_count = max(1, int(solver_model.get_vertices_count() * clamped_percentage))
 
-                id_to_node: dict[str, SolverNode] = {node.id: node for node in solver_model.get_blendshapes()}
-
-                for node_id in self.__avatar_config_manager.config.disable_solver_input_nodes:
-                    try:
-                        disabled_inputs.add(id_to_node[node_id])
-                    except Exception:
-                        _logger.warning(f"Failed to disable input node {node_id}")
-
-                for node_id in self.__avatar_config_manager.config.disable_solver_output_nodes:
-                    try:
-                        disabled_outputs.add(id_to_node[node_id])
-                    except Exception:
-                        _logger.warning(f"Failed to disable output node {node_id}")
-
-            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = set(IFacialMocap.get_available_endpoints())
-            for encoder in disabled_encoders.copy():
-                if encoder.id_str() not in self.__avatar_config_manager.config.disable_output_encoders:
-                    disabled_encoders.remove(encoder)
+            disabled_encoders: set[EndpointEncoderInterface[dict[str, float]]] = {
+                encoder for encoder in IFacialMocap.get_available_endpoints()
+                if encoder.id_str() in self.__avatar_config_manager.config.disable_output_encoders
+            }
 
             self.__ifacialmocap = (IFacialMocapBuilder(
                 HostAddress(ipaddress.ip_address(ifacialmocap_config.ip), ifacialmocap_config.port))
@@ -148,12 +137,13 @@ class IFacialMocapSenderPipeline(SenderInterface):
 
                                    .build())
 
-            all_nodes = (IFacialMocapGraph() + ARKitGraph()).get_all_nodes()
-            all_solver_inputs = frozenset(solver_model.load_input_functions(all_nodes))
-            all_solver_outputs = frozenset(solver_model.load_output_functions(all_nodes))
+            all_solver_inputs = frozenset(self.__ifacialmocap.get_all_solver_input_functions())
+            all_solver_outputs = frozenset(self.__ifacialmocap.get_all_solver_output_functions())
 
             self.__avatar_endpoint = frozenset(
                 [AvatarEndpoint(endpoint_name="iFacialMocap", config_manager=self.__avatar_config_manager,
                                 endpoints=IFacialMocap.get_available_endpoints(),
                                 solver_inputs=all_solver_inputs,
-                                solver_outputs=all_solver_outputs)])
+                                solver_outputs=all_solver_outputs,
+                                test_endpoint_callable=self.__ifacialmocap.enable_parameter_testing,
+                                stop_all_test_endpoint_callable=self.__ifacialmocap.disable_parameter_testing)])

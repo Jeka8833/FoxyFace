@@ -28,18 +28,19 @@ class Ui_AvatarCalibration(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.stackedWidget = QStackedWidget(self.centralwidget)
-        self.stackedWidget.setObjectName(u"stackedWidget")
+        self.page_selector_sw = QStackedWidget(self.centralwidget)
+        self.page_selector_sw.setObjectName(u"page_selector_sw")
         self.page = QWidget()
         self.page.setObjectName(u"page")
         self.horizontalLayout = QHBoxLayout(self.page)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.connection_list_widget = QTabWidget(self.page)
-        self.connection_list_widget.setObjectName(u"connection_list_widget")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.endpoint_list_tab = QTabWidget(self.page)
+        self.endpoint_list_tab.setObjectName(u"endpoint_list_tab")
 
-        self.horizontalLayout.addWidget(self.connection_list_widget)
+        self.horizontalLayout.addWidget(self.endpoint_list_tab)
 
-        self.stackedWidget.addWidget(self.page)
+        self.page_selector_sw.addWidget(self.page)
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
         self.verticalLayout = QVBoxLayout(self.page_2)
@@ -93,16 +94,16 @@ class Ui_AvatarCalibration(object):
 
         self.verticalLayout.addWidget(self.widget)
 
-        self.stackedWidget.addWidget(self.page_2)
+        self.page_selector_sw.addWidget(self.page_2)
 
-        self.verticalLayout_2.addWidget(self.stackedWidget)
+        self.verticalLayout_2.addWidget(self.page_selector_sw)
 
         AvatarCalibration.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(AvatarCalibration)
 
-        self.stackedWidget.setCurrentIndex(1)
-        self.connection_list_widget.setCurrentIndex(-1)
+        self.page_selector_sw.setCurrentIndex(1)
+        self.endpoint_list_tab.setCurrentIndex(-1)
 
 
         QMetaObject.connectSlotsByName(AvatarCalibration)

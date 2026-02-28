@@ -143,7 +143,8 @@ class ConfigManager[T]:
 
     def __hard_reset_task(self):
         try:
-            self.__path.unlink()
+            self.__last_hash = 0
+            self.__path.unlink(missing_ok=True)
         except Exception:
             _logger.warning("Failed to hard delete config", exc_info=True, stack_info=True)
 
