@@ -49,7 +49,7 @@ class VRChatSenderPipeline(SenderInterface):
         self.__avatar_endpoint_dict: dict[ConnectionNode, AvatarEndpoint] = {}
 
         self.__config_list_changed_lock: Lock = Lock()
-        self.__config_listeners: dict[ConnectionNode, ConfigUpdateListener[AvatarConfig]] = {}
+        self.__config_listeners: dict[ConnectionNode, list[ConfigUpdateListener[AvatarConfig]]] = {}
 
         self.__find_instance_lock: Lock = Lock()
         self.__config_find_instance: dict[ConnectionNode, FindInstanceItem] = {}
@@ -81,7 +81,7 @@ class VRChatSenderPipeline(SenderInterface):
 
         endpoints: set[AvatarEndpoint] = set()
         for connection, instance in vrchat.get_instances().items():
-            avatar = instance.get_avatar_info()
+            avatar = vrchat.get_unfiltered_avatars().get(connection)
             if avatar is None:
                 continue
 
@@ -106,8 +106,9 @@ class VRChatSenderPipeline(SenderInterface):
         self.__avatar_config_manager.unsubscribe_change(self.__avatar_config_list_changed)
 
         with self.__config_list_changed_lock:
-            for listener in self.__config_listeners.values():
-                listener.unregister()
+            for listener_list in self.__config_listeners.values():
+                for listener in listener_list:
+                    listener.unregister()
 
         with self.__vrchat_lock:
             if self.__vrchat is not None:
@@ -164,23 +165,44 @@ class VRChatSenderPipeline(SenderInterface):
                 if connection in self.__config_listeners:
                     return
 
-                watch_array: list[Callable[[AvatarConfig], Any]] = [lambda config: config.disable_solver_input_nodes,
-                                                                    lambda config: config.disable_solver_output_nodes,
-                                                                    lambda config: config.disable_output_encoders]
+                watch_solver_array: list[Callable[[AvatarConfig], Any]] = [
+                    lambda config: config.disable_solver_input_nodes,
+                    lambda config: config.disable_solver_output_nodes
+                ]
 
-                self.__config_listeners[connection] = avatar_config_manager.create_update_listener(
-                    lambda config, connection_=connection: self.__avatar_config_changed(connection_, config),
-                    watch_array, True)
+                watch_encoder_array: list[Callable[[AvatarConfig], Any]] = [
+                    lambda config: config.disable_output_encoders
+                ]
+
+                listener_list = [
+                    avatar_config_manager.create_update_listener(
+                        lambda config, connection_=connection: self.__avatar_config_solver_changed(connection_, config),
+                        watch_solver_array, True),
+
+                    avatar_config_manager.create_update_listener(self.__avatar_config_encoders_changed,
+                                                                 watch_encoder_array, False)
+                ]
+
+                self.__config_listeners[connection] = listener_list
 
             else:
-                value = self.__config_listeners.pop(connection)
+                listener_list = self.__config_listeners.pop(connection)
 
-                if value is not None:
-                    value.unregister()
+                if listener_list is not None:
+                    for listener in listener_list:
+                        listener.unregister()
 
-    def __avatar_config_changed(self, connection: ConnectionNode, avatar_config_manager: ConfigManager[AvatarConfig]):
+    def __avatar_config_solver_changed(self, connection: ConnectionNode,
+                                       avatar_config_manager: ConfigManager[AvatarConfig]):
         with self.__find_instance_lock:
             self.__config_find_instance[connection] = FindInstanceItem(0, avatar_config_manager)
+
+    def __avatar_config_encoders_changed(self, avatar_config_manager: ConfigManager[AvatarConfig]):
+        vrchat = self.__vrchat
+        if vrchat is None:
+            return
+
+        vrchat.revalidate_avatar_parameter_filter()
 
     def __ip_filter(self, node: ConnectionNode) -> bool:
         for ip in self.__config_manager.config.sender.vrchat.blocked_ips:
@@ -205,9 +227,9 @@ class VRChatSenderPipeline(SenderInterface):
             if encoder.id_str() not in config_manager.config.disable_output_encoders
         }
 
-        _logger.debug(f"For avatar {avatar.avatar_id}, connection: {node.name}, filtered endpoints: {encoders}")
+        _logger.info(f"For avatar {avatar.avatar_id}, connection: {node.name}, filtered endpoints: {encoders}")
 
-        return avatar.endpoints
+        return frozenset(encoders)
 
     def __connection_closed(self, node: ConnectionNode):
         self.__avatar_config_manager.close_connection(node)

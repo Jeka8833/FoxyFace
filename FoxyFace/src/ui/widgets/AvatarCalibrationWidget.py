@@ -30,13 +30,14 @@ class AvatarCalibrationWidget(QWidget):
         self.__endpoints_names: dict[str, EndpointEncoderInterface] = {}
         self.__input_checkboxes: dict[str, QCheckBox] = {}
         self.__output_checkboxes: dict[str, QCheckBox] = {}
+        self.__selected_endpoint: EndpointEncoderInterface | None = None
+
+        self.__register_signals()
 
         self.__build_checkbox_lists()
         self.__build_endpoint_list()
 
-        self.__update_signal.connect(self.__solvers_update)
         self.__avatar_config_changes: ConfigUpdateListener = self.__register_avatar_config_changes()
-        self.__register_events()
 
     def update_endpoint(self, endpoint: AvatarEndpoint):
         self.avatar_endpoint = endpoint
@@ -45,26 +46,35 @@ class AvatarCalibrationWidget(QWidget):
         super().closeEvent(event)
 
         self.__avatar_config_changes.unregister()
-        self.__update_signal.disconnect(self.__solvers_update)
-        self.__unregister_events()
+        self.__unregister_signal()
 
-    def __register_events(self):
+    def __register_signals(self):
+        self.__update_signal.connect(self.__solvers_update)
+        self.__ui.endpoint_enable_cb.toggled.connect(self.__changed_enable_cb)
+        self.__ui.endpoint_test_btn.clicked.connect(self.__changed_test_btn)
         self.__ui.apply_btn.clicked.connect(self.__apply_btn)
         self.__ui.avatar_reset_btn.clicked.connect(self.__reset_avatar_but)
         self.__ui.avatar_import_btn.clicked.connect(self.__import_avatar_but)
         self.__ui.avatar_export_btn.clicked.connect(self.__export_avatar_but)
+        self.__ui.endpoint_list_lw.currentRowChanged.connect(self.__endpoint_list_changed)
 
-    def __unregister_events(self):
+    def __unregister_signal(self):
+        self.__update_signal.disconnect(self.__solvers_update)
+        self.__ui.endpoint_enable_cb.toggled.disconnect(self.__changed_enable_cb)
+        self.__ui.endpoint_test_btn.clicked.disconnect(self.__changed_test_btn)
         self.__ui.apply_btn.clicked.disconnect(self.__apply_btn)
         self.__ui.avatar_reset_btn.clicked.disconnect(self.__reset_avatar_but)
         self.__ui.avatar_import_btn.clicked.disconnect(self.__import_avatar_but)
         self.__ui.avatar_export_btn.clicked.disconnect(self.__export_avatar_but)
+        self.__ui.endpoint_list_lw.currentRowChanged.disconnect(self.__endpoint_list_changed)
 
     def __build_endpoint_list(self):
         for endpoint in self.avatar_endpoint.endpoints:
             self.__endpoints_names[endpoint.id_str()] = endpoint
 
             self.__ui.endpoint_list_lw.addItem(endpoint.id_str())
+
+        self.__ui.endpoint_list_lw.setCurrentRow(0)
 
     def __build_checkbox_lists(self):
         self.__build_solver_checkboxes(
@@ -111,6 +121,26 @@ class AvatarCalibrationWidget(QWidget):
                 checkbox.setChecked(is_enabled)
                 checkbox.blockSignals(False)
 
+    def __endpoint_list_changed(self):
+        selected_endpoint_text = self.__ui.endpoint_list_lw.currentItem().text()
+
+        for endpoint in self.avatar_endpoint.endpoints:
+            if endpoint.id_str() == selected_endpoint_text:
+                self.__selected_endpoint = endpoint
+                break
+
+        if self.__selected_endpoint is None:
+            return
+
+        self.__ui.endpoint_name_lb.setText(self.__selected_endpoint.id_str())
+
+        self.__ui.endpoint_enable_cb.setChecked(
+            self.__selected_endpoint.id_str() not in self.avatar_endpoint.config_manager.config.disable_output_encoders
+        )
+
+        for node in self.__selected_endpoint.get_used_nodes():
+            pass
+
     @staticmethod
     def __checkbox_changed(checked: bool, id_: str, get_disabled_nodes: Callable[[], set[str]]):
         if checked:
@@ -130,6 +160,30 @@ class AvatarCalibrationWidget(QWidget):
 
     def __avatar_config_changed(self, config_manager: ConfigManager[AvatarConfig]):
         self.__update_signal.emit()
+
+    def __changed_enable_cb(self):
+        selected_endpoint = self.__selected_endpoint
+        if selected_endpoint is None:
+            return
+
+        if self.__ui.endpoint_enable_cb.isChecked():
+            self.avatar_endpoint.config_manager.config.disable_output_encoders.discard(selected_endpoint.id_str())
+        else:
+            self.avatar_endpoint.config_manager.config.disable_output_encoders.add(selected_endpoint.id_str())
+
+    def __changed_test_btn(self, state: bool):
+        if state:
+            self.__ui.endpoint_test_btn.setText("Stop")
+
+            selected_endpoint = self.__selected_endpoint
+            if selected_endpoint is None:
+                return
+
+            self.avatar_endpoint.test_endpoint_callable(selected_endpoint)
+        else:
+            self.__ui.endpoint_test_btn.setText("Start")
+
+            self.avatar_endpoint.stop_all_test_endpoint_callable()
 
     def __apply_btn(self):
         self.avatar_endpoint.config_manager.write()

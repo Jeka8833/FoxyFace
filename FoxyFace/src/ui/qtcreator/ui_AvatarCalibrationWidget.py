@@ -56,10 +56,10 @@ class Ui_AvatarCalibrationWidget(object):
         self.endpoint_info_widget.setObjectName(u"endpoint_info_widget")
         self.verticalLayout_3 = QVBoxLayout(self.endpoint_info_widget)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.label = QLabel(self.endpoint_info_widget)
-        self.label.setObjectName(u"label")
+        self.endpoint_name_lb = QLabel(self.endpoint_info_widget)
+        self.endpoint_name_lb.setObjectName(u"endpoint_name_lb")
 
-        self.verticalLayout_3.addWidget(self.label)
+        self.verticalLayout_3.addWidget(self.endpoint_name_lb)
 
         self.line = QFrame(self.endpoint_info_widget)
         self.line.setObjectName(u"line")
@@ -68,43 +68,44 @@ class Ui_AvatarCalibrationWidget(object):
 
         self.verticalLayout_3.addWidget(self.line)
 
-        self.checkBox = QCheckBox(self.endpoint_info_widget)
-        self.checkBox.setObjectName(u"checkBox")
+        self.endpoint_enable_cb = QCheckBox(self.endpoint_info_widget)
+        self.endpoint_enable_cb.setObjectName(u"endpoint_enable_cb")
+        self.endpoint_enable_cb.setChecked(True)
 
-        self.verticalLayout_3.addWidget(self.checkBox)
+        self.verticalLayout_3.addWidget(self.endpoint_enable_cb)
 
-        self.label_2 = QLabel(self.endpoint_info_widget)
-        self.label_2.setObjectName(u"label_2")
+        self.used_nodes_lb = QLabel(self.endpoint_info_widget)
+        self.used_nodes_lb.setObjectName(u"used_nodes_lb")
 
-        self.verticalLayout_3.addWidget(self.label_2)
+        self.verticalLayout_3.addWidget(self.used_nodes_lb)
 
-        self.widget = QWidget(self.endpoint_info_widget)
-        self.widget.setObjectName(u"widget")
+        self.used_nodes_list_widget = QWidget(self.endpoint_info_widget)
+        self.used_nodes_list_widget.setObjectName(u"used_nodes_list_widget")
 
-        self.verticalLayout_3.addWidget(self.widget)
+        self.verticalLayout_3.addWidget(self.used_nodes_list_widget)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer)
 
-        self.widget_5 = QWidget(self.endpoint_info_widget)
-        self.widget_5.setObjectName(u"widget_5")
-        self.horizontalLayout_5 = QHBoxLayout(self.widget_5)
+        self.endpoint_test_widget = QWidget(self.endpoint_info_widget)
+        self.endpoint_test_widget.setObjectName(u"endpoint_test_widget")
+        self.horizontalLayout_5 = QHBoxLayout(self.endpoint_test_widget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.label_3 = QLabel(self.widget_5)
-        self.label_3.setObjectName(u"label_3")
+        self.endpoint_test_lb = QLabel(self.endpoint_test_widget)
+        self.endpoint_test_lb.setObjectName(u"endpoint_test_lb")
 
-        self.horizontalLayout_5.addWidget(self.label_3)
+        self.horizontalLayout_5.addWidget(self.endpoint_test_lb)
 
-        self.pushButton = QPushButton(self.widget_5)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setCheckable(True)
-        self.pushButton.setChecked(False)
+        self.endpoint_test_btn = QPushButton(self.endpoint_test_widget)
+        self.endpoint_test_btn.setObjectName(u"endpoint_test_btn")
+        self.endpoint_test_btn.setCheckable(True)
+        self.endpoint_test_btn.setChecked(False)
 
-        self.horizontalLayout_5.addWidget(self.pushButton)
+        self.horizontalLayout_5.addWidget(self.endpoint_test_btn)
 
 
-        self.verticalLayout_3.addWidget(self.widget_5)
+        self.verticalLayout_3.addWidget(self.endpoint_test_widget)
 
         self.splitter.addWidget(self.endpoint_info_widget)
 
@@ -184,6 +185,7 @@ class Ui_AvatarCalibrationWidget(object):
 
 
         self.retranslateUi(AvatarCalibrationWidget)
+        self.endpoint_enable_cb.toggled.connect(self.endpoint_test_btn.setEnabled)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -193,11 +195,11 @@ class Ui_AvatarCalibrationWidget(object):
 
     def retranslateUi(self, AvatarCalibrationWidget):
         AvatarCalibrationWidget.setWindowTitle(QCoreApplication.translate("AvatarCalibrationWidget", u"Form", None))
-        self.label.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Endpoint Name", None))
-        self.checkBox.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Enabled", None))
-        self.label_2.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Used Nodes and precision:", None))
-        self.label_3.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Test Endpoint:", None))
-        self.pushButton.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Start", None))
+        self.endpoint_name_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Endpoint Name", None))
+        self.endpoint_enable_cb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Enabled", None))
+        self.used_nodes_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Used Nodes and precision:", None))
+        self.endpoint_test_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Test Endpoint:", None))
+        self.endpoint_test_btn.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Start", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.avatar_endpoint_tab), QCoreApplication.translate("AvatarCalibrationWidget", u"Avatar Endpoints", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.solver_input_tab), QCoreApplication.translate("AvatarCalibrationWidget", u"Solver Inputs", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.solver_output_tab), QCoreApplication.translate("AvatarCalibrationWidget", u"Solver Outputs", None))

@@ -58,9 +58,18 @@
             <widget class="QWidget" name="endpoint_info_widget" native="true">
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
-               <widget class="QLabel" name="label">
+               <widget class="QLabel" name="endpoint_name_lb">
+                <property name="font">
+                 <font>
+                  <pointsize>11</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>Endpoint Name</string>
+                 <string notr="true">Endpoint Name</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -72,21 +81,24 @@
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="endpoint_enable_cb">
                 <property name="text">
                  <string>Enabled</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_2">
+               <widget class="QLabel" name="used_nodes_lb">
                 <property name="text">
                  <string>Used Nodes and precision:</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QWidget" name="widget" native="true"/>
+               <widget class="QWidget" name="used_nodes_list_widget" native="true"/>
               </item>
               <item>
                <spacer name="verticalSpacer">
@@ -102,17 +114,17 @@
                </spacer>
               </item>
               <item>
-               <widget class="QWidget" name="widget_5" native="true">
+               <widget class="QWidget" name="endpoint_test_widget" native="true">
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <item>
-                  <widget class="QLabel" name="label_3">
+                  <widget class="QLabel" name="endpoint_test_lb">
                    <property name="text">
                     <string>Test Endpoint:</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="pushButton">
+                  <widget class="QPushButton" name="endpoint_test_btn">
                    <property name="text">
                     <string>Start</string>
                    </property>
@@ -249,5 +261,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>endpoint_enable_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>endpoint_test_btn</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>467</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>610</x>
+     <y>353</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
