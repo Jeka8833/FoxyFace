@@ -1,5 +1,3 @@
-import math
-
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
@@ -12,7 +10,12 @@ class ValidateGeneralBlendShapes(StreamReadOnly[BlendShapesFrame[GeneralBlendSha
     def poll(self, timeout: float | None = None) -> BlendShapesFrame[GeneralBlendShapeEnum]:
         frame = self.__stream.poll(timeout)
 
-        blend_shapes = {k: min(k.value.max_value, max(k.value.min_value, v)) for k, v in frame.blend_shapes.items() if
-                        isinstance(v, float) and math.isfinite(v)}
+        new_blend_shapes = {}
 
-        return BlendShapesFrame(blend_shapes, frame.timestamp_ns)
+        for key, value in frame.blend_shapes.items():
+            if isinstance(value, float):
+                new_blend_shapes[key] = min(key.value.max_value, max(key.value.min_value, value))
+            else:
+                new_blend_shapes[key] = value
+
+        return BlendShapesFrame(new_blend_shapes, frame.timestamp_ns)

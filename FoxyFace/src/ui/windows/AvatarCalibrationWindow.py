@@ -59,8 +59,8 @@ class AvatarCalibrationWindow(FoxyWindow):
                         self.__ui.endpoint_list_tab.removeTab(index)
                     else:
                         for endpoint in endpoints:
-                            if endpoint is widget.avatar_endpoint:
-                                widget.update_endpoint(endpoint)
+                            if endpoint == widget.avatar_endpoint:
+                                widget.avatar_endpoint = endpoint
                                 break
 
                         has_endpoints.add(widget.avatar_endpoint)

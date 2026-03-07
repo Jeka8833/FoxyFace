@@ -39,8 +39,16 @@ class AvatarCalibrationWidget(QWidget):
 
         self.__avatar_config_changes: ConfigUpdateListener = self.__register_avatar_config_changes()
 
-    def update_endpoint(self, endpoint: AvatarEndpoint):
-        self.avatar_endpoint = endpoint
+    @property
+    def avatar_endpoint(self) -> AvatarEndpoint:
+        return self.__avatar_endpoint
+
+    @avatar_endpoint.setter
+    def avatar_endpoint(self, value: AvatarEndpoint):
+        if not isinstance(value, AvatarEndpoint):
+            raise TypeError("value must be of type AvatarEndpoint")
+
+        self.__avatar_endpoint = value
 
     def closeEvent(self, event, /):
         super().closeEvent(event)

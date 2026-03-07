@@ -129,6 +129,7 @@ class IFacialMocapSenderPipeline(SenderInterface):
                                    .with_solver_threads(ifacialmocap_config.solver_threads)
                                    .with_solver_interleaved_vertices_count(vertices_count)
                                    .with_solver_max_cps(ifacialmocap_config.solver_max_cps)
+                                   .with_facemotion3d_compatibility(ifacialmocap_config.facemotion3d_compatibility)
                                    .disable_solver_input_nodes(disabled_inputs)
                                    .disable_solver_output_nodes(disabled_outputs)
                                    .disable_output_endpoints(disabled_encoders)
