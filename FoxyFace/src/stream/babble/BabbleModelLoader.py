@@ -8,8 +8,14 @@ from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
+from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import torch
+except Exception:
+    _logger.warning("Failed to import torch. Compute acceleration may not work")
 
 
 class BabbleModelLoader:
@@ -21,14 +27,6 @@ class BabbleModelLoader:
         self.model = None
 
         device_id_str = str(device_id)
-
-        try:
-            providers: list[str] = onnxruntime.get_available_providers()
-            if "CUDAExecutionProvider" in providers:
-                # noinspection PyUnusedImports
-                import torch
-        except Exception:
-            _logger.warning("Failed to import torch", exc_info=True, stack_info=True)
 
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
@@ -45,12 +43,19 @@ class BabbleModelLoader:
         else:
             provider = ["CPUExecutionProvider"]
 
-        if not model_path or model_path.isspace():
-            path = BabbleModelLoader.get_base_model_path()
-        else:
-            path = Path(model_path).resolve(strict=True)
+        available_providers = onnxruntime.get_available_providers()
 
-        session = InferenceSession(path, opts, providers=provider)
+        _logger.info(f"Available providers: {available_providers}")
+
+        final_providers = []
+        for p in provider:
+            name = p[0] if isinstance(p, tuple) else p
+            if name in available_providers:
+                final_providers.append(p)
+
+        path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
+
+        session = InferenceSession(path, opts, providers=final_providers)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
