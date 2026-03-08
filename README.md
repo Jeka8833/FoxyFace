@@ -73,7 +73,7 @@ Instructions on how to update the FoxyFace app can be found [here](https://foxyf
 
 ### Build FoxyFace
 
-Python version 3.13 or 3.12 is required. A newer version of Python is not supported. Older versions of Python have not been tested.
+Python version **3.12, 3.13, or 3.14** is required. Newer and older versions of Python have not been tested.
 
 Automatically configuring the Python Virtual Environment doesn't happen in the IDE, but the basic plan consists of:
 1. Cloning the repository using:
@@ -81,7 +81,7 @@ Automatically configuring the Python Virtual Environment doesn't happen in the I
 git clone --recurse-submodules https://github.com/Jeka8833/FoxyFace.git
 ```
 2. Opening FoxyFace folder in IDE (PyCharm)
-3. The PyCharm may try to create .venv on its own, but it will most likely do so with the wrong version of Python, you need to recreate .venv with Python 3.13 or 3.12.
+3. The PyCharm may try to create .venv on its own, but it will most likely do so with the wrong version of Python, you need to recreate .venv with Python 3.12, 3.13, or 3.14.
 4. Next, the PyCharm will prompt you to install the required libraries from the `requirements.txt` file, you agree to this.
 
 This is quite a complicated process for beginners, if you know how to automate this, feel free to offer your thoughts.
