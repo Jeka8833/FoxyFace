@@ -18,12 +18,12 @@
     <item>
      <widget class="QLabel" name="camera_id_lbl">
       <property name="text">
-       <string>Camera ID:</string>
+       <string>Camera:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="camera_id_sp"/>
+     <widget class="QComboBox" name="camera_combo"/>
     </item>
     <item>
      <widget class="QLabel" name="width_lbl">

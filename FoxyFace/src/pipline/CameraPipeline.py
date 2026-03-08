@@ -79,7 +79,8 @@ class CameraPipeline:
     def __register_change_camera_options(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.camera.width,
                                                       lambda config: config.camera.height,
-                                                      lambda config: config.camera.camera_id]
+                                                      lambda config: config.camera.camera_id,
+                                                      lambda config: config.camera.camera_name]
 
         return self.__config_manager.create_update_listener(self.__update_camera_options, watch_array, True)
 
@@ -87,6 +88,7 @@ class CameraPipeline:
         try:
             self.__stream.start_new_camera(config_manager.config.camera.camera_id,
                                            (config_manager.config.camera.width // 2) * 2,
-                                           (config_manager.config.camera.height // 2) * 2)
+                                           (config_manager.config.camera.height // 2) * 2,
+                                           config_manager.config.camera.camera_name)
         except Exception:
             _logger.warning("Failed to recreate camera", exc_info=True, stack_info=True)

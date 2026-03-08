@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'CameraSettings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QHBoxLayout,
+    QLabel, QMainWindow, QPushButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QVBoxLayout, QWidget)
 
 class Ui_CameraSettings(object):
     def setupUi(self, CameraSettings):
@@ -33,10 +33,10 @@ class Ui_CameraSettings(object):
 
         self.verticalLayout.addWidget(self.camera_id_lbl)
 
-        self.camera_id_sp = QSpinBox(self.centralwidget)
-        self.camera_id_sp.setObjectName(u"camera_id_sp")
+        self.camera_combo = QComboBox(self.centralwidget)
+        self.camera_combo.setObjectName(u"camera_combo")
 
-        self.verticalLayout.addWidget(self.camera_id_sp)
+        self.verticalLayout.addWidget(self.camera_combo)
 
         self.width_lbl = QLabel(self.centralwidget)
         self.width_lbl.setObjectName(u"width_lbl")
@@ -104,7 +104,7 @@ class Ui_CameraSettings(object):
 
     def retranslateUi(self, CameraSettings):
         CameraSettings.setWindowTitle(QCoreApplication.translate("CameraSettings", u"Camera Settings", None))
-        self.camera_id_lbl.setText(QCoreApplication.translate("CameraSettings", u"Camera ID:", None))
+        self.camera_id_lbl.setText(QCoreApplication.translate("CameraSettings", u"Camera:", None))
         self.width_lbl.setText(QCoreApplication.translate("CameraSettings", u"Width:", None))
         self.height_lbl.setText(QCoreApplication.translate("CameraSettings", u"Height:", None))
         self.vertical_flip_cb.setText(QCoreApplication.translate("CameraSettings", u"Vertical Flip", None))
