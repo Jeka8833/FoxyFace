@@ -1,6 +1,8 @@
-{
-    "files": [
-        "starter.py",
+[project]
+name = "PySide Widgets Project"
+
+[tool.pyside6-project]
+files = ["starter.py",
         "MainWindow.ui",
         "CameraSettings.ui",
         "MediaPipeSettings.ui",
@@ -12,6 +14,4 @@
         "HasUpdateWindow.ui",
         "SenderSettings.ui",
         "AvatarCalibration.ui",
-        "AvatarCalibrationWidget.ui"
-    ]
-}
+        "AvatarCalibrationWidget.ui"]

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QFileDialog
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QFileDialog, QTableWidgetItem
 from blendshape_router.router.EndpointEncoderInterface import EndpointEncoderInterface
 
 from src.config.ConfigManager import ConfigManager
@@ -59,7 +59,7 @@ class AvatarCalibrationWidget(QWidget):
     def __register_signals(self):
         self.__update_signal.connect(self.__solvers_update)
         self.__ui.endpoint_enable_cb.toggled.connect(self.__changed_enable_cb)
-        self.__ui.endpoint_test_btn.clicked.connect(self.__changed_test_btn)
+        self.__ui.endpoint_test_btn.toggled.connect(self.__changed_test_btn)
         self.__ui.apply_btn.clicked.connect(self.__apply_btn)
         self.__ui.avatar_reset_btn.clicked.connect(self.__reset_avatar_but)
         self.__ui.avatar_import_btn.clicked.connect(self.__import_avatar_but)
@@ -69,7 +69,7 @@ class AvatarCalibrationWidget(QWidget):
     def __unregister_signal(self):
         self.__update_signal.disconnect(self.__solvers_update)
         self.__ui.endpoint_enable_cb.toggled.disconnect(self.__changed_enable_cb)
-        self.__ui.endpoint_test_btn.clicked.disconnect(self.__changed_test_btn)
+        self.__ui.endpoint_test_btn.toggled.disconnect(self.__changed_test_btn)
         self.__ui.apply_btn.clicked.disconnect(self.__apply_btn)
         self.__ui.avatar_reset_btn.clicked.disconnect(self.__reset_avatar_but)
         self.__ui.avatar_import_btn.clicked.disconnect(self.__import_avatar_but)
@@ -146,8 +146,22 @@ class AvatarCalibrationWidget(QWidget):
             self.__selected_endpoint.id_str() not in self.avatar_endpoint.config_manager.config.disable_output_encoders
         )
 
-        for node in self.__selected_endpoint.get_used_nodes():
-            pass
+        self.__changed_test_btn(self.__ui.endpoint_test_btn.isChecked())
+
+        self.__ui.used_nodes_table.setRowCount(0)
+        for i, (node, step) in enumerate(self.__selected_endpoint.get_used_nodes().items()):
+            self.__ui.used_nodes_table.insertRow(i)
+            self.__ui.used_nodes_table.setItem(i, 0, QTableWidgetItem(node.id))
+            self.__ui.used_nodes_table.setItem(i, 1, QTableWidgetItem(self.__format_float(node.min_value)))
+            self.__ui.used_nodes_table.setItem(i, 2, QTableWidgetItem(self.__format_float(node.max_value)))
+            self.__ui.used_nodes_table.setItem(i, 3, QTableWidgetItem(self.__format_float(step.value)))
+
+    @staticmethod
+    def __format_float(value: float) -> str:
+        if value == 0 or abs(value) >= 1e-2:
+            return f"{value:.2f}"
+        else:
+            return f"{value:.2e}"
 
     @staticmethod
     def __checkbox_changed(checked: bool, id_: str, get_disabled_nodes: Callable[[], set[str]]):
@@ -170,11 +184,15 @@ class AvatarCalibrationWidget(QWidget):
         self.__update_signal.emit()
 
     def __changed_enable_cb(self):
+        is_checked = self.__ui.endpoint_enable_cb.isChecked()
+        if not is_checked:
+            self.__ui.endpoint_test_btn.setChecked(False)
+
         selected_endpoint = self.__selected_endpoint
         if selected_endpoint is None:
             return
 
-        if self.__ui.endpoint_enable_cb.isChecked():
+        if is_checked:
             self.avatar_endpoint.config_manager.config.disable_output_encoders.discard(selected_endpoint.id_str())
         else:
             self.avatar_endpoint.config_manager.config.disable_output_encoders.add(selected_endpoint.id_str())

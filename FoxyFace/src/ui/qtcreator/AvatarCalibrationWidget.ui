@@ -98,7 +98,31 @@
                </widget>
               </item>
               <item>
-               <widget class="QWidget" name="used_nodes_list_widget" native="true"/>
+               <widget class="QTableWidget" name="used_nodes_table">
+                <attribute name="horizontalHeaderStretchLastSection">
+                 <bool>false</bool>
+                </attribute>
+                <column>
+                 <property name="text">
+                  <string>Node</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Min</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Max</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Step</string>
+                 </property>
+                </column>
+               </widget>
               </item>
               <item>
                <spacer name="verticalSpacer">

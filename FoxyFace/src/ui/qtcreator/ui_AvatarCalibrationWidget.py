@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'AvatarCalibrationWidget.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.1
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,9 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QPushButton,
-    QScrollArea, QSizePolicy, QSpacerItem, QSplitter,
-    QTabWidget, QVBoxLayout, QWidget)
+    QHeaderView, QLabel, QListWidget, QListWidgetItem,
+    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
+    QSplitter, QTabWidget, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_AvatarCalibrationWidget(object):
     def setupUi(self, AvatarCalibrationWidget):
@@ -58,6 +59,12 @@ class Ui_AvatarCalibrationWidget(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.endpoint_name_lb = QLabel(self.endpoint_info_widget)
         self.endpoint_name_lb.setObjectName(u"endpoint_name_lb")
+        font = QFont()
+        font.setPointSize(11)
+        font.setBold(True)
+        self.endpoint_name_lb.setFont(font)
+        self.endpoint_name_lb.setText(u"Endpoint Name")
+        self.endpoint_name_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.endpoint_name_lb)
 
@@ -79,10 +86,21 @@ class Ui_AvatarCalibrationWidget(object):
 
         self.verticalLayout_3.addWidget(self.used_nodes_lb)
 
-        self.used_nodes_list_widget = QWidget(self.endpoint_info_widget)
-        self.used_nodes_list_widget.setObjectName(u"used_nodes_list_widget")
+        self.used_nodes_table = QTableWidget(self.endpoint_info_widget)
+        if (self.used_nodes_table.columnCount() < 4):
+            self.used_nodes_table.setColumnCount(4)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.used_nodes_table.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.used_nodes_table.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.used_nodes_table.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.used_nodes_table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        self.used_nodes_table.setObjectName(u"used_nodes_table")
+        self.used_nodes_table.horizontalHeader().setStretchLastSection(False)
 
-        self.verticalLayout_3.addWidget(self.used_nodes_list_widget)
+        self.verticalLayout_3.addWidget(self.used_nodes_table)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -195,9 +213,16 @@ class Ui_AvatarCalibrationWidget(object):
 
     def retranslateUi(self, AvatarCalibrationWidget):
         AvatarCalibrationWidget.setWindowTitle(QCoreApplication.translate("AvatarCalibrationWidget", u"Form", None))
-        self.endpoint_name_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Endpoint Name", None))
         self.endpoint_enable_cb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Enabled", None))
         self.used_nodes_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Used Nodes and precision:", None))
+        ___qtablewidgetitem = self.used_nodes_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Node", None));
+        ___qtablewidgetitem1 = self.used_nodes_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Min", None));
+        ___qtablewidgetitem2 = self.used_nodes_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Max", None));
+        ___qtablewidgetitem3 = self.used_nodes_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Step", None));
         self.endpoint_test_lb.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Test Endpoint:", None))
         self.endpoint_test_btn.setText(QCoreApplication.translate("AvatarCalibrationWidget", u"Start", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.avatar_endpoint_tab), QCoreApplication.translate("AvatarCalibrationWidget", u"Avatar Endpoints", None))
