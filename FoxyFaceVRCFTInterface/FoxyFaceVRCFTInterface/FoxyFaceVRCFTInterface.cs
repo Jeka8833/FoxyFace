@@ -29,8 +29,15 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
 
     private FoxyFaceUdpClient _udpClient = null!;
     private FoxyFacePacketProcessor _packetProcessor = null!;
+    private string _trackingMode = "both";
 
-    public override (bool SupportsEye, bool SupportsExpression) Supported => (true, true);
+    public override (bool SupportsEye, bool SupportsExpression) Supported => 
+        _trackingMode switch
+        {
+            "mouth" => (false, true),
+            "eyes" => (true, false),
+            _ => (true, true)
+        };
 
     public override (bool eyeSuccess, bool expressionSuccess) Initialize(bool eyeAvailable, bool expressionAvailable)
     {
@@ -99,10 +106,16 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
         }
 
         _packetProcessor = new FoxyFacePacketProcessor(FoxyFaceSpamLogger);
+        _trackingMode = packetConfig.TrackingMode?.ToLower() ?? "both";
 
-        FoxyFaceLogger.LogInformation("FoxyFace app is connected successfully!");
+        FoxyFaceLogger.LogInformation("FoxyFace app is connected successfully! Tracking mode: {}", _trackingMode);
 
-        return (eyeAvailable, expressionAvailable);
+        return _trackingMode switch
+        {
+            "mouth" => (false, expressionAvailable),
+            "eyes" => (eyeAvailable, false),
+            _ => (eyeAvailable, expressionAvailable)
+        };
     }
 
     public override void Update()
@@ -119,6 +132,13 @@ public class FoxyFaceVRCFTInterface : ExtTrackingModule
             FoxyFaceDto? packet = _udpClient.TryRequest();
 
             if (packet?.Values == null || packet.Values.Count == 0) return;
+            
+            if (packet.Config != null && packet.Config.TrackingMode != _trackingMode)
+            {
+                _trackingMode = packet.Config.TrackingMode?.ToLower() ?? "both";
+                _packetProcessor.SetTrackingMode(_trackingMode);
+                FoxyFaceLogger.LogInformation("Tracking mode changed to: {}", _trackingMode);
+            }
             
             _packetProcessor.UpdateEyes(packet.Values);
             _packetProcessor.UpdateExpression(packet.Values);

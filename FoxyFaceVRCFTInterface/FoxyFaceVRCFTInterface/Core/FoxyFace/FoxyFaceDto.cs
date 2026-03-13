@@ -11,5 +11,6 @@ public class FoxyFaceDto
     {
         public ushort UdpReadTimeoutMs { get; init; } = 5_000;
         public bool BypassOtherModulesBlock { get; init; } = false;
+        public string TrackingMode { get; init; } = "both";
     }
 }
