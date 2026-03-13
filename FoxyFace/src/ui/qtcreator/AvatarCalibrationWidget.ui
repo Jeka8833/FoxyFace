@@ -81,86 +81,114 @@
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="endpoint_enable_cb">
-                <property name="text">
-                 <string>Enabled</string>
-                </property>
-                <property name="checked">
+               <widget class="QScrollArea" name="scrollArea">
+                <property name="widgetResizable">
                  <bool>true</bool>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="used_nodes_lb">
-                <property name="text">
-                 <string>Used Nodes and precision:</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QTableWidget" name="used_nodes_table">
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>Node</string>
+                <widget class="QWidget" name="scrollAreaWidgetContents">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>326</width>
+                   <height>276</height>
+                  </rect>
                  </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Min</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Max</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Step</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Orientation::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item>
-               <widget class="QWidget" name="endpoint_test_widget" native="true">
-                <layout class="QHBoxLayout" name="horizontalLayout_5">
-                 <item>
-                  <widget class="QLabel" name="endpoint_test_lb">
-                   <property name="text">
-                    <string>Test Endpoint:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="endpoint_test_btn">
-                   <property name="text">
-                    <string>Start</string>
-                   </property>
-                   <property name="checkable">
-                    <bool>true</bool>
-                   </property>
-                   <property name="checked">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <widget class="QCheckBox" name="endpoint_enable_cb">
+                    <property name="text">
+                     <string>Enabled</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label">
+                    <property name="text">
+                     <string notr="true">Node percision: 0.5</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="used_nodes_lb">
+                    <property name="text">
+                     <string>Endpoints and precision:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QTableWidget" name="used_nodes_table">
+                    <property name="focusPolicy">
+                     <enum>Qt::FocusPolicy::NoFocus</enum>
+                    </property>
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+                    </property>
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+                    </property>
+                    <property name="sortingEnabled">
+                     <bool>true</bool>
+                    </property>
+                    <attribute name="horizontalHeaderStretchLastSection">
+                     <bool>false</bool>
+                    </attribute>
+                    <column>
+                     <property name="text">
+                      <string>Endpoint</string>
+                     </property>
+                    </column>
+                    <column>
+                     <property name="text">
+                      <string>Step</string>
+                     </property>
+                    </column>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="verticalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Orientation::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QWidget" name="endpoint_test_widget" native="true">
+                    <layout class="QHBoxLayout" name="horizontalLayout_5">
+                     <item>
+                      <widget class="QLabel" name="endpoint_test_lb">
+                       <property name="text">
+                        <string>Test Endpoint:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="endpoint_test_btn">
+                       <property name="text">
+                        <string>Start</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                       <property name="checked">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
                </widget>
               </item>
              </layout>

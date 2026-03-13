@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QFrame, QHBoxLayout,
-    QHeaderView, QLabel, QListWidget, QListWidgetItem,
-    QPushButton, QScrollArea, QSizePolicy, QSpacerItem,
-    QSplitter, QTabWidget, QTableWidget, QTableWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QFrame,
+    QHBoxLayout, QHeaderView, QLabel, QListWidget,
+    QListWidgetItem, QPushButton, QScrollArea, QSizePolicy,
+    QSpacerItem, QSplitter, QTabWidget, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_AvatarCalibrationWidget(object):
     def setupUi(self, AvatarCalibrationWidget):
@@ -75,18 +75,26 @@ class Ui_AvatarCalibrationWidget(object):
 
         self.verticalLayout_3.addWidget(self.line)
 
-        self.endpoint_enable_cb = QCheckBox(self.endpoint_info_widget)
+        self.scrollArea = QScrollArea(self.endpoint_info_widget)
+        self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 326, 276))
+        self.verticalLayout_5 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.endpoint_enable_cb = QCheckBox(self.scrollAreaWidgetContents)
         self.endpoint_enable_cb.setObjectName(u"endpoint_enable_cb")
         self.endpoint_enable_cb.setChecked(True)
 
-        self.verticalLayout_3.addWidget(self.endpoint_enable_cb)
+        self.verticalLayout_5.addWidget(self.endpoint_enable_cb)
 
-        self.used_nodes_lb = QLabel(self.endpoint_info_widget)
+        self.used_nodes_lb = QLabel(self.scrollAreaWidgetContents)
         self.used_nodes_lb.setObjectName(u"used_nodes_lb")
 
-        self.verticalLayout_3.addWidget(self.used_nodes_lb)
+        self.verticalLayout_5.addWidget(self.used_nodes_lb)
 
-        self.used_nodes_table = QTableWidget(self.endpoint_info_widget)
+        self.used_nodes_table = QTableWidget(self.scrollAreaWidgetContents)
         if (self.used_nodes_table.columnCount() < 4):
             self.used_nodes_table.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
@@ -98,15 +106,19 @@ class Ui_AvatarCalibrationWidget(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.used_nodes_table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.used_nodes_table.setObjectName(u"used_nodes_table")
+        self.used_nodes_table.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.used_nodes_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self.used_nodes_table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.used_nodes_table.setSortingEnabled(True)
         self.used_nodes_table.horizontalHeader().setStretchLastSection(False)
 
-        self.verticalLayout_3.addWidget(self.used_nodes_table)
+        self.verticalLayout_5.addWidget(self.used_nodes_table)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_3.addItem(self.verticalSpacer)
+        self.verticalLayout_5.addItem(self.verticalSpacer)
 
-        self.endpoint_test_widget = QWidget(self.endpoint_info_widget)
+        self.endpoint_test_widget = QWidget(self.scrollAreaWidgetContents)
         self.endpoint_test_widget.setObjectName(u"endpoint_test_widget")
         self.horizontalLayout_5 = QHBoxLayout(self.endpoint_test_widget)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
@@ -123,7 +135,11 @@ class Ui_AvatarCalibrationWidget(object):
         self.horizontalLayout_5.addWidget(self.endpoint_test_btn)
 
 
-        self.verticalLayout_3.addWidget(self.endpoint_test_widget)
+        self.verticalLayout_5.addWidget(self.endpoint_test_widget)
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.verticalLayout_3.addWidget(self.scrollArea)
 
         self.splitter.addWidget(self.endpoint_info_widget)
 

@@ -15,7 +15,11 @@ from src.ui.qtcreator.ui_AvatarCalibrationWidget import Ui_AvatarCalibrationWidg
 
 _logger = logging.getLogger(__name__)
 
-
+# 1. Add background change for enabled elements in the list
+# 2. Add buttons for graph visualization
+# 3. Add the possibility to disable nodes in VRchat endpoints
+# 4. Fix Node column width in the table
+# 5. Change background for the scrollbar panel
 class AvatarCalibrationWidget(QWidget):
     __update_signal: Signal = Signal()
 
