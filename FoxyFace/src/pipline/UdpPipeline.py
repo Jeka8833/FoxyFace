@@ -48,13 +48,15 @@ class UdpPipeline:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.socket.ip,
                                                       lambda config: config.socket.port,
                                                       lambda config: config.socket.udp_read_timeout,
-                                                      lambda config: config.socket.bypass_other_modules_block]
+                                                      lambda config: config.socket.bypass_other_modules_block,
+                                                      lambda config: config.socket.tracking_mode]
 
         return self.__config_manager.create_update_listener(self.__update_options, watch_array, True)
 
     def __update_options(self, config_manager: ConfigManager):
         self.__options.udp_read_timeout_ms = config_manager.config.socket.udp_read_timeout
         self.__options.bypass_other_modules_block = config_manager.config.socket.bypass_other_modules_block
+        self.__options.tracking_mode = config_manager.config.socket.tracking_mode
 
         self.__stream.ping_connection_time = config_manager.config.socket.udp_read_timeout / 4000.0
         self.__stream.target_address = (config_manager.config.socket.ip, config_manager.config.socket.port)
