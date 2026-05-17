@@ -1408,7 +1408,7 @@ class Ui_SenderSettings(object):
     # setupUi
 
     def retranslateUi(self, SenderSettings):
-        SenderSettings.setWindowTitle(QCoreApplication.translate("SenderSettings", u"MainWindow", None))
+        SenderSettings.setWindowTitle(QCoreApplication.translate("SenderSettings", u"Sender Settings", None))
         self.vrchat_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable VRChat Routing", None))
         self.vrchat_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.vrchat_avatare_request_period_lb.setText(QCoreApplication.translate("SenderSettings", u"Avatar Request Period:", None))

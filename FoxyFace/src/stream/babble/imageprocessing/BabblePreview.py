@@ -65,8 +65,20 @@ class BabblePreview:
             try:
                 image = self.__image_stream.poll(self.__frame_timeout).processed_frame
 
-                # noinspection PyTypeChecker
-                im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_Grayscale8)
+                if image.ndim == 2:
+                    q_format = QImage.Format.Format_Grayscale8
+                elif image.ndim == 3:
+                    q_format = QImage.Format.Format_RGB888
+                else:
+                    raise ValueError(f"Unexpected image shape: {image.shape}")
+
+                im = QImage(
+                    image.data,
+                    image.shape[1],
+                    image.shape[0],
+                    image.strides[0],
+                    q_format
+                )
 
                 self.__window.set_image_event.emit(im)
             except TimeoutError:

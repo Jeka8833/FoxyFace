@@ -32,8 +32,11 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
                 if model is not None:
                     break
 
-        img_gray = cv2.cvtColor(mediapipe_frame.camera_frame.frame, cv2.COLOR_RGB2GRAY)
-        height, width = img_gray.shape[:2]
+        if self.__model_loader.model.is_input_rgb:
+            img = mediapipe_frame.camera_frame.frame.copy()
+        else:
+            img = cv2.cvtColor(mediapipe_frame.camera_frame.frame, cv2.COLOR_RGB2GRAY)
+        height, width = img.shape[:2]
 
         # Center Top
         point_5 = mediapipe_frame.face_landmarker_result.face_landmarks[0][4]  # 195 or 5 or 4
@@ -69,9 +72,9 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
 
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
 
-        img_gray = cv2.warpPerspective(img_gray, matrix, (model.input_size_x, model.input_size_y))
+        img = cv2.warpPerspective(img, matrix, (model.input_size_x, model.input_size_y))
 
-        return BabbleImageFrame(img_gray, mediapipe_frame.camera_frame.timestamp_ns)
+        return BabbleImageFrame(img, mediapipe_frame.camera_frame.timestamp_ns)
 
     def __validate_rotation(self, frame: MediaPipeFrame):
         rotation_matrix = frame.face_landmarker_result.facial_transformation_matrixes[0][0:3, 0:3]

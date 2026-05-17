@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QFileDialog, QTableWidgetItem
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QFileDialog, QTableWidgetItem, QStyle
 from blendshape_router.router.EndpointEncoderInterface import EndpointEncoderInterface
 
 from src.config.ConfigManager import ConfigManager
@@ -15,11 +15,7 @@ from src.ui.qtcreator.ui_AvatarCalibrationWidget import Ui_AvatarCalibrationWidg
 
 _logger = logging.getLogger(__name__)
 
-# 1. Add background change for enabled elements in the list
-# 2. Add buttons for graph visualization
-# 3. Add the possibility to disable nodes in VRchat endpoints
-# 4. Fix Node column width in the table
-# 5. Change background for the scrollbar panel
+
 class AvatarCalibrationWidget(QWidget):
     __update_signal: Signal = Signal()
 
@@ -40,6 +36,7 @@ class AvatarCalibrationWidget(QWidget):
 
         self.__build_checkbox_lists()
         self.__build_endpoint_list()
+        self.__update_endpoint_list_highlight()
 
         self.__avatar_config_changes: ConfigUpdateListener = self.__register_avatar_config_changes()
 
@@ -88,6 +85,18 @@ class AvatarCalibrationWidget(QWidget):
 
         self.__ui.endpoint_list_lw.setCurrentRow(0)
 
+    def __update_endpoint_list_highlight(self):
+        for i in range(self.__ui.endpoint_list_lw.count()):
+            item = self.__ui.endpoint_list_lw.item(i)
+
+            endpoint = self.__endpoints_names[item.text()]
+            style = self.style()
+
+            if endpoint.id_str() in self.avatar_endpoint.config_manager.config.disable_output_encoders:
+                item.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_MediaPause))
+            else:
+                item.setIcon(style.standardIcon(QStyle.StandardPixmap.SP_MediaPlay))
+
     def __build_checkbox_lists(self):
         self.__build_solver_checkboxes(
             self.avatar_endpoint.solver_inputs,
@@ -122,6 +131,8 @@ class AvatarCalibrationWidget(QWidget):
 
         disabled_outputs = self.avatar_endpoint.config_manager.config.disable_solver_output_nodes
         self.__update_checkbox_states(self.__output_checkboxes, disabled_outputs)
+
+        self.__update_endpoint_list_highlight()
 
     @staticmethod
     def __update_checkbox_states(storage_dict: dict[str, QCheckBox], disabled_nodes: set[str]):

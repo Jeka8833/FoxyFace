@@ -59,6 +59,7 @@ class BabbleModelLoader:
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
+        input_color = first_input.shape[1]
         input_size_x = first_input.shape[2]
         input_size_y = first_input.shape[3]
 
@@ -66,7 +67,7 @@ class BabbleModelLoader:
 
         is_default_model = BabbleModelLoader.get_base_model_path().samefile(path)
 
-        model = BabbleModel(session, input_name, output_names, is_default_model, input_size_x, input_size_y)
+        model = BabbleModel(session, input_name, output_names, is_default_model, input_color == 3, input_size_x, input_size_y)
         if model.is_loaded_successfully():
             self.model = model
 

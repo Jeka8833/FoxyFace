@@ -16,11 +16,16 @@ class BabbleModel:
     __input_name: str
     __output_names: list[str]
     is_default_model: bool
+    is_input_rgb: bool
     input_size_x: int
     input_size_y: int
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float]:
-        frame = (image[numpy.newaxis, numpy.newaxis, :, :] / 255.0).astype(numpy.float32)  # (1, 1, size, size)
+        if self.is_input_rgb:
+            frame = (image.transpose(2, 0, 1)[numpy.newaxis, ...] / 255.0).astype(numpy.float32, copy=False)
+        else:
+            frame = (image[numpy.newaxis, numpy.newaxis, :, :] / 255.0).astype(numpy.float32,
+                                                                               copy=False)  # (1, 1, size, size)
 
         out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
@@ -30,7 +35,10 @@ class BabbleModel:
 
     def is_loaded_successfully(self) -> bool:
         try:
-            test_image = numpy.zeros((self.input_size_y, self.input_size_x), dtype=numpy.uint8)
+            if self.is_input_rgb:
+                test_image = numpy.zeros((self.input_size_y, self.input_size_x, 3), dtype=numpy.uint8)
+            else:
+                test_image = numpy.zeros((self.input_size_y, self.input_size_x), dtype=numpy.uint8)
 
             self.process_gray_image(test_image)
 

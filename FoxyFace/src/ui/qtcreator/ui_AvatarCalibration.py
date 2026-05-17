@@ -110,7 +110,7 @@ class Ui_AvatarCalibration(object):
     # setupUi
 
     def retranslateUi(self, AvatarCalibration):
-        AvatarCalibration.setWindowTitle(QCoreApplication.translate("AvatarCalibration", u"MainWindow", None))
+        AvatarCalibration.setWindowTitle(QCoreApplication.translate("AvatarCalibration", u"Avatar Calibration", None))
         self.no_connection_lb.setText(QCoreApplication.translate("AvatarCalibration", u"No connected avatars", None))
         self.no_connection_description_lb.setText("")
         self.open_connection_settings_btn.setText(QCoreApplication.translate("AvatarCalibration", u"Open Connection Settings", None))
