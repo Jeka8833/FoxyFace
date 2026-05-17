@@ -17,7 +17,7 @@ class UdpPipeline:
 
         self.__options = VrcftInterfaceOptions()
 
-        encoder_stream = VrcftPacketEncoderStream(self.__processing_pipeline.get_udp_stream(), self.__options)
+        encoder_stream = VrcftPacketEncoderStream(self.__processing_pipeline.stream_output, self.__options)
 
         self.__stream = VRCFTUdpSocket(encoder_stream)
         self.__options_listener = self.__register_change_options()

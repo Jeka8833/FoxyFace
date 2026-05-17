@@ -11,7 +11,7 @@ from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 
 _logger = logging.getLogger(__name__)
 

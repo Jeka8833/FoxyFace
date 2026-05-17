@@ -92,11 +92,11 @@ class MainWindow(FoxyWindow):
     def __update_thread(self):
         try:
             self.camera_fps_signal.emit(f"FPS: {self.__camera_pipeline.get_fps():.1f}")
-            self.mediapipe_fps_signal.emit(f"FPS: {self.__media_pipe_pipeline.get_fps():.1f}")
-            self.babble_fps_signal.emit(f"FPS: {self.__babble_pipeline.get_fps():.1f}")
+            self.mediapipe_fps_signal.emit(f"FPS: {self.__processing_pipeline.media_pipe_fps:.1f}")
+            self.babble_fps_signal.emit(f"FPS: {self.__processing_pipeline.babble_fps:.1f}")
 
-            self.mediapipe_latency_signal.emit(f"Latency: {self.__media_pipe_pipeline.get_latency() * 1000.0:.0f} ms")
-            self.babble_latency_signal.emit(f"Latency: {self.__babble_pipeline.get_latency() * 1000.0:.0f} ms")
+            self.mediapipe_latency_signal.emit(f"Latency: {self.__processing_pipeline.media_pipe_latency * 1000.0:.0f} ms")
+            self.babble_latency_signal.emit(f"Latency: {self.__processing_pipeline.babble_latency * 1000.0:.0f} ms")
 
             self.udp_pps_signal.emit(f"PPS: {self.__udp_pipeline.get_pps():.1f}")
             self.udp_status_signal.emit(

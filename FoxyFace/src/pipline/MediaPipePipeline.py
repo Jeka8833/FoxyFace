@@ -12,12 +12,10 @@ from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraProcessing import CameraProcessing
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
-from src.stream.mediapipe.MediaPipeProcessingOptions import MediaPipeProcessingOptions
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.core.MediaPipePreview import MediaPipePreview
-from src.stream.mediapipe.core.MediaPipeStream import MediaPipeStream
-from src.stream.ui.BlendShapesFrameLatency import BlendShapesFrameLatency
+from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipePreview import MediaPipePreview
+from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
 
 _logger = logging.getLogger(__name__)
 
@@ -42,12 +40,6 @@ class MediaPipePipeline:
         self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
         self.__fps_limit_listener: ConfigUpdateListener = self.__register_change_fps_limit()
 
-        self.__fps_counter = WriteCpsCounter()
-        self.__stream.register_stream(self.__fps_counter)
-
-        self.__latency_counter = BlendShapesFrameLatency()
-        self.__stream.register_stream(self.__latency_counter)
-
         self.__preview_window: MediaPipePreview | None = None
 
     def register_stream(self, stream: StreamWriteOnly[MediaPipeFrame]) -> None:
@@ -65,20 +57,11 @@ class MediaPipePipeline:
     def get_processing_options(self) -> MediaPipeProcessingOptions:
         return self.__processing_options
 
-    def get_fps(self):
-        return self.__fps_counter.get_cps()
-
-    def get_latency(self):
-        return self.__latency_counter.get_latency()
-
     def close(self):
         if self.__preview_window is not None:
             self.__preview_window.close()
 
         self.__camera_pipeline.unregister_stream(self.__buffer)
-
-        self.__stream.unregister_stream(self.__fps_counter)
-        self.__stream.unregister_stream(self.__latency_counter)
 
         self.__fps_limit_listener.unregister()
         self.__processing_options_listener.unregister()

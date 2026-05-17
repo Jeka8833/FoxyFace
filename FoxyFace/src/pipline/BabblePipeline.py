@@ -13,11 +13,9 @@ from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import Babbl
 from src.stream.babble.imageprocessing.BabblePreview import BabblePreview
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.filter.BlendShapesOneEuroFilterOptions import BlendShapesOneEuroFilterOptions
-from src.stream.ui.BlendShapesFrameLatency import BlendShapesFrameLatency
 
 
 class BabblePipeline:
@@ -42,12 +40,6 @@ class BabblePipeline:
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
         self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
 
-        self.__fps_counter = WriteCpsCounter()
-        self.__stream.register_stream(self.__fps_counter)
-
-        self.__latency_counter = BlendShapesFrameLatency()
-        self.__stream.register_stream(self.__latency_counter)
-
         self.__preview_window: BabblePreview | None = None
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
@@ -66,12 +58,6 @@ class BabblePipeline:
     def get_filter_processing_options(self) -> BlendShapesOneEuroFilterOptions:
         return self.__filter_processing_options
 
-    def get_fps(self):
-        return self.__fps_counter.get_cps()
-
-    def get_latency(self):
-        return self.__latency_counter.get_latency()
-
     def get_model_loader(self) -> BabbleModelLoader:
         return self.__babble_loader
 
@@ -81,9 +67,6 @@ class BabblePipeline:
 
         self.__enabled_listener.unregister()
         self.__media_pipe_pipeline.unregister_stream(self.__buffer)
-
-        self.__stream.unregister_stream(self.__fps_counter)
-        self.__stream.unregister_stream(self.__latency_counter)
 
         self.__processing_options_listener.unregister()
         self.__babble_loader_options_listener.unregister()

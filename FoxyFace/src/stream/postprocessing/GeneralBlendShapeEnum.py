@@ -1,7 +1,7 @@
 from enum import Enum, unique
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeOption import GeneralBlendShapeOption
 
 

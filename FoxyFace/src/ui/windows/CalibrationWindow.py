@@ -142,13 +142,13 @@ class CalibrationWindow(FoxyWindow):
             try:
                 input_frame = None
                 try:
-                    input_frame = self.__processing_pipeline.get_ui_stream_input().poll(timeout=1.0)
+                    input_frame = self.__processing_pipeline.ui_stream_input.poll(timeout=1.0)
                 except TimeoutError:
                     pass
 
                 output_frame = None
                 try:
-                    output_frame = self.__processing_pipeline.get_ui_stream_output().poll(timeout=1.0)
+                    output_frame = self.__processing_pipeline.ui_stream_output.poll(timeout=1.0)
                 except TimeoutError:
                     pass
 

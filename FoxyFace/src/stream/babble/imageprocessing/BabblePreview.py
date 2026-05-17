@@ -10,8 +10,8 @@ from src.stream.babble.imageprocessing.BabbleImageProcessing import BabbleImageP
 from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.core.MediaPipeStream import MediaPipeStream
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)

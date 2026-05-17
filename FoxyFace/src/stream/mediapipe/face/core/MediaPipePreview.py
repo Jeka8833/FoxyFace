@@ -5,8 +5,8 @@ import cv2
 from PySide6.QtGui import QImage
 
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.core.MediaPipeStream import MediaPipeStream
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)

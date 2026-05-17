@@ -6,19 +6,20 @@ from numpy import ndarray
 from scipy.spatial.transform import Rotation
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
-from src.stream.mediapipe.MediaPipeProcessingOptions import MediaPipeProcessingOptions
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
 
 _logger = logging.getLogger(__name__)
 
 
 class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
-    def __init__(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]],
-                 options: MediaPipeProcessingOptions):
-        self.__stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]] = stream
+    def __init__(self, options: MediaPipeProcessingOptions):
         self.__options: MediaPipeProcessingOptions = options
+
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
 
     def put(self, value: MediaPipeFrame) -> bool:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
@@ -62,10 +63,16 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
 
         new_value = BlendShapesFrame(shapes, value.camera_frame.timestamp_ns)
 
-        return self.__stream.put(new_value)
+        return self.__stream_root.put(new_value)
+
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+        self.__stream_root.register_stream(stream)
+
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+        self.__stream_root.unregister_stream(stream)
 
     def close(self) -> None:
-        self.__stream.close()
+        self.__stream_root.close()
 
     # https://docs.unity3d.com/ScriptReference/Quaternion-eulerAngles.html
     # Scipy coordinates order doesn't match Unity!

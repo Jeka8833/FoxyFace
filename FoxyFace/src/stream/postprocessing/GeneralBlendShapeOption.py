@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 
 
 @dataclass(frozen=True, slots=True)

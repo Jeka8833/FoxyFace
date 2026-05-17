@@ -3,7 +3,7 @@ from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.calibration.AutoCalibration import AutoCalibration
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 
 
 class AutoCalibrationEndpoint:
@@ -17,7 +17,7 @@ class AutoCalibrationEndpoint:
         self.__media_pipe_pipeline.register_stream(self.__buffer)
 
         self.auto_calibration = AutoCalibration(self.__config_manager,
-                                                self.__processing_pipeline.get_auto_calibration_stream(), self.__buffer)
+                                                self.__processing_pipeline.stream_without_calibration, self.__buffer)
 
     def close(self):
         self.__buffer.close()

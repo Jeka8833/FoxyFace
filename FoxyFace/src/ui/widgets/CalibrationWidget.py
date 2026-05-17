@@ -9,7 +9,7 @@ from src.config.schemas.Config import Config
 from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.config.schemas.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 from src.stream.postprocessing.mixer import MixBlockList

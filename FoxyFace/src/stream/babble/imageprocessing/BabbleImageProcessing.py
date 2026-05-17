@@ -8,7 +8,7 @@ from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.stream.babble.imageprocessing.BabbleImageFrame import BabbleImageFrame
 from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 
 
 class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
