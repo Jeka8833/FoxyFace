@@ -43,6 +43,11 @@ class ProcessingPipeline:
         self.__media_pipe_stream.register_stream(self.__media_pipe_fps_counter)
         self.__media_pipe_stream.register_stream(self.__media_pipe_latency_counter)
 
+        # ==== MediaPipeTongue Block ====
+
+        self.__media_pipe_tongue_fps_counter = WriteCpsCounter()
+        self.__media_pipe_tongue_latency_counter = BlendShapesFrameLatency()
+
         # ==== Babble Block ====
         self.__babble_fps_counter = WriteCpsCounter()
         self.__babble_latency_counter = BlendShapesFrameLatency()

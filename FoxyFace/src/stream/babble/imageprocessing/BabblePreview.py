@@ -47,7 +47,10 @@ class BabblePreview:
 
         if do_join:
             try:
-                self.__thread.join(self.__frame_timeout * 2.0)
+                if self.__frame_timeout is None:
+                    self.__thread.join(5.0)
+                else:
+                    self.__thread.join(self.__frame_timeout * 2.0)
             except Exception:
                 _logger.warning("Failed to join Babble Preview thread", exc_info=True, stack_info=True)
 

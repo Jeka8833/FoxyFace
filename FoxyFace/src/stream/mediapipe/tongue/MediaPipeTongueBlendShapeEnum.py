@@ -2,5 +2,5 @@ from enum import Enum, unique
 
 
 @unique
-class MediaPipeBlendShapeEnum(Enum):
+class MediaPipeTongueBlendShapeEnum(Enum):
     TongueOut = "tongueOut"

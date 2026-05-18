@@ -1,6 +1,6 @@
 import unittest
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream import BabbleBlendShapeEnum
 from src.stream.core.components.BufferStream import BufferStream
 from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame

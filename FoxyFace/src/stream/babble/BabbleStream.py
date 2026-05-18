@@ -13,8 +13,9 @@ _logger = logging.getLogger(__name__)
 
 
 class BabbleStream:
-    def __init__(self, stream: StreamReadOnly[BabbleImageFrame], frame_timeout: float | None, model: BabbleModelLoader):
-        self.__babble_image_stream: StreamReadOnly[BabbleImageFrame] = stream
+    def __init__(self, image_stream: StreamReadOnly[BabbleImageFrame], frame_timeout: float | None,
+                 model: BabbleModelLoader):
+        self.__babble_image_stream: StreamReadOnly[BabbleImageFrame] = image_stream
         self.__frame_timeout: float | None = frame_timeout
         self.__model = model
 
@@ -36,7 +37,10 @@ class BabbleStream:
         self.__stream_root.close()
 
         try:
-            self.__thread.join(self.__frame_timeout * 2.0)
+            if self.__frame_timeout is None:
+                self.__thread.join(5.0)
+            else:
+                self.__thread.join(self.__frame_timeout * 2.0)
         except Exception:
             _logger.warning("Failed to join Babble thread", exc_info=True, stack_info=True)
 

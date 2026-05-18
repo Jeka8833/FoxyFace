@@ -12,11 +12,6 @@ from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
-try:
-    import torch
-except Exception:
-    _logger.warning("Failed to import torch. Compute acceleration may not work")
-
 
 class BabbleModelLoader:
     def __init__(self):
