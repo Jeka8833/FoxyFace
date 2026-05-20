@@ -1,23 +1,25 @@
 import logging
-from pathlib import Path
 from threading import Event, Thread
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.mediapipe.tongue.MediaPipeTongueModel import MediaPipeTongueModel
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
+
 class MediaPipeTongueStream:
-    def __init__(self, image_stream: StreamReadOnly[MediaPipeFrame], model_path: Path,
-                 frame_timeout: float | None):
-        self.__image_stream: StreamReadOnly[MediaPipeFrame] = image_stream
+    def __init__(self, image_stream: StreamReadOnly[ImageFrame], frame_timeout: float | None):
+        self.__image_stream: StreamReadOnly[ImageFrame] = image_stream
         self.__frame_timeout: float | None = frame_timeout
 
         self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]()
+
+        self.model: MediaPipeTongueModel | None = None
 
         self.__close_event = Event()
 
@@ -30,6 +32,17 @@ class MediaPipeTongueStream:
     def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
 
+    @property
+    def model(self) -> MediaPipeTongueModel | None:
+        return self.__model
+
+    @model.setter
+    def model(self, model: MediaPipeTongueModel | None):
+        if model is not None and not isinstance(model, MediaPipeTongueModel):
+            raise TypeError("model isn't MediaPipeTongueModel")
+
+        self.__model = model
+
     def close(self):
         self.__close_event.set()
         self.__stream_root.close()
@@ -40,7 +53,7 @@ class MediaPipeTongueStream:
             else:
                 self.__thread.join(self.__frame_timeout * 2.0)
         except Exception:
-            _logger.warning("Failed to join MediaPipe thread", exc_info=True, stack_info=True)
+            _logger.warning("Failed to join MediaPipe Tongue thread", exc_info=True, stack_info=True)
 
     def __enter__(self):
         return self
@@ -51,13 +64,24 @@ class MediaPipeTongueStream:
     def __loop(self):
         while not self.__close_event.is_set():
             try:
-                frame = self.__image_stream.poll(self.__frame_timeout)
+                last_frame = self.__image_stream.poll(self.__frame_timeout)
+
+                model = self.model
+                if model is None:
+                    continue
+
+                tongue_out = model.run(last_frame.image)
+
+                self.__stream_root.put(BlendShapesFrame(
+                    {MediaPipeTongueBlendShapeEnum.TongueOut: tongue_out},
+                    last_frame.timestamp_ns)
+                )
 
             except TimeoutError:
                 continue
             except InterruptedError:
                 return
             except Exception:
-                _logger.warning("Exception in MediaPipe loop", exc_info=True, stack_info=True)
+                _logger.warning("Exception in MediaPipe Tongue loop", exc_info=True, stack_info=True)
 
                 self.__close_event.wait(0.001)

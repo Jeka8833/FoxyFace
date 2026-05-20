@@ -7,6 +7,7 @@ from src.config.schemas.core.AutoRunConfig import AutoRunConfig
 from src.config.schemas.core.BabbleConfig import BabbleConfig
 from src.config.schemas.core.CameraConfig import CameraConfig
 from src.config.schemas.core.MediaPipeConfig import MediaPipeConfig
+from src.config.schemas.core.MediaPipeTongueConfig import MediaPipeTongueConfig
 from src.config.schemas.core.ProcessingConfig import ProcessingConfig
 from src.config.schemas.core.SocketConfig import SocketConfig
 from src.config.schemas.gui.GuiConfig import GuiConfig
@@ -21,6 +22,7 @@ class Config(JSONWizard):
 
     camera: CameraConfig = field(default_factory=CameraConfig)
     media_pipe: MediaPipeConfig = field(default_factory=MediaPipeConfig)
+    media_pipe_tongue: MediaPipeTongueConfig = field(default_factory=MediaPipeTongueConfig)
     babble: BabbleConfig = field(default_factory=BabbleConfig)
     processing: ProcessingConfig = field(default_factory=ProcessingConfig)
     socket: SocketConfig = field(default_factory=SocketConfig)

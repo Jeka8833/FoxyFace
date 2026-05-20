@@ -8,7 +8,6 @@ from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.Config import Config
 from src.pipline.CameraPipeline import CameraPipeline
-from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraProcessing import CameraProcessing
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
@@ -16,6 +15,7 @@ from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProces
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.face.core.MediaPipePreview import MediaPipePreview
 from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class MediaPipePipeline:
         self.__config_manager = config_manager
         self.__camera_pipeline = camera_pipeline
 
-        self.__buffer = SingleBufferStream[CameraFrame]()
+        self.__buffer = SingleBufferStream[ImageFrame]()
         self.__camera_pipeline.register_stream(self.__buffer)
         processed_stream = CameraProcessing(self.__buffer, self.__camera_pipeline.get_processing_options())
 

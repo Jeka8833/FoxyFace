@@ -10,7 +10,7 @@ from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
 from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 _logger = logging.getLogger(__name__)
 

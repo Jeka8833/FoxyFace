@@ -5,16 +5,16 @@ from threading import Event, Thread
 
 import cv2
 
-from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
 
 class CameraStream:
     def __init__(self):
-        self.__stream_root = WriteStreamSplitter[CameraFrame]()
+        self.__stream_root = WriteStreamSplitter[ImageFrame]()
 
         self.__camera: cv2.VideoCapture | None = None
 
@@ -52,10 +52,10 @@ class CameraStream:
 
         _logger.info("Camera started")
 
-    def register_stream(self, stream: StreamWriteOnly[CameraFrame]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream_root.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[CameraFrame]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream_root.unregister_stream(stream)
 
     def close(self) -> None:
@@ -82,7 +82,7 @@ class CameraStream:
                     if success:
                         current_time = time.perf_counter_ns()
 
-                        packet = CameraFrame(numpy_frame_from_opencv, current_time)
+                        packet = ImageFrame(numpy_frame_from_opencv, current_time)
 
                         self.__stream_root.put(packet)
                         continue

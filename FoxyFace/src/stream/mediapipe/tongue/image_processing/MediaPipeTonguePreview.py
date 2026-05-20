@@ -1,27 +1,36 @@
 import logging
 import threading
 
-import cv2
 from PySide6.QtGui import QImage
 
+from src.pipline.MediaPipePipeline import MediaPipePipeline
+from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
+from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
+from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueProcessingOptions import \
+    MediaPipeTongueProcessingOptions
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)
 
 
-class MediaPipePreview:
-    def __init__(self, mediapipe_stream: MediaPipeStream, frame_timeout: float | None = 1.0):
-        self.__mediapipe_stream: MediaPipeStream = mediapipe_stream
+class MediaPipeTonguePreview:
+    def __init__(self, mediapipe_stream: MediaPipeStream | MediaPipePipeline,
+                 processing_options: MediaPipeTongueProcessingOptions, frame_timeout: float | None = 1.0):
+        self.__mediapipe_stream: MediaPipeStream | MediaPipePipeline = mediapipe_stream
+        self.__processing_options: MediaPipeTongueProcessingOptions = processing_options
         self.__frame_timeout: float | None = frame_timeout
 
         self.__single_buffer_stream: SingleBufferStream[MediaPipeFrame] = SingleBufferStream[MediaPipeFrame]()
+        self.__image_stream: StreamReadOnly[ImageFrame] = MediaPipeTongueImageProcessing(self.__single_buffer_stream,
+                                                                                         self.__processing_options)
 
-        self.__window: ImagePreviewWindow = ImagePreviewWindow(title="MediaPipe Camera Preview")
+        self.__window: ImagePreviewWindow = ImagePreviewWindow(title="MediaPipe Tongue Preview")
 
-        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="MediaPipe Camera Preview")
+        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="MediaPipe Tongue Preview")
         self.__thread.start()
 
         self.__mediapipe_stream.register_stream(self.__single_buffer_stream)
@@ -40,7 +49,7 @@ class MediaPipePreview:
                 else:
                     self.__thread.join(self.__frame_timeout * 2.0)
             except Exception:
-                _logger.warning("Failed to join MediaPipe Preview thread", exc_info=True, stack_info=True)
+                _logger.warning("Failed to join MediaPipe Tongue Preview thread", exc_info=True, stack_info=True)
 
         self.__mediapipe_stream.unregister_stream(self.__single_buffer_stream)
         self.__single_buffer_stream.close()
@@ -54,29 +63,7 @@ class MediaPipePreview:
     def __loop(self):
         while not self.is_closed():
             try:
-                frame = self.__single_buffer_stream.poll(self.__frame_timeout)
-
-                image = frame.camera_frame.image.copy()
-
-                if frame.face_landmarker_result.face_landmarks:
-                    z_values = [point.z for point in frame.face_landmarker_result.face_landmarks[0]]
-
-                    z_max_val = max(z_values)
-                    z_min_val = min(z_values)
-
-                    for points in frame.face_landmarker_result.face_landmarks[0]:
-                        x = round(points.x * image.shape[1])
-                        y = round(points.y * image.shape[0])
-
-                        if x >= image.shape[1] or y >= image.shape[0] or x < 0 or y < 0:
-                            continue
-
-                        if abs(z_min_val - z_max_val) < 0.0001:
-                            size = 2
-                        else:
-                            size = round(1 + (points.z - z_max_val) / (z_min_val - z_max_val) * 2)
-
-                        cv2.circle(image, (x, y), size, (0, 255, 0), -1)
+                image = self.__image_stream.poll(self.__frame_timeout).image
 
                 # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_RGB888)
@@ -87,7 +74,7 @@ class MediaPipePreview:
             except InterruptedError:
                 break
             except Exception:
-                _logger.warning("Exception in MediaPipe Preview loop", exc_info=True, stack_info=True)
+                _logger.warning("Exception in MediaPipe Tongue Preview loop", exc_info=True, stack_info=True)
 
                 self.__window.is_closed.wait(0.001)
 

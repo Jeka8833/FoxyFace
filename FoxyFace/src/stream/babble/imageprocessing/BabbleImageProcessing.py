@@ -5,20 +5,20 @@ import numpy
 from scipy.spatial.transform import Rotation
 
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
-from src.stream.babble.imageprocessing.BabbleImageFrame import BabbleImageFrame
 from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 
-class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
+class BabbleImageProcessing(StreamReadOnly[ImageFrame]):
     def __init__(self, stream: StreamReadOnly[MediaPipeFrame], options: BabbleImageProcessingOptions,
                  model_loader: BabbleModelLoader):
         self.__stream: StreamReadOnly[MediaPipeFrame] = stream
         self.__options: BabbleImageProcessingOptions = options
         self.__model_loader: BabbleModelLoader = model_loader
 
-    def poll(self, timeout: float | None = None) -> BabbleImageFrame:
+    def poll(self, timeout: float | None = None) -> ImageFrame:
         start_time = time.perf_counter_ns()
 
         while True:
@@ -32,7 +32,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
                 if model is not None:
                     break
 
-        img_gray = cv2.cvtColor(mediapipe_frame.camera_frame.frame, cv2.COLOR_RGB2GRAY)
+        img_gray = cv2.cvtColor(mediapipe_frame.camera_frame.image, cv2.COLOR_RGB2GRAY)
         height, width = img_gray.shape[:2]
 
         # Center Top
@@ -71,7 +71,7 @@ class BabbleImageProcessing(StreamReadOnly[BabbleImageFrame]):
 
         img_gray = cv2.warpPerspective(img_gray, matrix, (model.input_size_x, model.input_size_y))
 
-        return BabbleImageFrame(img_gray, mediapipe_frame.camera_frame.timestamp_ns)
+        return ImageFrame(img_gray, mediapipe_frame.camera_frame.timestamp_ns)
 
     def __validate_rotation(self, frame: MediaPipeFrame):
         rotation_matrix = frame.face_landmarker_result.facial_transformation_matrixes[0][0:3, 0:3]

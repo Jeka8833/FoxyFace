@@ -8,7 +8,7 @@ from src.config.ConfigManager import ConfigManager
 from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 

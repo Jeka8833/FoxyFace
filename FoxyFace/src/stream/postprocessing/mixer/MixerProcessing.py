@@ -2,7 +2,7 @@ from typing import Any
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.BufferStream import BufferStream
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.mixer.MixSelectEnum import MixSelectEnum
 from src.stream.postprocessing.mixer.MixerProcessingOptions import MixerProcessingOptions

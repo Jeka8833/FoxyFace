@@ -5,13 +5,13 @@ from PySide6.QtGui import QImage
 
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
-from src.stream.babble.imageprocessing.BabbleImageFrame import BabbleImageFrame
 from src.stream.babble.imageprocessing.BabbleImageProcessing import BabbleImageProcessing
 from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class BabblePreview:
         self.__frame_timeout: float | None = frame_timeout
 
         self.__single_buffer_stream: SingleBufferStream[MediaPipeFrame] = SingleBufferStream[MediaPipeFrame]()
-        self.__image_stream: StreamReadOnly[BabbleImageFrame] = BabbleImageProcessing(self.__single_buffer_stream,
+        self.__image_stream: StreamReadOnly[ImageFrame] = BabbleImageProcessing(self.__single_buffer_stream,
                                                                                       self.__processing_options,
                                                                                       self.__model_loader)
 
@@ -66,7 +66,7 @@ class BabblePreview:
     def __loop(self):
         while not self.is_closed():
             try:
-                image = self.__image_stream.poll(self.__frame_timeout).processed_frame
+                image = self.__image_stream.poll(self.__frame_timeout).image
 
                 # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_Grayscale8)

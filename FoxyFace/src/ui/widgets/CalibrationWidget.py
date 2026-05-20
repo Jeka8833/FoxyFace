@@ -10,6 +10,7 @@ from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBle
 from src.config.schemas.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 from src.stream.postprocessing.mixer import MixBlockList
@@ -147,6 +148,8 @@ class CalibrationWidget(QWidget):
                 source_list.append(MixSelectEnumConfig.MediaPipe)
             elif isinstance(source, BabbleBlendShapeEnum):
                 source_list.append(MixSelectEnumConfig.Babble)
+            elif isinstance(source, MediaPipeTongueBlendShapeEnum):
+                source_list.append(MixSelectEnumConfig.MediaPipeTongue)
 
         self.__recreate_source_list.emit([source.name for source in source_list], source_list.index(selected))
 

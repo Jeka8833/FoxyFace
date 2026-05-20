@@ -21,7 +21,7 @@ class BabbleModelLoader:
                           device_id: int):
         self.model = None
 
-        device_id_str = str(device_id)
+        device_id_param = {"device_id": str(device_id)}
 
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
@@ -31,22 +31,23 @@ class BabbleModelLoader:
         opts.enable_mem_pattern = False
 
         if use_gpu:
-            provider = [("DmlExecutionProvider", {"device_id": device_id_str}),
-                        ("CUDAExecutionProvider", {"device_id": device_id_str}),
-                        ("ROCMExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
+            provider = [("DmlExecutionProvider", device_id_param), ("CUDAExecutionProvider", device_id_param),
+                        ("ROCMExecutionProvider", device_id_param), "CoreMLExecutionProvider",
                         "CPUExecutionProvider"]
         else:
             provider = ["CPUExecutionProvider"]
 
         available_providers = onnxruntime.get_available_providers()
 
-        _logger.info(f"Available providers: {available_providers}")
+        _logger.info(f"All providers: {available_providers}")
 
         final_providers = []
         for p in provider:
             name = p[0] if isinstance(p, tuple) else p
             if name in available_providers:
                 final_providers.append(p)
+
+        _logger.info(f"Using providers: {final_providers}")
 
         path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
 

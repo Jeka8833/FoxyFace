@@ -2,7 +2,7 @@ import threading
 import time
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
 class BlendShapesFrameLatency(StreamWriteOnly[BlendShapesFrame]):

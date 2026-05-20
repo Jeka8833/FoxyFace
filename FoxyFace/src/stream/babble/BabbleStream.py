@@ -3,19 +3,19 @@ from threading import Event, Thread
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
-from src.stream.babble.imageprocessing.BabbleImageFrame import BabbleImageFrame
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
 
 class BabbleStream:
-    def __init__(self, image_stream: StreamReadOnly[BabbleImageFrame], frame_timeout: float | None,
+    def __init__(self, image_stream: StreamReadOnly[ImageFrame], frame_timeout: float | None,
                  model: BabbleModelLoader):
-        self.__babble_image_stream: StreamReadOnly[BabbleImageFrame] = image_stream
+        self.__babble_image_stream: StreamReadOnly[ImageFrame] = image_stream
         self.__frame_timeout: float | None = frame_timeout
         self.__model = model
 
@@ -54,7 +54,7 @@ class BabbleStream:
         while not self.__close_event.is_set():
             try:
                 last_frame = self.__babble_image_stream.poll(self.__frame_timeout)
-                bend_shapes = self.__model.process_gray_image(last_frame.processed_frame)
+                bend_shapes = self.__model.process_gray_image(last_frame.image)
                 if bend_shapes is None:
                     continue
 

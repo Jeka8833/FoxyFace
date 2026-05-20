@@ -3,12 +3,12 @@ import threading
 
 from PySide6.QtGui import QImage
 
-from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraProcessing import CameraProcessing
 from src.stream.camera.CameraProcessingOption import CameraProcessingOption
 from src.stream.camera.CameraStream import CameraStream
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)
@@ -20,9 +20,9 @@ class CameraPreview:
         self.__camera_stream: CameraStream = camera_stream_root
         self.__frame_timeout: float | None = frame_timeout
 
-        self.__single_buffer_image_stream: SingleBufferStream[CameraFrame] = SingleBufferStream[CameraFrame]()
-        self.__image_stream: StreamReadOnly[CameraFrame] = CameraProcessing(self.__single_buffer_image_stream,
-                                                                            post_processing_options)
+        self.__single_buffer_image_stream: SingleBufferStream[ImageFrame] = SingleBufferStream[ImageFrame]()
+        self.__image_stream: StreamReadOnly[ImageFrame] = CameraProcessing(self.__single_buffer_image_stream,
+                                                                           post_processing_options)
 
         self.__window: ImagePreviewWindow = ImagePreviewWindow(title="Camera Preview")
 
@@ -59,7 +59,7 @@ class CameraPreview:
     def __loop(self):
         while not self.is_closed():
             try:
-                image = self.__image_stream.poll(self.__frame_timeout).frame
+                image = self.__image_stream.poll(self.__frame_timeout).image
 
                 # noinspection PyTypeChecker
                 im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_RGB888)

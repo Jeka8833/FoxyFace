@@ -33,6 +33,7 @@ from src.ui.windows.MainWindow import MainWindow
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.CameraPipeline import CameraPipeline
+from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.UdpPipeline import UdpPipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
@@ -42,7 +43,7 @@ _logger = logging.getLogger(__name__)
 
 
 class RunMainStream:
-    def __init__(self, splash_screen: QSplashScreen = None):
+    def __init__(self, splash_screen: QSplashScreen | None = None):
         _logger.info(f"Hello, I'm FoxyFace {str(AppConstants.VERSION)}")
 
         self.__config_manager: ConfigManager = ConfigManager(Path("config.json"))
@@ -50,21 +51,36 @@ class RunMainStream:
 
         self.__camera_pipeline: CameraPipeline = CameraPipeline(self.__config_manager)
         self.__media_pipe_pipeline: MediaPipePipeline = MediaPipePipeline(self.__config_manager, self.__camera_pipeline)
+        self.__media_pipe_tongue_pipeline: MediaPipeTonguePipeline = MediaPipeTonguePipeline(
+            self.__config_manager,
+            self.__media_pipe_pipeline
+        )
         self.__babble_pipeline: BabblePipeline = BabblePipeline(self.__config_manager, self.__media_pipe_pipeline)
-        self.__processing_pipeline: ProcessingPipeline = ProcessingPipeline(self.__config_manager,
-                                                                            self.__media_pipe_pipeline,
-                                                                            self.__babble_pipeline)
+        self.__processing_pipeline: ProcessingPipeline = ProcessingPipeline(
+            self.__config_manager,
+            self.__media_pipe_pipeline,
+            self.__media_pipe_tongue_pipeline,
+            self.__babble_pipeline
+        )
         self.__udp_pipeline: UdpPipeline = UdpPipeline(self.__config_manager, self.__processing_pipeline)
-        self.__auto_calibration_endpoint: AutoCalibrationEndpoint = AutoCalibrationEndpoint(self.__config_manager,
-                                                                                            self.__media_pipe_pipeline,
-                                                                                            self.__processing_pipeline)
+        self.__auto_calibration_endpoint: AutoCalibrationEndpoint = AutoCalibrationEndpoint(
+            self.__config_manager,
+            self.__media_pipe_pipeline,
+            self.__processing_pipeline
+        )
 
         self.__steam_auto_run: SteamAutoRun = SteamAutoRun(self.__config_manager)
 
-        self.__main_window: MainWindow = MainWindow(self.__config_manager, self.__camera_pipeline,
-                                                    self.__media_pipe_pipeline, self.__babble_pipeline,
-                                                    self.__processing_pipeline, self.__udp_pipeline,
-                                                    self.__auto_calibration_endpoint, self.__steam_auto_run)
+        self.__main_window: MainWindow = MainWindow(
+            self.__config_manager,
+            self.__camera_pipeline,
+            self.__media_pipe_pipeline,
+            self.__babble_pipeline,
+            self.__processing_pipeline,
+            self.__udp_pipeline,
+            self.__auto_calibration_endpoint,
+            self.__steam_auto_run
+        )
 
         if splash_screen is not None:
             splash_screen.finish(self.__main_window)
@@ -81,6 +97,7 @@ class RunMainStream:
 
         self.__babble_pipeline.close()
         self.__media_pipe_pipeline.close()
+        self.__media_pipe_tongue_pipeline.close()
         self.__camera_pipeline.close()
         self.__processing_pipeline.close()
         self.__udp_pipeline.close()

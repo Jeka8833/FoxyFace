@@ -4,6 +4,6 @@ from cv2.typing import MatLike
 
 
 @dataclass(frozen=True, slots=True)
-class BabbleImageFrame:
-    processed_frame: MatLike
+class ImageFrame:
+    image: MatLike
     timestamp_ns: int

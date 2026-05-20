@@ -20,7 +20,7 @@ class BabbleModel:
     input_size_y: int
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float]:
-        frame = (image[numpy.newaxis, numpy.newaxis, :, :] / 255.0).astype(numpy.float32)  # (1, 1, size, size)
+        frame = numpy.divide(image, 255, dtype=numpy.float32)[numpy.newaxis, numpy.newaxis, :, :]  # (1, 1, size, size)
 
         out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
