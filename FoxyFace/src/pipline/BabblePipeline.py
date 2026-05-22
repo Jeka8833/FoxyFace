@@ -24,25 +24,23 @@ class BabblePipeline:
         self.__config_manager: ConfigManager = config_manager
         self.__media_pipe_pipeline: MediaPipePipeline = media_pipe_pipeline
 
-        self.__processing_options = BabbleImageProcessingOptions()
-        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
-
         self.__buffer = SingleBufferStream[MediaPipeFrame]()
         self.__media_pipe_pipeline.register_stream(self.__buffer)
 
-        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
-
         self.__babble_loader = BabbleModelLoader()
-        self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
 
+        self.__processing_options = BabbleImageProcessingOptions()
         processed_stream = BabbleImageProcessing(self.__buffer, self.__processing_options, self.__babble_loader)
         self.__stream = BabbleStream(processed_stream, 1.0, self.__babble_loader)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
-        self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
-
         self.__babble_stream = BlendShapesOneEuroFilter[BabbleBlendShapeEnum](self.__filter_processing_options)
         self.__stream.register_stream(self.__babble_stream)
+
+        self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
+        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
+        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
+        self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
 
         self.__preview_window: BabblePreview | None = None
 
@@ -59,9 +57,6 @@ class BabblePipeline:
         else:
             self.__preview_window.close()
 
-    def get_filter_processing_options(self) -> BlendShapesOneEuroFilterOptions:
-        return self.__filter_processing_options
-
     def get_model_loader(self) -> BabbleModelLoader:
         return self.__babble_loader
 
@@ -70,12 +65,12 @@ class BabblePipeline:
             self.__preview_window.close()
 
         self.__enabled_listener.unregister()
-        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
-        self.__stream.unregister_stream(self.__babble_stream)
-
         self.__processing_options_listener.unregister()
         self.__babble_loader_options_listener.unregister()
         self.__filter_processing_options_listener.unregister()
+
+        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
+        self.__stream.unregister_stream(self.__babble_stream)
 
         self.__stream.close()
 

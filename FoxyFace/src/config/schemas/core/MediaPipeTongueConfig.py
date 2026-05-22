@@ -10,8 +10,8 @@ class MediaPipeTongueConfig:
     intra_op_num_threads: int = 1
     allow_spinning: bool = False
 
-    padding_x: int = 30
-    padding_y: int = 30
+    padding_x: int = 49
+    padding_y: int = 43
 
     mincutoff: float = 0.9
     beta: float = 0.9

@@ -5,6 +5,7 @@ import numpy
 from cv2.typing import MatLike
 from onnxruntime import InferenceSession
 
+from src.stream import ONNX_LOCK
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 
 _logger = logging.getLogger(__name__)
@@ -22,7 +23,8 @@ class BabbleModel:
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float]:
         frame = numpy.divide(image, 255, dtype=numpy.float32)[numpy.newaxis, numpy.newaxis, :, :]  # (1, 1, size, size)
 
-        out = self.__session.run(self.__output_names, {self.__input_name: frame})
+        with ONNX_LOCK:
+            out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
         arr = out[0][0].astype(float)
 

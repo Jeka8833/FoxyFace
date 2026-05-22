@@ -8,6 +8,7 @@ from cv2.typing import MatLike
 from onnxruntime import InferenceSession, SessionOptions, GraphOptimizationLevel
 
 from AppConstants import AppConstants
+from src.stream import ONNX_LOCK
 
 _logger = logging.getLogger(__name__)
 
@@ -24,11 +25,12 @@ class MediaPipeTongueModel:
     input_size_y: int
 
     def run(self, image: MatLike) -> float:
-        frame = numpy.divide(image, 255, dtype=numpy.float32)[numpy.newaxis, :, :, :]  # [1, H, W, 3]
+        frame = numpy.expand_dims(numpy.divide(image, 255, dtype=numpy.float32), axis=0)  # [1, H, W, 3]
 
-        out = self.__session.run(self.__output_names, {self.__input_name: frame})
+        with ONNX_LOCK:
+            out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
-        return float(out[0][0])
+        return float(out[0][0][0])
 
     def __run_test_image(self):
         frame = numpy.zeros((MPT_IMAGE_INPUT_SIZE_Y, MPT_IMAGE_INPUT_SIZE_X, 3), dtype=numpy.uint8)

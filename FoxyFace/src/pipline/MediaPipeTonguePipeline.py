@@ -27,32 +27,29 @@ class MediaPipeTonguePipeline:
         self.__config_manager: ConfigManager = config_manager
         self.__media_pipe_pipeline: MediaPipePipeline = media_pipe_pipeline
 
-        self.__processing_options = MediaPipeTongueProcessingOptions()
-        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
-
         self.__buffer = SingleBufferStream[MediaPipeFrame]()
         self.__media_pipe_pipeline.register_stream(self.__buffer)
 
-        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
-
-        self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_model_options()
-
+        self.__processing_options = MediaPipeTongueProcessingOptions()
         processed_stream = MediaPipeTongueImageProcessing(self.__buffer, self.__processing_options)
         self.__stream = MediaPipeTongueStream(processed_stream, 1.0)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
-        self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
+        self.__media_pipe_tongue_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendShapeEnum](self.__filter_processing_options)
+        self.__stream.register_stream(self.__media_pipe_tongue_stream)
 
-        self.__babble_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendShapeEnum](self.__filter_processing_options)
-        self.__stream.register_stream(self.__babble_stream)
+        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
+        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
+        self.__media_pipe_tongue_loader_options_listener: ConfigUpdateListener = self.__register_change_model_options()
+        self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
 
         self.__preview_window: MediaPipeTonguePreview | None = None
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
-        self.__babble_stream.register_stream(stream)
+        self.__media_pipe_tongue_stream.register_stream(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
-        self.__babble_stream.unregister_stream(stream)
+        self.__media_pipe_tongue_stream.unregister_stream(stream)
 
     def trigger_view_preview(self):
         if self.__preview_window is None or self.__preview_window.is_closed():
@@ -60,20 +57,17 @@ class MediaPipeTonguePipeline:
         else:
             self.__preview_window.close()
 
-    def get_filter_processing_options(self) -> BlendShapesOneEuroFilterOptions:
-        return self.__filter_processing_options
-
     def close(self):
         if self.__preview_window is not None:
             self.__preview_window.close()
 
         self.__enabled_listener.unregister()
-        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
-        self.__stream.unregister_stream(self.__babble_stream)
-
         self.__processing_options_listener.unregister()
-        self.__babble_loader_options_listener.unregister()
+        self.__media_pipe_tongue_loader_options_listener.unregister()
         self.__filter_processing_options_listener.unregister()
+
+        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
+        self.__stream.unregister_stream(self.__media_pipe_tongue_stream)
 
         self.__stream.close()
 
@@ -105,7 +99,7 @@ class MediaPipeTonguePipeline:
         self.__filter_processing_options.beta = config_manager.config.media_pipe_tongue.beta
         self.__filter_processing_options.dcutoff = config_manager.config.media_pipe_tongue.dcutoff
 
-        self.__babble_stream.recreate()
+        self.__media_pipe_tongue_stream.recreate()
 
     def __register_change_enabled(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe_tongue.enabled]
