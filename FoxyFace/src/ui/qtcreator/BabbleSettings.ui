@@ -148,7 +148,7 @@
            <double>0.010000000000000</double>
           </property>
           <property name="value">
-           <double>3.000000000000000</double>
+           <double>1.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -286,7 +286,7 @@
         <item>
          <widget class="QLabel" name="thread_count_lb">
           <property name="text">
-           <string>Thread Count:</string>
+           <string>CPU Threads:</string>
           </property>
          </widget>
         </item>
@@ -300,7 +300,7 @@
         <item>
          <widget class="QCheckBox" name="allow_spinning_cb">
           <property name="text">
-           <string>Allow Spinning</string>
+           <string>CPU Wait Spin</string>
           </property>
          </widget>
         </item>

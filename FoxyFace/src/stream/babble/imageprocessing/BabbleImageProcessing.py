@@ -2,6 +2,8 @@ import time
 
 import cv2
 import numpy
+import numpy as np
+from cv2.typing import MatLike
 from scipy.spatial.transform import Rotation
 
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
@@ -33,6 +35,22 @@ class BabbleImageProcessing(StreamReadOnly[ImageFrame]):
                     break
 
         img_gray = cv2.cvtColor(mediapipe_frame.camera_frame.image, cv2.COLOR_RGB2GRAY)
+
+        # landmarks = mediapipe_frame.face_landmarker_result.face_landmarks[0]
+        #
+        # # Получаем параметры модели
+        # target_size = (model.input_size_x, model.input_size_y)
+        #
+        # # Вызываем нашу математически правильную функцию
+        # img_gray_cropped = BabbleImageProcessing.crop_and_align_face_full_new(
+        #     image=img_gray,
+        #     landmarks=landmarks,
+        #     target_size=target_size,
+        #     paddings=(5, 22, 9)  # Настройте отступы по вкусу (X, Top, Bottom)
+        # )
+        #
+        # return ImageFrame(img_gray_cropped, mediapipe_frame.camera_frame.timestamp_ns)
+
         height, width = img_gray.shape[:2]
 
         # Center Top
@@ -109,3 +127,70 @@ class BabbleImageProcessing(StreamReadOnly[ImageFrame]):
         point_e = (point_b[0] + side_vector[0], point_b[1] + side_vector[1])
 
         return point_d, point_e
+
+    @staticmethod
+    def crop_and_align_face_full_new(image: MatLike, landmarks, target_size: tuple[int, int] = (256, 256),
+                                     paddings: tuple[int, int, int] = (30, 30, 30)):
+        h, w = image.shape[:2]
+
+        lm33, lm263 = landmarks[33], landmarks[263]
+        lx, ly = lm33.x * w, lm33.y * h
+        rx, ry = lm263.x * w, lm263.y * h
+
+        angle = np.degrees(np.arctan2(ry - ly, rx - lx))
+        eye_center = ((lx + rx) * 0.5, (ly + ry) * 0.5)
+
+        m_rot = cv2.getRotationMatrix2D(eye_center, angle, scale=1.0)
+
+        all_pts = np.array([[lm.x * w, lm.y * h] for lm in landmarks])
+
+        rotated_pts = cv2.transform(all_pts.reshape(1, -1, 2), m_rot)[0]
+
+        x_min = np.min(rotated_pts[:, 0])
+        x_max = np.max(rotated_pts[:, 0])
+        y_max = np.max(rotated_pts[:, 1])
+        y_min = eye_center[1]
+
+        pad_x, pad_top, pad_bottom = paddings
+
+        x_min -= pad_x
+        x_max += pad_x
+        y_min -= pad_top
+        y_max += pad_bottom
+
+        tw, th = target_size
+
+        bbox_w = max(x_max - x_min, 1e-5)
+        bbox_h = max(y_max - y_min, 1e-5)
+
+        scale_x = tw / bbox_w
+        scale_y = th / bbox_h
+
+        m_crop = np.array([
+            [scale_x, 0, -x_min * scale_x],
+            [0, scale_y, -y_min * scale_y],
+            [0, 0, 1]
+        ], dtype=np.float64)
+
+        m_rot_3x3 = np.vstack([m_rot, [0, 0, 1]])
+
+        m_final = (m_crop @ m_rot_3x3)[:2, :]
+
+        final_pts = cv2.transform(all_pts.reshape(1, -1, 2), m_final)[0].astype(np.int32)
+
+        hull = cv2.convexHull(final_pts)
+
+        mask = np.zeros((th, tw), dtype=np.uint8)
+        cv2.fillConvexPoly(mask, hull, 255)
+
+        face_final = cv2.warpAffine(
+            image,
+            m_final,
+            target_size,
+            flags=cv2.INTER_CUBIC,
+            borderMode=cv2.BORDER_CONSTANT,
+            borderValue=(0, 0, 0)
+        )
+        # face_final[mask == 0] = 2
+
+        return face_final

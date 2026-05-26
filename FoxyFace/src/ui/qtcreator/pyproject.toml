@@ -1,0 +1,17 @@
+[project]
+name = "FoxyFace"
+
+[tool.pyside6-project]
+files = [
+        "AutoCalibrationWindow.ui",
+        "BabbleSettings.ui",
+        "CalibrationSettings.ui",
+        "CalibrationSettingsItem.ui",
+        "CameraSettings.ui",
+        "HasUpdateWindow.ui",
+        "MainWindow.ui",
+        "MediaPipeSettings.ui",
+        "MediaPipeTongueSettings.ui",
+        "VrcftSettings.ui",
+        "starter.py",
+    ]

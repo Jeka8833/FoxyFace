@@ -15,6 +15,6 @@ class BabbleConfig:
     max_head_rotation_x: float = 30
     max_head_rotation_y: float = 50
 
-    mincutoff: float = 0.9
-    beta: float = 0.9
+    mincutoff: float = 1.0
+    beta: float = 0.0001
     dcutoff: float = 1.0

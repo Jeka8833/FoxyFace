@@ -19,63 +19,60 @@ class MediaPipeTongueImageProcessing(StreamReadOnly[ImageFrame]):
         mediapipe_frame = self.__stream.poll(timeout)
 
         return ImageFrame(
-            self.crop_and_align_face_full_new(
+            self.crop_and_align_face(
                 mediapipe_frame.camera_frame.image,
                 mediapipe_frame.face_landmarker_result.face_landmarks[0],
                 target_size=(MPT_IMAGE_INPUT_SIZE_X, MPT_IMAGE_INPUT_SIZE_Y),
-                paddings=(self.__options.padding_x, self.__options.padding_y),
+                paddings=(self.__options.padding_x, self.__options.padding_top, self.__options.padding_bottom),
             ),
             mediapipe_frame.camera_frame.timestamp_ns
         )
 
     @staticmethod
-    def crop_and_align_face_full_new(image: MatLike, landmarks, target_size: tuple[int, int] = (256, 256),
-                                     paddings: tuple[int, int] = (30, 30)):
+    def crop_and_align_face(image: MatLike, landmarks, target_size: tuple[int, int] = (256, 256),
+                                 paddings: tuple[int, int, int] = (30, 30, 30)):
         h, w, _ = image.shape
 
-        left_eye = np.array([landmarks[33].x * w, landmarks[33].y * h])
-        right_eye = np.array([landmarks[263].x * w, landmarks[263].y * h])
+        lm33 = landmarks[33]
+        lm263 = landmarks[263]
+        left_eye_x, left_eye_y = lm33.x * w, lm33.y * h
+        right_eye_x, right_eye_y = lm263.x * w, lm263.y * h
 
-        d_y = right_eye[1] - left_eye[1]
-        d_x = right_eye[0] - left_eye[0]
-        angle = np.degrees(np.arctan2(d_y, d_x))
-        eye_center = ((left_eye[0] + right_eye[0]) / 2.0, (left_eye[1] + right_eye[1]) / 2.0)
+        angle = np.degrees(np.arctan2(right_eye_y - left_eye_y, right_eye_x - left_eye_x))
+        eye_center = ((left_eye_x + right_eye_x) * 0.5, (left_eye_y + right_eye_y) * 0.5)
 
         m_rot = cv2.getRotationMatrix2D(eye_center, angle, scale=1.0)
 
-        all_pts = np.array([[lm.x * w, lm.y * h] for lm in landmarks])
-        ones = np.ones(shape=(len(all_pts), 1))
-        points_ones = np.concatenate((all_pts, ones), axis=1)
-        rotated_pts = m_rot.dot(points_ones.T).T
 
-        x_min, y_min = np.min(rotated_pts, axis=0)
-        x_max, y_max = np.max(rotated_pts, axis=0)
+        xs = np.array([lm.x for lm in landmarks], dtype=np.float64) * w
+        ys = np.array([lm.y for lm in landmarks], dtype=np.float64) * h
 
-        pad_x, pad_y = paddings
+        m00, m01, m02 = m_rot[0]
+        m10, m11, m12 = m_rot[1]
+
+        rotated_xs = xs * m00 + ys * m01 + m02
+        rotated_ys = xs * m10 + ys * m11 + m12
+
+        x_min, x_max = np.min(rotated_xs), np.max(rotated_xs)
+        y_min, y_max = np.min(rotated_ys), np.max(rotated_ys)
+
+        pad_x, pad_top, pad_bottom = paddings
 
         x_min -= pad_x
-        y_min -= pad_y
+        y_min -= pad_top
         x_max += pad_x
-        y_max += pad_y
+        y_max += pad_bottom
 
-        bbox_rotated_pts = np.array([
-            [x_min, y_min],
-            [x_max, y_min],
-            [x_min, y_max]
-        ], dtype=np.float32)
-
-        m_inv = cv2.invertAffineTransform(m_rot)
-        bbox_rotated_ones = np.concatenate((bbox_rotated_pts, np.ones((3, 1))), axis=1)
-        src_pts = m_inv.dot(bbox_rotated_ones.T).T.astype(np.float32)
+        assert x_max - x_min >= 1.0 and y_max - y_min >= 1.0
 
         tw, th = target_size
-        dst_pts = np.array([
-            [0, 0],
-            [tw, 0],
-            [0, th]
-        ], dtype=np.float32)
+        scale_x = tw / (x_max - x_min)
+        scale_y = th / (y_max - y_min)
 
-        m_final = cv2.getAffineTransform(src_pts, dst_pts)
+        m_final = np.array([
+            [m00 * scale_x, m01 * scale_x, (m02 - x_min) * scale_x],
+            [m10 * scale_y, m11 * scale_y, (m12 - y_min) * scale_y]
+        ], dtype=np.float64)
 
         face_final = cv2.warpAffine(
             image,

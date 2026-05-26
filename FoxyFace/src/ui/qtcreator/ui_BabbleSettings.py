@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BabbleSettings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -109,7 +109,7 @@ class Ui_BabbleSettings(object):
         self.mincutoff_sp.setDecimals(6)
         self.mincutoff_sp.setMinimum(0.000001000000000)
         self.mincutoff_sp.setSingleStep(0.010000000000000)
-        self.mincutoff_sp.setValue(3.000000000000000)
+        self.mincutoff_sp.setValue(1.000000000000000)
 
         self.verticalLayout_2.addWidget(self.mincutoff_sp)
 
@@ -293,8 +293,8 @@ class Ui_BabbleSettings(object):
         self.select_path_btn.setText(QCoreApplication.translate("BabbleSettings", u"...", None))
         self.model_status_lb.setText(QCoreApplication.translate("BabbleSettings", u"Update the model for better face tracking!", None))
         self.reset_model_path_btn.setText(QCoreApplication.translate("BabbleSettings", u"Reset Model Path", None))
-        self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"Thread Count:", None))
-        self.allow_spinning_cb.setText(QCoreApplication.translate("BabbleSettings", u"Allow Spinning", None))
+        self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"CPU Threads:", None))
+        self.allow_spinning_cb.setText(QCoreApplication.translate("BabbleSettings", u"CPU Wait Spin", None))
         self.try_use_gpu_cb.setText(QCoreApplication.translate("BabbleSettings", u"Try to use GPU acceleration", None))
         self.gpu_device_id_lb.setText(QCoreApplication.translate("BabbleSettings", u"GPU Device ID:", None))
         self.full_reset_btn.setText(QCoreApplication.translate("BabbleSettings", u"Full Reset", None))

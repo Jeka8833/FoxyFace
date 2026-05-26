@@ -3,12 +3,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy
-import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import InferenceSession, SessionOptions, GraphOptimizationLevel
 
 from AppConstants import AppConstants
-from src.stream import ONNX_LOCK
+from util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class MediaPipeTongueModel:
     def run(self, image: MatLike) -> float:
         frame = numpy.expand_dims(numpy.divide(image, 255, dtype=numpy.float32), axis=0)  # [1, H, W, 3]
 
-        with ONNX_LOCK:
+        with OnnxUtil.global_lock:
             out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
         return float(out[0][0][0])
@@ -38,10 +37,8 @@ class MediaPipeTongueModel:
         self.run(frame)
 
     @staticmethod
-    def load_model(use_gpu: bool, intra_op_num_threads: int, allow_spinning: bool,
+    def load_model(provider_name: str, intra_op_num_threads: int, allow_spinning: bool,
                    device_id: int) -> MediaPipeTongueModel:
-        device_id_param = {"device_id": str(device_id)}
-
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
         opts.intra_op_num_threads = intra_op_num_threads
@@ -49,26 +46,11 @@ class MediaPipeTongueModel:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        if use_gpu:
-            provider = [("DmlExecutionProvider", device_id_param), ("CUDAExecutionProvider", device_id_param),
-                        ("ROCMExecutionProvider", device_id_param), "CoreMLExecutionProvider",
-                        "CPUExecutionProvider"]
-        else:
-            provider = ["CPUExecutionProvider"]
-
-        available_providers = onnxruntime.get_available_providers()
-
-        _logger.info(f"All providers: {available_providers}")
-
-        final_providers = []
-        for p in provider:
-            name = p[0] if isinstance(p, tuple) else p
-            if name in available_providers:
-                final_providers.append(p)
-
-        _logger.info(f"Using providers: {final_providers}")
-
-        session = InferenceSession(MediaPipeTongueModel.get_base_model_path(), opts, providers=final_providers)
+        session = InferenceSession(
+            MediaPipeTongueModel.get_base_model_path(),
+            opts,
+            providers=OnnxUtil.get_provider(provider_name, device_id)
+        )
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name

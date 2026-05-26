@@ -79,13 +79,15 @@ class MediaPipeTonguePipeline:
 
     def __register_change_processing_options(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe_tongue.padding_x,
-                                                      lambda config: config.media_pipe_tongue.padding_y]
+                                                      lambda config: config.media_pipe_tongue.padding_top,
+                                                      lambda config: config.media_pipe_tongue.padding_bottom]
 
         return self.__config_manager.create_update_listener(self.__update_processing_options, watch_array, True)
 
     def __update_processing_options(self, config_manager: ConfigManager):
         self.__processing_options.padding_x = config_manager.config.media_pipe_tongue.padding_x
-        self.__processing_options.padding_y = config_manager.config.media_pipe_tongue.padding_y
+        self.__processing_options.padding_top = config_manager.config.media_pipe_tongue.padding_top
+        self.__processing_options.padding_bottom = config_manager.config.media_pipe_tongue.padding_bottom
 
     def __register_change_filter_processing_options(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe_tongue.mincutoff,

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainWindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(729, 195)
+        MainWindow.resize(920, 193)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout_2 = QHBoxLayout(self.centralwidget)
@@ -122,6 +122,55 @@ class Ui_MainWindow(object):
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.horizontalLayout_2.addWidget(self.line_2)
+
+        self.mediapipe_tongue_layout = QVBoxLayout()
+        self.mediapipe_tongue_layout.setObjectName(u"mediapipe_tongue_layout")
+        self.mediapipe_tongue_zone_lbl = QLabel(self.centralwidget)
+        self.mediapipe_tongue_zone_lbl.setObjectName(u"mediapipe_tongue_zone_lbl")
+        self.mediapipe_tongue_zone_lbl.setFont(font)
+        self.mediapipe_tongue_zone_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.mediapipe_tongue_layout.addWidget(self.mediapipe_tongue_zone_lbl)
+
+        self.mediapipe_tongue_fps_lbl = QLabel(self.centralwidget)
+        self.mediapipe_tongue_fps_lbl.setObjectName(u"mediapipe_tongue_fps_lbl")
+        self.mediapipe_tongue_fps_lbl.setFont(font1)
+        self.mediapipe_tongue_fps_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.mediapipe_tongue_layout.addWidget(self.mediapipe_tongue_fps_lbl)
+
+        self.mediapipe_tongue_latency_lbl = QLabel(self.centralwidget)
+        self.mediapipe_tongue_latency_lbl.setObjectName(u"mediapipe_tongue_latency_lbl")
+        self.mediapipe_tongue_latency_lbl.setFont(font1)
+        self.mediapipe_tongue_latency_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.mediapipe_tongue_layout.addWidget(self.mediapipe_tongue_latency_lbl)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.mediapipe_tongue_layout.addItem(self.verticalSpacer)
+
+        self.open_mediapipe_tongue_preview_btn = QPushButton(self.centralwidget)
+        self.open_mediapipe_tongue_preview_btn.setObjectName(u"open_mediapipe_tongue_preview_btn")
+        self.open_mediapipe_tongue_preview_btn.setFont(font1)
+
+        self.mediapipe_tongue_layout.addWidget(self.open_mediapipe_tongue_preview_btn)
+
+        self.open_mediapipe_tongue_settings_btn = QPushButton(self.centralwidget)
+        self.open_mediapipe_tongue_settings_btn.setObjectName(u"open_mediapipe_tongue_settings_btn")
+        self.open_mediapipe_tongue_settings_btn.setFont(font1)
+
+        self.mediapipe_tongue_layout.addWidget(self.open_mediapipe_tongue_settings_btn)
+
+
+        self.horizontalLayout_2.addLayout(self.mediapipe_tongue_layout)
+
+        self.line_5 = QFrame(self.centralwidget)
+        self.line_5.setObjectName(u"line_5")
+        self.line_5.setFrameShape(QFrame.Shape.VLine)
+        self.line_5.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.horizontalLayout_2.addWidget(self.line_5)
 
         self.babble_vertical_layout = QVBoxLayout()
         self.babble_vertical_layout.setObjectName(u"babble_vertical_layout")
@@ -261,6 +310,11 @@ class Ui_MainWindow(object):
         self.mediapipe_latency_lbl.setText(QCoreApplication.translate("MainWindow", u"Latency: 0 ms", None))
         self.open_mediapipe_preview_btn.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
         self.open_mediapipe_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
+        self.mediapipe_tongue_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"MPTongue", None))
+        self.mediapipe_tongue_fps_lbl.setText(QCoreApplication.translate("MainWindow", u"FPS: 0.0", None))
+        self.mediapipe_tongue_latency_lbl.setText(QCoreApplication.translate("MainWindow", u"Latency: 0 ms", None))
+        self.open_mediapipe_tongue_preview_btn.setText(QCoreApplication.translate("MainWindow", u"Preview", None))
+        self.open_mediapipe_tongue_settings_btn.setText(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.babble_zone_lbl.setText(QCoreApplication.translate("MainWindow", u"Babble", None))
         self.babble_fps_lbl.setText(QCoreApplication.translate("MainWindow", u"FPS: 0.0", None))
         self.babble_latency_lbl.setText(QCoreApplication.translate("MainWindow", u"Latency: 0 ms", None))

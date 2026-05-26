@@ -75,6 +75,7 @@ class RunMainStream:
             self.__config_manager,
             self.__camera_pipeline,
             self.__media_pipe_pipeline,
+            self.__media_pipe_tongue_pipeline,
             self.__babble_pipeline,
             self.__processing_pipeline,
             self.__udp_pipeline,
@@ -88,6 +89,8 @@ class RunMainStream:
         self.__update_checker: UpdateChecker = UpdateChecker(self.__config_manager, self.__main_window)
         self.__steam_auto_run.run()
         self.__update_checker.startup_check()
+
+        self.__media_pipe_tongue_pipeline.trigger_view_preview()
 
     def __enter__(self):
         return self
