@@ -35,7 +35,8 @@ class MediaPipeTonguePipeline:
         self.__stream = MediaPipeTongueStream(processed_stream, 1.0)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
-        self.__media_pipe_tongue_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendShapeEnum](self.__filter_processing_options)
+        self.__media_pipe_tongue_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendShapeEnum](
+            self.__filter_processing_options)
         self.__stream.register_stream(self.__media_pipe_tongue_stream)
 
         self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
@@ -115,7 +116,7 @@ class MediaPipeTonguePipeline:
             self.__media_pipe_pipeline.unregister_stream(self.__buffer)
 
     def __register_change_model_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe_tongue.try_use_gpu,
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe_tongue.provider,
                                                       lambda config: config.media_pipe_tongue.intra_op_num_threads,
                                                       lambda config: config.media_pipe_tongue.allow_spinning,
                                                       lambda config: config.media_pipe_tongue.device_id]
@@ -125,7 +126,7 @@ class MediaPipeTonguePipeline:
     def __update_model_options(self, config_manager: ConfigManager):
         try:
             model = MediaPipeTongueModel.load_model(
-                config_manager.config.media_pipe_tongue.try_use_gpu,
+                config_manager.config.media_pipe_tongue.provider,
                 config_manager.config.media_pipe_tongue.intra_op_num_threads,
                 config_manager.config.media_pipe_tongue.allow_spinning,
                 config_manager.config.media_pipe_tongue.device_id

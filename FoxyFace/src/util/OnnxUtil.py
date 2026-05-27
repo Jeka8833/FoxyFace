@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 try:
     import torch
 except ImportError:
-    _logger.warning("Failed to import torch. Some compute acceleration for onnxruntime may not work")
+    _logger.info("Failed to import torch. Some compute acceleration for onnxruntime may not work")
 
 import onnxruntime
 
@@ -43,9 +43,8 @@ AVAILABLE_PROVIDERS: MappingProxyType[str, bool] = MappingProxyType({
 })
 
 
-def get_provider(name: str, gpu_id: int = 0) -> Sequence[str | tuple[str, dict[Any, Any]]]:
-    if not isinstance(name, str):
-        raise TypeError(f"Provider 'name' must be a string, got {type(name).__name__}")
+def get_provider(name: str | None, gpu_id: int = 0) -> Sequence[str | tuple[str, dict[Any, Any]]]:
+    name = get_provider_name_or_first(name)
 
     provider_params = _PROVIDERS.get(name)
     if provider_params is None:
@@ -63,3 +62,13 @@ def get_provider(name: str, gpu_id: int = 0) -> Sequence[str | tuple[str, dict[A
         return [(name, {_DEVICE_ID_KEY: str(gpu_id)})]
 
     return [name]
+
+
+def get_provider_name_or_first(name: str | None) -> str:
+    if name is not None and not isinstance(name, str):
+        raise TypeError(f"Provider 'name' must be a string, got {type(name).__name__}")
+
+    if name is None or name not in _PROVIDERS:
+        return next(iter(_PROVIDERS))
+
+    return name

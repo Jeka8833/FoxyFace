@@ -151,8 +151,8 @@ class MainWindow(FoxyWindow):
         self.__ui.open_mediapipe_preview_btn.clicked.connect(self.__open_mediapipe_preview)
         self.__ui.open_mediapipe_settings_btn.clicked.connect(self.__open_mediapipe_setting)
 
-        self.__ui.open_mediapipe_tongue_preview_btn.connect(self.__open_mediapipe_tongue_preview)
-        self.__ui.open_mediapipe_tongue_settings_btn.connect(self.__open_mediapipe_tongue_setting)
+        self.__ui.open_mediapipe_tongue_preview_btn.clicked.connect(self.__open_mediapipe_tongue_preview)
+        self.__ui.open_mediapipe_tongue_settings_btn.clicked.connect(self.__open_mediapipe_tongue_setting)
 
         self.__ui.open_babble_preview_btn.clicked.connect(self.__open_babble_preview)
         self.__ui.open_babble_setting_btn.clicked.connect(self.__open_babble_setting_btn)

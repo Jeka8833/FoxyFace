@@ -16,7 +16,7 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
     """
 
     def __init__(self):
-        self.__streams: set[StreamWriteOnly[T]] | None = set[StreamWriteOnly[T]]()
+        self._streams: set[StreamWriteOnly[T]] | None = set[StreamWriteOnly[T]]()
         self.__lock: Lock = Lock()
 
     def put(self, value: T) -> bool:
@@ -37,10 +37,10 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
         not_closed = False
 
         with self.__lock:
-            if self.__streams is None:
+            if self._streams is None:
                 raise InterruptedError()
 
-            for stream in self.__streams:
+            for stream in self._streams:
                 try:
                     if stream.put(value):
                         not_closed = True
@@ -49,7 +49,7 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
                 except Exception:
                     _logger.warning("Failed to write to child stream", exc_info=True, stack_info=True)
 
-            self.__streams.difference_update(streams_to_remove)
+            self._streams.difference_update(streams_to_remove)
 
         return not_closed
 
@@ -58,26 +58,26 @@ class WriteStreamSplitter[T](StreamWriteOnly[T]):
             raise ValueError("Cannot register splitter from itself")
 
         with self.__lock:
-            if self.__streams is None:
+            if self._streams is None:
                 raise InterruptedError()
 
-            self.__streams.add(stream)
+            self._streams.add(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[T]) -> None:
         if self is stream:
             raise ValueError("Cannot unregister splitter from itself")
 
         with self.__lock:
-            if self.__streams is not None:
-                self.__streams.discard(stream)
+            if self._streams is not None:
+                self._streams.discard(stream)
 
     def close(self) -> None:
         with self.__lock:
-            if self.__streams is None:
+            if self._streams is None:
                 return
 
-            streams = self.__streams
-            self.__streams = None
+            streams = self._streams
+            self._streams = None
 
         for stream in streams:
             try:

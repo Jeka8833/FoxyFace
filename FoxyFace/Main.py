@@ -90,8 +90,6 @@ class RunMainStream:
         self.__steam_auto_run.run()
         self.__update_checker.startup_check()
 
-        self.__media_pipe_tongue_pipeline.trigger_view_preview()
-
     def __enter__(self):
         return self
 

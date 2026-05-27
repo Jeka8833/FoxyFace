@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>403</height>
+    <width>427</width>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -284,6 +284,33 @@
          </layout>
         </item>
         <item>
+         <widget class="QCheckBox" name="allow_spinning_cb">
+          <property name="text">
+           <string>CPU Wait Spin</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="provider_lb">
+          <property name="text">
+           <string>Provider:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="provider_cb"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="gpu_device_id_lb">
+          <property name="text">
+           <string>GPU Device ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="gpu_device_id_sb"/>
+        </item>
+        <item>
          <widget class="QLabel" name="thread_count_lb">
           <property name="text">
            <string>CPU Threads:</string>
@@ -298,34 +325,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="allow_spinning_cb">
+         <widget class="QLabel" name="error_lb">
           <property name="text">
-           <string>CPU Wait Spin</string>
+           <string>Error:</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="try_use_gpu_cb">
-          <property name="text">
-           <string>Try to use GPU acceleration</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <property name="tristate">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="gpu_device_id_lb">
-          <property name="text">
-           <string>GPU Device ID:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="gpu_device_id_sb"/>
         </item>
         <item>
          <spacer name="verticalSpacer_2">
@@ -350,16 +354,6 @@
        <widget class="QPushButton" name="full_reset_btn">
         <property name="text">
          <string>Full Reset</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="provider_status_lb">
-        <property name="toolTip">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Provider: Unknown</string>
         </property>
        </widget>
       </item>
@@ -403,38 +397,6 @@
     <hint type="destinationlabel">
      <x>308</x>
      <y>84</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>try_use_gpu_cb</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>gpu_device_id_sb</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>261</x>
-     <y>261</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>273</x>
-     <y>309</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>use_babble_cb</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>provider_status_lb</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>138</x>
-     <y>53</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>163</x>
-     <y>385</y>
     </hint>
    </hints>
   </connection>

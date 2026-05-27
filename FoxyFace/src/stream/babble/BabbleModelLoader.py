@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 
-import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
@@ -18,8 +17,8 @@ class BabbleModelLoader:
     def __init__(self):
         self.model: BabbleModel | None = None
 
-    def start_new_session(self, model_path: str, provider_name: str, intra_op_num_threads: int, allow_spinning: bool,
-                          device_id: int):
+    def start_new_session(self, model_path: str, provider_name: str | None, intra_op_num_threads: int,
+                          allow_spinning: bool, device_id: int):
         self.model = None
 
         opts = SessionOptions()
@@ -31,7 +30,8 @@ class BabbleModelLoader:
 
         path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
 
-        session = InferenceSession(path, opts, providers=OnnxUtil.get_provider(provider_name, device_id))
+        provider = OnnxUtil.get_provider(provider_name, device_id)
+        session = InferenceSession(path, opts, providers=provider)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
@@ -46,7 +46,9 @@ class BabbleModelLoader:
         if model.is_loaded_successfully():
             self.model = model
 
-            _logger.info("Babble started")
+            _logger.info(
+                f"Babble model has loaded with provider: {provider}, device id: {device_id}, "
+                f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float] | None:
         if self.model is None:

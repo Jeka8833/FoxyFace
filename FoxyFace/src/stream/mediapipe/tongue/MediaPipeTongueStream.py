@@ -76,7 +76,6 @@ class MediaPipeTongueStream:
                     {MediaPipeTongueBlendShapeEnum.TongueOut: tongue_out},
                     last_frame.timestamp_ns)
                 )
-
             except TimeoutError:
                 continue
             except InterruptedError:

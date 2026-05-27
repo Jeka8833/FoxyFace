@@ -37,7 +37,7 @@ class MediaPipeTongueModel:
         self.run(frame)
 
     @staticmethod
-    def load_model(provider_name: str, intra_op_num_threads: int, allow_spinning: bool,
+    def load_model(provider_name: str | None, intra_op_num_threads: int, allow_spinning: bool,
                    device_id: int) -> MediaPipeTongueModel:
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
@@ -46,11 +46,8 @@ class MediaPipeTongueModel:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        session = InferenceSession(
-            MediaPipeTongueModel.get_base_model_path(),
-            opts,
-            providers=OnnxUtil.get_provider(provider_name, device_id)
-        )
+        provider = OnnxUtil.get_provider(provider_name, device_id)
+        session = InferenceSession(MediaPipeTongueModel.get_base_model_path(), opts, providers=provider)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
@@ -63,7 +60,8 @@ class MediaPipeTongueModel:
 
         model.__run_test_image()
 
-        _logger.info("MediaPipe Tongue Model loaded successfully")
+        _logger.info(f"Media Pipe Tongue model has loaded with provider: {provider}, device id: {device_id}, "
+                     f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
         return model
 
