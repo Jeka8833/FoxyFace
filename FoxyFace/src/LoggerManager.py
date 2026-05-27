@@ -1,3 +1,4 @@
+import faulthandler
 import logging
 import sys
 
@@ -18,6 +19,8 @@ class LoggerWriter:
 class LoggerManager:
     @staticmethod
     def init(root_level: int = logging.INFO):
+        faulthandler.enable()
+
         root_logger = logging.getLogger()
         root_logger.setLevel(root_level)
 

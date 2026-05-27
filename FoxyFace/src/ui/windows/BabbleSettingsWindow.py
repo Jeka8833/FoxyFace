@@ -8,6 +8,7 @@ from src.config.schemas.core.BabbleConfig import BabbleConfig
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_BabbleSettings import Ui_BabbleSettings
+from util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -57,6 +58,7 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__ui.thread_count_sp.setValue(self.__config_manager.config.babble.intra_op_num_threads)
 
         self.__update_model_status()
+        self.__update_provider()
 
     def __full_reset(self):
         try:
@@ -87,6 +89,7 @@ class BabbleSettingsWindow(FoxyWindow):
             self.__config_manager.config.babble.device_id = self.__ui.gpu_device_id_sb.value()
             self.__config_manager.config.babble.allow_spinning = self.__ui.allow_spinning_cb.isChecked()
             self.__config_manager.config.babble.intra_op_num_threads = self.__ui.thread_count_sp.value()
+            self.__config_manager.config.babble.provider = self.__get_provider()
 
             self.__config_manager.write()
         except Exception:
@@ -110,3 +113,24 @@ class BabbleSettingsWindow(FoxyWindow):
             self.__ui.reset_model_path_btn.setVisible(bool(selected_path))
         except Exception:
             _logger.warning("Failed to update thread", exc_info=True, stack_info=True)
+
+    def __update_provider(self):
+        self.__ui.provider_cb.clear()
+
+        self.__ui.provider_cb.addItem("Auto")
+        for provider in OnnxUtil.AVAILABLE_PROVIDERS:
+            self.__ui.provider_cb.addItem(provider)
+
+        for i in range(self.__ui.provider_cb.count()):
+            if self.__ui.provider_cb.itemText(i) == self.__config_manager.config.babble.provider:
+                self.__ui.provider_cb.setCurrentIndex(i)
+                return
+
+        self.__ui.provider_cb.setCurrentIndex(0)
+
+    def __get_provider(self) -> str | None:
+        selected_text = self.__ui.provider_cb.currentText()
+        if selected_text in OnnxUtil.AVAILABLE_PROVIDERS:
+            return selected_text
+
+        return None

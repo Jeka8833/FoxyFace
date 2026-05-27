@@ -1,6 +1,6 @@
 import logging
 from contextlib import nullcontext
-from threading import Lock
+from threading import Lock, RLock
 from types import MappingProxyType
 from typing import Sequence, Any
 
@@ -44,31 +44,30 @@ AVAILABLE_PROVIDERS: MappingProxyType[str, bool] = MappingProxyType({
 
 
 def get_provider(name: str | None, gpu_id: int = 0) -> Sequence[str | tuple[str, dict[Any, Any]]]:
-    name = get_provider_name_or_first(name)
-
-    provider_params = _PROVIDERS.get(name)
-    if provider_params is None:
-        available_names = ", ".join(repr(k) for k in _PROVIDERS.keys())
-
-        raise ValueError(
-            f"Provider '{name}' is not supported or not available on this system. "
-            f"Available providers are: {available_names}"
-        )
-
-    if _DEVICE_ID_KEY in provider_params:
-        if not isinstance(gpu_id, int) or gpu_id < 0:
-            raise ValueError(f"'gpu_id' must be a non-negative integer, got {gpu_id}")
-
-        return [(name, {_DEVICE_ID_KEY: str(gpu_id)})]
-
-    return [name]
-
-
-def get_provider_name_or_first(name: str | None) -> str:
     if name is not None and not isinstance(name, str):
         raise TypeError(f"Provider 'name' must be a string, got {type(name).__name__}")
 
-    if name is None or name not in _PROVIDERS:
-        return next(iter(_PROVIDERS))
+    if not isinstance(gpu_id, int) or gpu_id < 0:
+        raise ValueError(f"'gpu_id' must be a non-negative integer, got {gpu_id}")
 
-    return name
+    out: list[str | tuple[str, dict[Any, Any]]] = []
+
+    if is_auto(name):
+        for provider, value in _PROVIDERS.items():
+            if _DEVICE_ID_KEY in value:
+                out.append((provider, {_DEVICE_ID_KEY: str(gpu_id)}))
+            else:
+                out.append(provider)
+    else:
+        provider_params = _PROVIDERS.get(name)
+
+        if _DEVICE_ID_KEY in provider_params:
+            out.append((name, {_DEVICE_ID_KEY: str(gpu_id)}))
+        else:
+            out.append(name)
+
+    return out
+
+
+def is_auto(name: str | None) -> bool:
+    return name is None or name not in _PROVIDERS
