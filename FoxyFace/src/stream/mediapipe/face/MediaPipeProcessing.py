@@ -21,7 +21,7 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
 
         self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
 
-    def put(self, value: MediaPipeFrame) -> bool:
+    def put(self, value: MediaPipeFrame) -> None:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
         transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
@@ -63,7 +63,7 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
 
         new_value = BlendShapesFrame(shapes, value.camera_frame.timestamp_ns)
 
-        return self.__stream_root.put(new_value)
+        self.__stream_root.put(new_value)
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)

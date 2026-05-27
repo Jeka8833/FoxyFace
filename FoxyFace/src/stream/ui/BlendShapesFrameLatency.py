@@ -15,12 +15,10 @@ class BlendShapesFrameLatency(StreamWriteOnly[BlendShapesFrame]):
 
         self.__lock = threading.Lock()
 
-    def put(self, value: BlendShapesFrame) -> bool:
+    def put(self, value: BlendShapesFrame) -> None:
         with self.__lock:
             self.__latency_sum += time.perf_counter_ns() - value.timestamp_ns
             self.__latency_count += 1
-
-        return True
 
     def get_latency(self) -> float:
         with self.__lock:

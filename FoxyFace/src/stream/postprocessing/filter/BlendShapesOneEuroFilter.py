@@ -15,7 +15,7 @@ class BlendShapesOneEuroFilter[T](StreamWriteOnly[BlendShapesFrame[T]]):
         self.__filter_map: dict[Any, OneEuroFilter] = {}
         self.__stream_root = WriteStreamSplitter[BlendShapesFrame[T]]()
 
-    def put(self, value: BlendShapesFrame[T]) -> bool:
+    def put(self, value: BlendShapesFrame[T]) -> None:
         blend_shapes = {}
         for k, v in value.blend_shapes.items():
             one_euro_filter = self.__filter_map.setdefault(k, OneEuroFilter(30, self.__options.mincutoff,
@@ -24,7 +24,7 @@ class BlendShapesOneEuroFilter[T](StreamWriteOnly[BlendShapesFrame[T]]):
 
             blend_shapes[k] = one_euro_filter.filter(v, value.timestamp_ns / 1_000_000_000)
 
-        return self.__stream_root.put(BlendShapesFrame(blend_shapes, value.timestamp_ns))
+        self.__stream_root.put(BlendShapesFrame(blend_shapes, value.timestamp_ns))
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[T]]) -> None:
         self.__stream_root.register_stream(stream)
