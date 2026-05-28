@@ -319,15 +319,11 @@
         </item>
         <item>
          <widget class="QSpinBox" name="thread_count_sp">
-          <property name="value">
+          <property name="minimum">
            <number>1</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="error_lb">
-          <property name="text">
-           <string>Error:</string>
+          <property name="value">
+           <number>1</number>
           </property>
          </widget>
         </item>

@@ -1,6 +1,4 @@
 import logging
-from contextlib import nullcontext
-from threading import Lock, RLock
 from types import MappingProxyType
 from typing import Sequence, Any
 
@@ -19,8 +17,6 @@ _DEVICE_ID_KEY = "device_id"
 
 _AVAILABLE_ONNX_PROVIDERS = onnxruntime.get_available_providers()
 _logger.info(f"All supported providers for onnxruntime: {_AVAILABLE_ONNX_PROVIDERS}")
-
-global_lock = Lock() if "DmlExecutionProvider" in _AVAILABLE_ONNX_PROVIDERS else nullcontext()
 
 _ALLOWED_PROVIDERS = {
     "DmlExecutionProvider": [_DEVICE_ID_KEY],

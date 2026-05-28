@@ -230,14 +230,10 @@ class Ui_BabbleSettings(object):
 
         self.thread_count_sp = QSpinBox(self.centralwidget)
         self.thread_count_sp.setObjectName(u"thread_count_sp")
+        self.thread_count_sp.setMinimum(1)
         self.thread_count_sp.setValue(1)
 
         self.verticalLayout_4.addWidget(self.thread_count_sp)
-
-        self.error_lb = QLabel(self.centralwidget)
-        self.error_lb.setObjectName(u"error_lb")
-
-        self.verticalLayout_4.addWidget(self.error_lb)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -295,7 +291,6 @@ class Ui_BabbleSettings(object):
         self.provider_lb.setText(QCoreApplication.translate("BabbleSettings", u"Provider:", None))
         self.gpu_device_id_lb.setText(QCoreApplication.translate("BabbleSettings", u"GPU Device ID:", None))
         self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"CPU Threads:", None))
-        self.error_lb.setText(QCoreApplication.translate("BabbleSettings", u"Error:", None))
         self.full_reset_btn.setText(QCoreApplication.translate("BabbleSettings", u"Full Reset", None))
         self.save_btn.setText(QCoreApplication.translate("BabbleSettings", u"Apply and Save", None))
     # retranslateUi

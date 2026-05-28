@@ -26,8 +26,7 @@ class MediaPipeTongueModel:
     def run(self, image: MatLike) -> float:
         frame = numpy.expand_dims(numpy.divide(image, 255, dtype=numpy.float32), axis=0)  # [1, H, W, 3]
 
-        with OnnxUtil.global_lock:
-            out = self.__session.run(self.__output_names, {self.__input_name: frame})
+        out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
         return float(out[0][0][0])
 
@@ -38,7 +37,7 @@ class MediaPipeTongueModel:
 
     @staticmethod
     def load_model(provider_name: str | None, intra_op_num_threads: int, allow_spinning: bool,
-                   device_id: int) -> MediaPipeTongueModel:
+                   device_id: int) -> "MediaPipeTongueModel":
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
         opts.intra_op_num_threads = intra_op_num_threads
