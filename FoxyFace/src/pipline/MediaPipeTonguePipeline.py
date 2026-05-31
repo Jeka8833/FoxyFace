@@ -57,6 +57,10 @@ class MediaPipeTonguePipeline:
         else:
             self.__preview_window.close()
 
+    @property
+    def good_started(self) -> bool:
+        return self.__stream.good_started
+
     def close(self):
         if self.__preview_window is not None:
             self.__preview_window.close()

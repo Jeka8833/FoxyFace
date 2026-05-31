@@ -4,8 +4,8 @@ from OneEuroFilter import OneEuroFilter
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.filter.BlendShapesOneEuroFilterOptions import BlendShapesOneEuroFilterOptions
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
 class BlendShapesOneEuroFilter[T](StreamWriteOnly[BlendShapesFrame[T]]):

@@ -7,8 +7,8 @@ from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
+from src.util import OnnxUtil
 from src.util.PathUtil import PathUtil
-from util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class BabbleModelLoader:
             self.model = model
 
             _logger.info(
-                f"Babble model has loaded with provider: {provider}, device id: {device_id}, "
+                f"Babble model has loaded with provider: {provider}, "
                 f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float] | None:

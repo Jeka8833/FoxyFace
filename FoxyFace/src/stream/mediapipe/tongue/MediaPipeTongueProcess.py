@@ -5,32 +5,13 @@ import time
 
 import numpy
 
-from stream.mediapipe.tongue.MediaPipeTongueModel import MediaPipeTongueModel
+from src.stream.mediapipe.tongue.MediaPipeTongueModel import MediaPipeTongueModel
 
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
 IMAGE_CHANNELS = 3
 IMAGE_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
 IMAGE_SIZE = IMAGE_HEIGHT * IMAGE_WIDTH * IMAGE_CHANNELS
-
-
-def _drain_commands(cmd_queue, process_logger):
-    model = None
-    try:
-        while True:
-            cmd = cmd_queue.get_nowait()
-            if cmd[0] == "load_model":
-                try:
-                    model = MediaPipeTongueModel.load_model(cmd[1], cmd[2], cmd[3], cmd[4])
-                except Exception:
-                    process_logger.error("Failed to load model", exc_info=True, stack_info=True)
-            elif cmd[0] == "stop":
-                return None, False
-    except queue.Empty:
-        pass
-    except (ValueError, OSError):
-        return None, False
-    return model, True
 
 
 def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame_image,
@@ -50,14 +31,27 @@ def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame
         if parent is not None and not parent.is_alive():
             break
 
-        new_model, should_continue = _drain_commands(cmd_queue, process_logger)
-        if not should_continue:
-            return
-
-        if new_model is not None:
-            model = new_model
+        try:
+            while True:
+                cmd = cmd_queue.get_nowait()
+                if cmd[0] == "load_model":
+                    try:
+                        model = None
+                        model = MediaPipeTongueModel.load_model(cmd[1], cmd[2], cmd[3], cmd[4])
+                        process_logger.info(
+                            f"MediaPipe Tongue model has loaded with provider: {cmd[1]}, device id: {cmd[4]}, "
+                            f"intra_op_num_threads: {cmd[2]}, allow_spinning: {cmd[3]}")
+                    except Exception:
+                        process_logger.error("Failed to load model", exc_info=True, stack_info=True)
+                elif cmd[0] == "stop":
+                    return
+        except queue.Empty:
+            pass
+        except (ValueError, OSError):
+            process_logger.error("Failed to load model", exc_info=True, stack_info=True)
 
         if model is None:
+            output_queue.put((None, None))
             time.sleep(0.5)
 
             continue
@@ -82,6 +76,7 @@ def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame
             try:
                 process_logger.error("Run model", exc_info=True, stack_info=True)
 
+                output_queue.put((None, None))
                 time.sleep(0.05)
             except Exception:
                 break

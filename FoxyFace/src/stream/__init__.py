@@ -1,2 +1,2 @@
 # noinspection PyUnusedImports
-from util.OnnxUtil import *
+from src.util.OnnxUtil import *

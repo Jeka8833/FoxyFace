@@ -11,9 +11,9 @@ from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
-from stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE
 
 _logger = logging.getLogger(__name__)
 
@@ -52,12 +52,17 @@ class MediaPipeTongueStream:
                                       name="MediaPipe Tongue Result Thread")
         self.__image_thread.start()
         self.__result_thread.start()
+        self.__good_started = False
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
+
+    @property
+    def good_started(self) -> bool:
+        return self.__good_started
 
     def load_model(self, provider_name: str | None, intra_op_num_threads: int, allow_spinning: bool,
                    device_id: int) -> None:
@@ -185,10 +190,17 @@ class MediaPipeTongueStream:
             try:
                 timestamp, tongue_out = self.__output_queue.get(timeout=0.05)
 
+                if timestamp is None:
+                    self.__good_started = False
+
+                    self.__close_event.wait(0.05)
+                    continue
+
                 self.__stream_root.put(BlendShapesFrame(
                     {MediaPipeTongueBlendShapeEnum.TongueOut: tongue_out},
                     timestamp)
                 )
+                self.__good_started = True
             except queue.Empty:
                 continue
             except (ValueError, OSError):

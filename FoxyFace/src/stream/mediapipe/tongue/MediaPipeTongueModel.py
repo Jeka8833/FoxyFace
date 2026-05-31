@@ -7,7 +7,7 @@ from cv2.typing import MatLike
 from onnxruntime import InferenceSession, SessionOptions, GraphOptimizationLevel
 
 from AppConstants import AppConstants
-from util import OnnxUtil
+from src.util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 

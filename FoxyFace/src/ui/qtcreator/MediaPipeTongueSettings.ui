@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>508</width>
-    <height>330</height>
+    <height>480</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>MediaPipe Tongue Settings</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -68,14 +68,14 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="filter_settings_zone_lb">
+         <widget class="QLabel" name="image_padding_zone_lb">
           <property name="font">
            <font>
             <pointsize>11</pointsize>
            </font>
           </property>
           <property name="text">
-           <string>Filter Settings</string>
+           <string>Image Padding</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -83,55 +83,60 @@
          </widget>
         </item>
         <item>
-         <widget class="Line" name="line_4">
+         <widget class="Line" name="line_3">
           <property name="orientation">
            <enum>Qt::Orientation::Horizontal</enum>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="mincutoff_lb">
+         <widget class="QLabel" name="left_right_pad_lb">
           <property name="text">
-           <string>Mincutoff:</string>
+           <string>Left/Riget padding:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="mincutoff_dsb">
-          <property name="decimals">
-           <number>6</number>
-          </property>
-          <property name="minimum">
-           <double>0.000001000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001000000000000</double>
+         <widget class="QSpinBox" name="left_right_pad_sb">
+          <property name="maximum">
+           <number>127</number>
           </property>
           <property name="value">
-           <double>1.000000000000000</double>
+           <number>64</number>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="beta_lb">
+         <widget class="QLabel" name="top_pad_lb">
           <property name="text">
-           <string>Beta:</string>
+           <string>Top padding:</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="beta_dsb">
-          <property name="decimals">
-           <number>6</number>
-          </property>
-          <property name="minimum">
-           <double>0.000001000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001000000000000</double>
+         <widget class="QSpinBox" name="top_pad_sb">
+          <property name="maximum">
+           <number>127</number>
           </property>
           <property name="value">
-           <double>0.000100000000000</double>
+           <number>64</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="bottom_pad_lb">
+          <property name="text">
+           <string>Bottom padding:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="bottom_pad_sb">
+          <property name="maximum">
+           <number>127</number>
+          </property>
+          <property name="value">
+           <number>64</number>
           </property>
          </widget>
         </item>
@@ -224,8 +229,95 @@
         </item>
         <item>
          <widget class="QLabel" name="error_message_lb">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(255, 0, 4);</string>
+          </property>
           <property name="text">
            <string>Error: </string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Policy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="filter_settings_zone_lb">
+          <property name="font">
+           <font>
+            <pointsize>11</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Filter Settings</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="Line" name="line_4">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="mincutoff_lb">
+          <property name="text">
+           <string>Mincutoff:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="mincutoff_dsb">
+          <property name="decimals">
+           <number>6</number>
+          </property>
+          <property name="minimum">
+           <double>0.000001000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.001000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="beta_lb">
+          <property name="text">
+           <string>Beta:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="beta_dsb">
+          <property name="decimals">
+           <number>6</number>
+          </property>
+          <property name="minimum">
+           <double>0.000001000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.001000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.000100000000000</double>
           </property>
          </widget>
         </item>

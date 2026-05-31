@@ -1,8 +1,8 @@
 import math
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
 class ValidateGeneralBlendShapes(StreamReadOnly[BlendShapesFrame[GeneralBlendShapeEnum]]):

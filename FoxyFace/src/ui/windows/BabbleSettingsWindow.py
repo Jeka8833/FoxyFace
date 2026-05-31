@@ -8,7 +8,7 @@ from src.config.schemas.core.BabbleConfig import BabbleConfig
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_BabbleSettings import Ui_BabbleSettings
-from util import OnnxUtil
+from src.util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 

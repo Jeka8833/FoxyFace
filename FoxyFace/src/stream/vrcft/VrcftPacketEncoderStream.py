@@ -2,8 +2,8 @@ import json
 import time
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.vrcft.UnifiedExpressionEnum import UnifiedExpressionEnum
 from src.stream.vrcft.VrcftInterfaceOptions import VrcftInterfaceOptions
 

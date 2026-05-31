@@ -28,8 +28,8 @@ class BabblePreview:
 
         self.__single_buffer_stream: SingleBufferStream[MediaPipeFrame] = SingleBufferStream[MediaPipeFrame]()
         self.__image_stream: StreamReadOnly[ImageFrame] = BabbleImageProcessing(self.__single_buffer_stream,
-                                                                                      self.__processing_options,
-                                                                                      self.__model_loader)
+                                                                                self.__processing_options,
+                                                                                self.__model_loader)
 
         self.__window: ImagePreviewWindow = ImagePreviewWindow(title="Babble Camera Preview")
 

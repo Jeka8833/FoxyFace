@@ -1,5 +1,5 @@
 REM Yes-yes, you'll have to change the path to 7zip, or live without archiving at the very end of operations.
-set "zip="D:\Program Files\7-Zip\7z.exe""
+set "zip="C:\Program Files\7-Zip\7z.exe""
 
 python -m venv .venv
 call .venv\Scripts\activate
@@ -28,7 +28,7 @@ pip install -e .
 
 cd ..\..\..
 
-pyinstaller --add-data="Assets:Assets" --add-data="Baballonia\\src\\Baballonia\\faceModel.onnx:Baballonia\\src\\Baballonia\\" --noconfirm --icon="Assets\\icon.png" --hide-console="hide-early" --clean --version-file="compile\\windows\\FoxyFace.exe.rc" --distpath=compile\windows\dist --workpath=compile\windows\build --name FoxyFace Main.py
+pyinstaller --add-data="Assets:Assets" --add-data="Baballonia\\src\\Baballonia\\faceModel.onnx:Baballonia\\src\\Baballonia\\" --noconfirm --icon="Assets\\icon.png" --hide-console="hide-early" --clean --version-file="compile\\windows\\FoxyFace.exe.rc" --distpath=compile\windows\dist --workpath=compile\windows\build --hidden-import=mediapipe.tasks.c --add-data=".venv/Lib/site-packages/mediapipe/tasks/c;mediapipe/tasks/c" --name FoxyFace Main.py
 
 cd compile\windows
 

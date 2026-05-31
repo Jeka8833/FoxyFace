@@ -25,6 +25,7 @@ from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
+from src.ui.windows.MediaPipeTongueSettingsWindow import MediaPipeTongueSettingsWindow
 from src.ui.windows.VrcftSettingsWindow import VrcftSettingsWindow
 
 _logger = logging.getLogger(__name__)
@@ -74,6 +75,7 @@ class MainWindow(FoxyWindow):
 
         self.__camera_settings_window: CameraSettingsWindow | None = None
         self.__media_pipe_settings_window: MediaPipeSettingsWindow | None = None
+        self.__media_pipe_tongue_settings_window: MediaPipeTongueSettingsWindow | None = None
         self.__babble_settings_window: BabbleSettingsWindow | None = None
         self.__vrcft_settings_window: VrcftSettingsWindow | None = None
         self.__auto_calibration_window: AutoCalibrationWindow | None = None
@@ -200,10 +202,13 @@ class MainWindow(FoxyWindow):
 
     def __open_mediapipe_tongue_setting(self):
         try:
-            if self.__media_pipe_settings_window is None or self.__media_pipe_settings_window.is_closed.is_set():
-                self.__media_pipe_settings_window = MediaPipeSettingsWindow(self.__config_manager)
+            if self.__media_pipe_tongue_settings_window is None or self.__media_pipe_tongue_settings_window.is_closed.is_set():
+                self.__media_pipe_tongue_settings_window = MediaPipeTongueSettingsWindow(
+                    self.__config_manager,
+                    self.__media_pipe_tongue_pipeline
+                )
             else:
-                self.__media_pipe_settings_window.close_event.emit()
+                self.__media_pipe_tongue_settings_window.close_event.emit()
         except Exception:
             _logger.warning("Failed to open mediapipe settings", exc_info=True, stack_info=True)
 

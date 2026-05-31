@@ -6,7 +6,6 @@ from cv2.typing import MatLike
 from onnxruntime import InferenceSession
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 

@@ -1,9 +1,9 @@
 import numpy
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.CalibrateProcessingOptions import CalibrateProcessingOptions
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
 class CalibrateProcessing(StreamReadOnly[BlendShapesFrame[GeneralBlendShapeEnum]]):

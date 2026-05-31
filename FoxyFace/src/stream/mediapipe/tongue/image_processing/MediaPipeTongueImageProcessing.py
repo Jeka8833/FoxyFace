@@ -30,7 +30,7 @@ class MediaPipeTongueImageProcessing(StreamReadOnly[ImageFrame]):
 
     @staticmethod
     def crop_and_align_face(image: MatLike, landmarks, target_size: tuple[int, int] = (256, 256),
-                                 paddings: tuple[int, int, int] = (30, 30, 30)):
+                            paddings: tuple[int, int, int] = (30, 30, 30)):
         h, w, _ = image.shape
 
         lm33 = landmarks[33]
@@ -42,7 +42,6 @@ class MediaPipeTongueImageProcessing(StreamReadOnly[ImageFrame]):
         eye_center = ((left_eye_x + right_eye_x) * 0.5, (left_eye_y + right_eye_y) * 0.5)
 
         m_rot = cv2.getRotationMatrix2D(eye_center, angle, scale=1.0)
-
 
         xs = np.array([lm.x for lm in landmarks], dtype=np.float64) * w
         ys = np.array([lm.y for lm in landmarks], dtype=np.float64) * h
