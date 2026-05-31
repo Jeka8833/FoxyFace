@@ -9,7 +9,6 @@ from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
-from src.stream.mediapipe.tongue.MediaPipeTongueModel import MediaPipeTongueModel
 from src.stream.mediapipe.tongue.MediaPipeTongueStream import MediaPipeTongueStream
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTonguePreview import MediaPipeTonguePreview
@@ -125,13 +124,11 @@ class MediaPipeTonguePipeline:
 
     def __update_model_options(self, config_manager: ConfigManager):
         try:
-            model = MediaPipeTongueModel.load_model(
+            self.__stream.load_model(
                 config_manager.config.media_pipe_tongue.provider,
                 config_manager.config.media_pipe_tongue.intra_op_num_threads,
                 config_manager.config.media_pipe_tongue.allow_spinning,
                 config_manager.config.media_pipe_tongue.device_id
             )
-
-            self.__stream.model = model
         except Exception:
-            _logger.warning("Failed to load model", exc_info=True, stack_info=True)
+            _logger.warning("Failed to send model config to tongue worker", exc_info=True, stack_info=True)
