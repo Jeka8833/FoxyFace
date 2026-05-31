@@ -37,7 +37,7 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
 
         return self.__encode_object_to_json(
             {"Timestamp": packet_timestamp, "Config": self.__options.to_packet_format_dict(),
-             "Values": self.__mediapipe_to_vrcft_name(timed_blend_shapes.blend_shapes)})
+             "Values": self.__mediapipe_to_vrcft_name(timed_blend_shapes.blend_shapes, self.__options.tracking_mode)})
 
     def generate_ping_packet(self) -> bytes:
         return self.__encode_object_to_json({"PingPacket": True, "Config": self.__options.to_packet_format_dict()})
@@ -47,7 +47,7 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
         return json.dumps(any_object, allow_nan=False, separators=(",", ":")).encode("utf-8")
 
     @staticmethod
-    def __mediapipe_to_vrcft_name(media_pipe_dict: dict[GeneralBlendShapeEnum, float]) -> dict[
+    def __mediapipe_to_vrcft_name(media_pipe_dict: dict[GeneralBlendShapeEnum, float], tracking_mode) -> dict[
         UnifiedExpressionEnum, float]:
         eye_close_left = media_pipe_dict.get(GeneralBlendShapeEnum.EyeBlinkLeft)
         eye_open_left = 1 - eye_close_left if eye_close_left is not None else None
@@ -189,4 +189,46 @@ class VrcftPacketEncoderStream(StreamReadOnly[bytes]):
                     }
         # @formatter:on
 
-        return {key: val for key, val in new_dict.items() if val is not None}
+        filtered_dict = {key: val for key, val in new_dict.items() if val is not None}
+
+        if tracking_mode == "mouth":
+            # Include only mouth-related expressions
+            mouth_keys = {
+                UnifiedExpressionEnum.JawForward, UnifiedExpressionEnum.JawLeft, UnifiedExpressionEnum.JawOpen,
+                UnifiedExpressionEnum.JawRight, UnifiedExpressionEnum.MouthClosed, UnifiedExpressionEnum.MouthDimpleLeft,
+                UnifiedExpressionEnum.MouthDimpleRight, UnifiedExpressionEnum.MouthFrownLeft, UnifiedExpressionEnum.MouthFrownRight,
+                UnifiedExpressionEnum.LipFunnelUpperRight, UnifiedExpressionEnum.LipFunnelUpperLeft, UnifiedExpressionEnum.LipFunnelLowerRight,
+                UnifiedExpressionEnum.LipFunnelLowerLeft, UnifiedExpressionEnum.MouthUpperLeft, UnifiedExpressionEnum.MouthLowerLeft,
+                UnifiedExpressionEnum.MouthLowerDownLeft, UnifiedExpressionEnum.MouthLowerDownRight, UnifiedExpressionEnum.MouthPressLeft,
+                UnifiedExpressionEnum.MouthPressRight, UnifiedExpressionEnum.LipPuckerUpperRight, UnifiedExpressionEnum.LipPuckerUpperLeft,
+                UnifiedExpressionEnum.LipPuckerLowerRight, UnifiedExpressionEnum.LipPuckerLowerLeft, UnifiedExpressionEnum.MouthUpperRight,
+                UnifiedExpressionEnum.MouthLowerRight, UnifiedExpressionEnum.LipSuckLowerRight, UnifiedExpressionEnum.LipSuckLowerLeft,
+                UnifiedExpressionEnum.LipSuckUpperRight, UnifiedExpressionEnum.LipSuckUpperLeft, UnifiedExpressionEnum.MouthRaiserLower,
+                UnifiedExpressionEnum.MouthRaiserUpper, UnifiedExpressionEnum.MouthCornerPullLeft, UnifiedExpressionEnum.MouthCornerSlantLeft,
+                UnifiedExpressionEnum.MouthCornerPullRight, UnifiedExpressionEnum.MouthCornerSlantRight, UnifiedExpressionEnum.MouthStretchLeft,
+                UnifiedExpressionEnum.MouthStretchRight, UnifiedExpressionEnum.MouthUpperUpLeft, UnifiedExpressionEnum.MouthUpperUpRight,
+                UnifiedExpressionEnum.NoseSneerLeft, UnifiedExpressionEnum.NoseSneerRight, UnifiedExpressionEnum.CheekPuffLeft,
+                UnifiedExpressionEnum.CheekPuffRight, UnifiedExpressionEnum.CheekSquintLeft, UnifiedExpressionEnum.CheekSquintRight,
+                UnifiedExpressionEnum.CheekSuckLeft, UnifiedExpressionEnum.CheekSuckRight, UnifiedExpressionEnum.TongueOut,
+                UnifiedExpressionEnum.TongueUp, UnifiedExpressionEnum.TongueDown, UnifiedExpressionEnum.TongueLeft,
+                UnifiedExpressionEnum.TongueRight, UnifiedExpressionEnum.TongueRoll, UnifiedExpressionEnum.TongueBendDown,
+                UnifiedExpressionEnum.TongueCurlUp, UnifiedExpressionEnum.TongueSquish, UnifiedExpressionEnum.TongueFlat,
+                UnifiedExpressionEnum.TongueTwistLeft, UnifiedExpressionEnum.TongueTwistRight
+            }
+            filtered_dict = {k: v for k, v in filtered_dict.items() if k in mouth_keys}
+        elif tracking_mode == "eyes":
+            # Include only eye and eyebrow related expressions
+            eye_keys = {
+                UnifiedExpressionEnum.BrowLowererLeft, UnifiedExpressionEnum.BrowPinchLeft, UnifiedExpressionEnum.BrowLowererRight,
+                UnifiedExpressionEnum.BrowPinchRight, UnifiedExpressionEnum.BrowInnerUpRight, UnifiedExpressionEnum.BrowInnerUpLeft,
+                UnifiedExpressionEnum.BrowOuterUpLeft, UnifiedExpressionEnum.BrowOuterUpRight, UnifiedExpressionEnum.EyeOpennessLeft,
+                UnifiedExpressionEnum.EyeOpennessRight, UnifiedExpressionEnum.EyeXLeft, UnifiedExpressionEnum.EyeXRight,
+                UnifiedExpressionEnum.EyeYLeft, UnifiedExpressionEnum.EyeYRight, UnifiedExpressionEnum.EyeSquintLeft,
+                UnifiedExpressionEnum.EyeSquintRight, UnifiedExpressionEnum.EyeWideLeft, UnifiedExpressionEnum.EyeWideRight,
+                UnifiedExpressionEnum.HeadX, UnifiedExpressionEnum.HeadY, UnifiedExpressionEnum.HeadZ,
+                UnifiedExpressionEnum.HeadPitch, UnifiedExpressionEnum.HeadYaw, UnifiedExpressionEnum.HeadRoll
+            }
+            filtered_dict = {k: v for k, v in filtered_dict.items() if k in eye_keys}
+        # For "both", include all
+
+        return filtered_dict

@@ -9,6 +9,7 @@ from src.autorun.SteamAutoRun import SteamAutoRun
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.Config import Config
+from src.config.schemas.core.enums.TrackingModeEnum import TrackingModeEnum
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_VrcftSettings import Ui_VrcftSettings
 
@@ -26,6 +27,16 @@ class VrcftSettingsWindow(FoxyWindow):
 
         self.__ui = Ui_VrcftSettings()
         self.__ui.setupUi(self)
+
+        # Add tracking mode combo box
+        from PySide6.QtWidgets import QLabel
+        self.__tracking_mode_lb = QLabel("Tracking Mode")
+        self.__ui.verticalLayout_7.addWidget(self.__tracking_mode_lb)
+        self.__tracking_mode_cb = QComboBox()
+        self.__tracking_mode_cb.addItem("Both", "both")
+        self.__tracking_mode_cb.addItem("Mouth Only", "mouth")
+        self.__tracking_mode_cb.addItem("Eyes Only", "eyes")
+        self.__ui.verticalLayout_7.addWidget(self.__tracking_mode_cb)
 
         self.__update_ip_signal.connect(self.__update_ip)
         self.__ui.save_btn.clicked.connect(self.__save)
@@ -73,6 +84,12 @@ class VrcftSettingsWindow(FoxyWindow):
         self.__ui.read_timeout_sp.setValue(self.__config_manager.config.socket.udp_read_timeout)
         self.__ui.bypass_cb.setChecked(self.__config_manager.config.socket.bypass_other_modules_block)
 
+        # Set tracking mode
+        tracking_mode = self.__config_manager.config.socket.tracking_mode.value
+        index = self.__tracking_mode_cb.findData(tracking_mode)
+        if index >= 0:
+            self.__tracking_mode_cb.setCurrentIndex(index)
+
         self.__ui.vrchat_file_path_le.setText(self.__config_manager.config.auto_run.vrchat_path)
         self.__ui.vrcft_file_path_le.setText(self.__config_manager.config.auto_run.vrcft_path)
 
@@ -92,6 +109,7 @@ class VrcftSettingsWindow(FoxyWindow):
             self.__config_manager.config.socket.port = self.__ui.port_sp.value()
             self.__config_manager.config.socket.udp_read_timeout = self.__ui.read_timeout_sp.value()
             self.__config_manager.config.socket.bypass_other_modules_block = self.__ui.bypass_cb.isChecked()
+            self.__config_manager.config.socket.tracking_mode = TrackingModeEnum(self.__tracking_mode_cb.currentData())
 
             self.__config_manager.config.auto_run.vrchat_path = self.__ui.vrchat_file_path_le.text()
             self.__config_manager.config.auto_run.vrcft_path = self.__ui.vrcft_file_path_le.text()
