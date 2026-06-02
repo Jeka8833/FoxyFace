@@ -66,7 +66,7 @@ class GeneralBlendShapeEnum(Enum):
     MouthStretchRight = GeneralBlendShapeOption(
         same_as=[MediaPipeBlendShapeEnum.MouthStretchRight, BabbleBlendShapeEnum.MouthStretchRight])
     TongueOut = GeneralBlendShapeOption(
-        same_as=[BabbleBlendShapeEnum.TongueOut, MediaPipeTongueBlendShapeEnum.TongueOut])
+        same_as=[MediaPipeTongueBlendShapeEnum.TongueOut, BabbleBlendShapeEnum.TongueOut])
     TongueUp = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueUp])
     TongueDown = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueDown])
     TongueLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueLeft])
