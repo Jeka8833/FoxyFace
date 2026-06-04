@@ -11,15 +11,13 @@ class BufferStream[T](StreamReadOnly[T], StreamWriteOnly[T]):
         self.__closed: bool = False
         self.__condition: Condition = Condition(Lock())
 
-    def put(self, value: T) -> bool:
-        if self.__closed:
-            return False
-
+    def put(self, value: T) -> None:
         with self.__condition:
+            if self.__closed:
+                return
+
             self.__values.append(value)
             self.__condition.notify()
-
-        return True
 
     def poll(self, timeout: float | None = None) -> T:
         if timeout is not None and timeout <= 0.0:

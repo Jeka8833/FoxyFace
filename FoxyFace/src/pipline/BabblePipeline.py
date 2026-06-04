@@ -13,11 +13,10 @@ from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import Babbl
 from src.stream.babble.imageprocessing.BabblePreview import BabblePreview
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.postprocessing.filter.BlendShapesOneEuroFilter import BlendShapesOneEuroFilter
 from src.stream.postprocessing.filter.BlendShapesOneEuroFilterOptions import BlendShapesOneEuroFilterOptions
-from src.stream.ui.BlendShapesFrameLatency import BlendShapesFrameLatency
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
 class BabblePipeline:
@@ -25,36 +24,31 @@ class BabblePipeline:
         self.__config_manager: ConfigManager = config_manager
         self.__media_pipe_pipeline: MediaPipePipeline = media_pipe_pipeline
 
-        self.__processing_options = BabbleImageProcessingOptions()
-        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
-
         self.__buffer = SingleBufferStream[MediaPipeFrame]()
         self.__media_pipe_pipeline.register_stream(self.__buffer)
 
-        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
-
         self.__babble_loader = BabbleModelLoader()
-        self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
 
+        self.__processing_options = BabbleImageProcessingOptions()
         processed_stream = BabbleImageProcessing(self.__buffer, self.__processing_options, self.__babble_loader)
         self.__stream = BabbleStream(processed_stream, 1.0, self.__babble_loader)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
+        self.__babble_stream = BlendShapesOneEuroFilter[BabbleBlendShapeEnum](self.__filter_processing_options)
+        self.__stream.register_stream(self.__babble_stream)
+
+        self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
+        self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
+        self.__enabled_listener: ConfigUpdateListener = self.__register_change_enabled()
         self.__filter_processing_options_listener: ConfigUpdateListener = self.__register_change_filter_processing_options()
-
-        self.__fps_counter = WriteCpsCounter()
-        self.__stream.register_stream(self.__fps_counter)
-
-        self.__latency_counter = BlendShapesFrameLatency()
-        self.__stream.register_stream(self.__latency_counter)
 
         self.__preview_window: BabblePreview | None = None
 
     def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
-        self.__stream.register_stream(stream)
+        self.__babble_stream.register_stream(stream)
 
     def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
-        self.__stream.unregister_stream(stream)
+        self.__babble_stream.unregister_stream(stream)
 
     def trigger_view_preview(self):
         if self.__preview_window is None or self.__preview_window.is_closed():
@@ -62,15 +56,6 @@ class BabblePipeline:
                                                   self.__babble_loader)
         else:
             self.__preview_window.close()
-
-    def get_filter_processing_options(self) -> BlendShapesOneEuroFilterOptions:
-        return self.__filter_processing_options
-
-    def get_fps(self):
-        return self.__fps_counter.get_cps()
-
-    def get_latency(self):
-        return self.__latency_counter.get_latency()
 
     def get_model_loader(self) -> BabbleModelLoader:
         return self.__babble_loader
@@ -80,14 +65,12 @@ class BabblePipeline:
             self.__preview_window.close()
 
         self.__enabled_listener.unregister()
-        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
-
-        self.__stream.unregister_stream(self.__fps_counter)
-        self.__stream.unregister_stream(self.__latency_counter)
-
         self.__processing_options_listener.unregister()
         self.__babble_loader_options_listener.unregister()
         self.__filter_processing_options_listener.unregister()
+
+        self.__media_pipe_pipeline.unregister_stream(self.__buffer)
+        self.__stream.unregister_stream(self.__babble_stream)
 
         self.__stream.close()
 
@@ -119,6 +102,8 @@ class BabblePipeline:
         self.__filter_processing_options.beta = config_manager.config.babble.beta
         self.__filter_processing_options.dcutoff = config_manager.config.babble.dcutoff
 
+        self.__babble_stream.recreate()
+
     def __register_change_enabled(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.babble.enabled]
 
@@ -132,7 +117,7 @@ class BabblePipeline:
 
     def __register_change_babble_loader_options(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.babble.model_path,
-                                                      lambda config: config.babble.try_use_gpu,
+                                                      lambda config: config.babble.provider,
                                                       lambda config: config.babble.intra_op_num_threads,
                                                       lambda config: config.babble.allow_spinning,
                                                       lambda config: config.babble.device_id]
@@ -141,7 +126,7 @@ class BabblePipeline:
 
     def __update_babble_loader_options(self, config_manager: ConfigManager):
         self.__babble_loader.start_new_session(config_manager.config.babble.model_path,
-                                               config_manager.config.babble.try_use_gpu,
+                                               config_manager.config.babble.provider,
                                                config_manager.config.babble.intra_op_num_threads,
                                                config_manager.config.babble.allow_spinning,
                                                config_manager.config.babble.device_id)

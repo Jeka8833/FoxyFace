@@ -1,5 +1,3 @@
-*.user
-.qtcreator
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
@@ -36,6 +34,7 @@ Thumbs.db
 *.rc
 /.qmake.cache
 /.qmake.stash
+**/.qmlls.ini
 
 # qtcreator generated files
 *.pro.user*
@@ -82,3 +81,4 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+/.qtcreator/

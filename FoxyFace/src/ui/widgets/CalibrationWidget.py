@@ -9,7 +9,8 @@ from src.config.schemas.main.Config import Config
 from src.config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.config.schemas.main.core.enums.MixSelectEnumConfig import MixSelectEnumConfig
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 from src.stream.postprocessing.mixer import MixBlockList
@@ -137,16 +138,26 @@ class CalibrationWidget(QWidget):
             GeneralBlendShapeEnumConfig.from_original(self.__blend_shape_type))
 
         if selected is None:
-            is_media_pipe_priority = isinstance(self.__blend_shape_type.value.same_as[0], MediaPipeBlendShapeEnum)
-
-            selected = MixSelectEnumConfig.MediaPipe if is_media_pipe_priority else MixSelectEnumConfig.Babble
+            priority_source = self.__blend_shape_type.value.same_as[0]
+            if isinstance(priority_source, MediaPipeBlendShapeEnum):
+                selected = MixSelectEnumConfig.MediaPipe
+            elif isinstance(priority_source, MediaPipeTongueBlendShapeEnum):
+                selected = MixSelectEnumConfig.MediaPipeTongue
+            elif isinstance(priority_source, BabbleBlendShapeEnum):
+                selected = MixSelectEnumConfig.Babble
+            else:
+                raise Exception(f"Unknown source type: {priority_source}")
 
         source_list = [MixSelectEnumConfig.Disabled]
         for source in self.__blend_shape_type.value.same_as:
             if isinstance(source, MediaPipeBlendShapeEnum):
                 source_list.append(MixSelectEnumConfig.MediaPipe)
+            elif isinstance(source, MediaPipeTongueBlendShapeEnum):
+                source_list.append(MixSelectEnumConfig.MediaPipeTongue)
             elif isinstance(source, BabbleBlendShapeEnum):
                 source_list.append(MixSelectEnumConfig.Babble)
+            else:
+                raise Exception(f"Unknown source type: {source}")
 
         self.__recreate_source_list.emit([source.name for source in source_list], source_list.index(selected))
 

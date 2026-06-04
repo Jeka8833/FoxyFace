@@ -4,36 +4,33 @@ import threading
 from PySide6.QtGui import QImage
 
 from src.pipline.MediaPipePipeline import MediaPipePipeline
-from src.stream.babble.BabbleModelLoader import BabbleModelLoader
-from src.stream.babble.imageprocessing.BabbleImageProcessing import BabbleImageProcessing
-from src.stream.babble.imageprocessing.BabbleImageProcessingOptions import BabbleImageProcessingOptions
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
+from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
+from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueProcessingOptions import \
+    MediaPipeTongueProcessingOptions
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)
 
 
-class BabblePreview:
+class MediaPipeTonguePreview:
     def __init__(self, mediapipe_stream: MediaPipeStream | MediaPipePipeline,
-                 processing_options: BabbleImageProcessingOptions, model_loader: BabbleModelLoader,
-                 frame_timeout: float | None = 1.0):
+                 processing_options: MediaPipeTongueProcessingOptions, frame_timeout: float | None = 1.0):
         self.__mediapipe_stream: MediaPipeStream | MediaPipePipeline = mediapipe_stream
-        self.__processing_options: BabbleImageProcessingOptions = processing_options
-        self.__model_loader: BabbleModelLoader = model_loader
+        self.__processing_options: MediaPipeTongueProcessingOptions = processing_options
         self.__frame_timeout: float | None = frame_timeout
 
         self.__single_buffer_stream: SingleBufferStream[MediaPipeFrame] = SingleBufferStream[MediaPipeFrame]()
-        self.__image_stream: StreamReadOnly[ImageFrame] = BabbleImageProcessing(self.__single_buffer_stream,
-                                                                                self.__processing_options,
-                                                                                self.__model_loader)
+        self.__image_stream: StreamReadOnly[ImageFrame] = MediaPipeTongueImageProcessing(self.__single_buffer_stream,
+                                                                                         self.__processing_options)
 
-        self.__window: ImagePreviewWindow = ImagePreviewWindow(title="Babble Camera Preview")
+        self.__window: ImagePreviewWindow = ImagePreviewWindow(title="MediaPipe Tongue Preview")
 
-        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="Babble Preview")
+        self.__thread = threading.Thread(target=self.__loop, daemon=True, name="MediaPipe Tongue Preview")
         self.__thread.start()
 
         self.__mediapipe_stream.register_stream(self.__single_buffer_stream)
@@ -52,7 +49,7 @@ class BabblePreview:
                 else:
                     self.__thread.join(self.__frame_timeout * 2.0)
             except Exception:
-                _logger.warning("Failed to join Babble Preview thread", exc_info=True, stack_info=True)
+                _logger.warning("Failed to join MediaPipe Tongue Preview thread", exc_info=True, stack_info=True)
 
         self.__mediapipe_stream.unregister_stream(self.__single_buffer_stream)
         self.__single_buffer_stream.close()
@@ -68,20 +65,8 @@ class BabblePreview:
             try:
                 image = self.__image_stream.poll(self.__frame_timeout).image
 
-                if image.ndim == 2:
-                    q_format = QImage.Format.Format_Grayscale8
-                elif image.ndim == 3:
-                    q_format = QImage.Format.Format_RGB888
-                else:
-                    raise ValueError(f"Unexpected image shape: {image.shape}")
-
-                im = QImage(
-                    image.data,
-                    image.shape[1],
-                    image.shape[0],
-                    image.strides[0],
-                    q_format
-                )
+                # noinspection PyTypeChecker
+                im = QImage(image, image.shape[1], image.shape[0], image.strides[0], QImage.Format.Format_RGB888)
 
                 self.__window.set_image_event.emit(im)
             except TimeoutError:
@@ -89,7 +74,7 @@ class BabblePreview:
             except InterruptedError:
                 break
             except Exception:
-                _logger.warning("Exception in Babble Preview loop", exc_info=True, stack_info=True)
+                _logger.warning("Exception in MediaPipe Tongue Preview loop", exc_info=True, stack_info=True)
 
                 self.__window.is_closed.wait(0.001)
 

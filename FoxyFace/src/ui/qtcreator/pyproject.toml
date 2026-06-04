@@ -1,17 +1,20 @@
 [project]
-name = "PySide Widgets Project"
+name = "FoxyFace"
 
 [tool.pyside6-project]
-files = ["starter.py",
-        "MainWindow.ui",
-        "CameraSettings.ui",
-        "MediaPipeSettings.ui",
-        "BabbleSettings.ui",
-        "AutoRunSettings.ui",
+files = [
         "AutoCalibrationWindow.ui",
+        "AutoRunSettings.ui",
+        "AvatarCalibration.ui",
+        "AvatarCalibrationWidget.ui",
+        "BabbleSettings.ui",
         "CalibrationSettings.ui",
         "CalibrationSettingsItem.ui",
+        "CameraSettings.ui",
         "HasUpdateWindow.ui",
+        "MainWindow.ui",
+        "MediaPipeSettings.ui",
+        "MediaPipeTongueSettings.ui",
         "SenderSettings.ui",
-        "AvatarCalibration.ui",
-        "AvatarCalibrationWidget.ui"]
+        "starter.py",
+    ]

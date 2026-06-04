@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'BabbleSettings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,16 +15,16 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QDoubleSpinBox, QFrame,
-    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
-    QToolButton, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
+    QFrame, QHBoxLayout, QLabel, QLineEdit,
+    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
+    QSpinBox, QToolButton, QVBoxLayout, QWidget)
 
 class Ui_BabbleSettings(object):
     def setupUi(self, BabbleSettings):
         if not BabbleSettings.objectName():
             BabbleSettings.setObjectName(u"BabbleSettings")
-        BabbleSettings.resize(434, 403)
+        BabbleSettings.resize(427, 435)
         self.centralwidget = QWidget(BabbleSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -109,7 +109,7 @@ class Ui_BabbleSettings(object):
         self.mincutoff_sp.setDecimals(6)
         self.mincutoff_sp.setMinimum(0.000001000000000)
         self.mincutoff_sp.setSingleStep(0.010000000000000)
-        self.mincutoff_sp.setValue(3.000000000000000)
+        self.mincutoff_sp.setValue(1.000000000000000)
 
         self.verticalLayout_2.addWidget(self.mincutoff_sp)
 
@@ -198,28 +198,20 @@ class Ui_BabbleSettings(object):
 
         self.verticalLayout_4.addLayout(self.horizontalLayout_4)
 
-        self.thread_count_lb = QLabel(self.centralwidget)
-        self.thread_count_lb.setObjectName(u"thread_count_lb")
-
-        self.verticalLayout_4.addWidget(self.thread_count_lb)
-
-        self.thread_count_sp = QSpinBox(self.centralwidget)
-        self.thread_count_sp.setObjectName(u"thread_count_sp")
-        self.thread_count_sp.setValue(1)
-
-        self.verticalLayout_4.addWidget(self.thread_count_sp)
-
         self.allow_spinning_cb = QCheckBox(self.centralwidget)
         self.allow_spinning_cb.setObjectName(u"allow_spinning_cb")
 
         self.verticalLayout_4.addWidget(self.allow_spinning_cb)
 
-        self.try_use_gpu_cb = QCheckBox(self.centralwidget)
-        self.try_use_gpu_cb.setObjectName(u"try_use_gpu_cb")
-        self.try_use_gpu_cb.setChecked(True)
-        self.try_use_gpu_cb.setTristate(False)
+        self.provider_lb = QLabel(self.centralwidget)
+        self.provider_lb.setObjectName(u"provider_lb")
 
-        self.verticalLayout_4.addWidget(self.try_use_gpu_cb)
+        self.verticalLayout_4.addWidget(self.provider_lb)
+
+        self.provider_cb = QComboBox(self.centralwidget)
+        self.provider_cb.setObjectName(u"provider_cb")
+
+        self.verticalLayout_4.addWidget(self.provider_cb)
 
         self.gpu_device_id_lb = QLabel(self.centralwidget)
         self.gpu_device_id_lb.setObjectName(u"gpu_device_id_lb")
@@ -230,6 +222,18 @@ class Ui_BabbleSettings(object):
         self.gpu_device_id_sb.setObjectName(u"gpu_device_id_sb")
 
         self.verticalLayout_4.addWidget(self.gpu_device_id_sb)
+
+        self.thread_count_lb = QLabel(self.centralwidget)
+        self.thread_count_lb.setObjectName(u"thread_count_lb")
+
+        self.verticalLayout_4.addWidget(self.thread_count_lb)
+
+        self.thread_count_sp = QSpinBox(self.centralwidget)
+        self.thread_count_sp.setObjectName(u"thread_count_sp")
+        self.thread_count_sp.setMinimum(1)
+        self.thread_count_sp.setValue(1)
+
+        self.verticalLayout_4.addWidget(self.thread_count_sp)
 
         self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
@@ -248,14 +252,6 @@ class Ui_BabbleSettings(object):
 
         self.horizontalLayout.addWidget(self.full_reset_btn)
 
-        self.provider_status_lb = QLabel(self.centralwidget)
-        self.provider_status_lb.setObjectName(u"provider_status_lb")
-#if QT_CONFIG(tooltip)
-        self.provider_status_lb.setToolTip(u"")
-#endif // QT_CONFIG(tooltip)
-
-        self.horizontalLayout.addWidget(self.provider_status_lb)
-
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
@@ -272,8 +268,6 @@ class Ui_BabbleSettings(object):
 
         self.retranslateUi(BabbleSettings)
         self.reset_model_path_btn.clicked.connect(self.selected_path_le.clear)
-        self.try_use_gpu_cb.toggled.connect(self.gpu_device_id_sb.setEnabled)
-        self.use_babble_cb.toggled.connect(self.provider_status_lb.setVisible)
 
         QMetaObject.connectSlotsByName(BabbleSettings)
     # setupUi
@@ -293,12 +287,11 @@ class Ui_BabbleSettings(object):
         self.select_path_btn.setText(QCoreApplication.translate("BabbleSettings", u"...", None))
         self.model_status_lb.setText(QCoreApplication.translate("BabbleSettings", u"Update the model for better face tracking!", None))
         self.reset_model_path_btn.setText(QCoreApplication.translate("BabbleSettings", u"Reset Model Path", None))
-        self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"Thread Count:", None))
-        self.allow_spinning_cb.setText(QCoreApplication.translate("BabbleSettings", u"Allow Spinning", None))
-        self.try_use_gpu_cb.setText(QCoreApplication.translate("BabbleSettings", u"Try to use GPU acceleration", None))
+        self.allow_spinning_cb.setText(QCoreApplication.translate("BabbleSettings", u"CPU Wait Spin", None))
+        self.provider_lb.setText(QCoreApplication.translate("BabbleSettings", u"Provider:", None))
         self.gpu_device_id_lb.setText(QCoreApplication.translate("BabbleSettings", u"GPU Device ID:", None))
+        self.thread_count_lb.setText(QCoreApplication.translate("BabbleSettings", u"CPU Threads:", None))
         self.full_reset_btn.setText(QCoreApplication.translate("BabbleSettings", u"Full Reset", None))
-        self.provider_status_lb.setText(QCoreApplication.translate("BabbleSettings", u"Provider: Unknown", None))
         self.save_btn.setText(QCoreApplication.translate("BabbleSettings", u"Apply and Save", None))
     # retranslateUi
 

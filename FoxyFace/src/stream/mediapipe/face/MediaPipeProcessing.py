@@ -5,21 +5,22 @@ from numpy import ndarray
 from scipy.spatial.transform import Rotation
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
-from src.stream.mediapipe.MediaPipeProcessingOptions import MediaPipeProcessingOptions
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 _logger = logging.getLogger(__name__)
 
 
 class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
-    def __init__(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]],
-                 options: MediaPipeProcessingOptions):
-        self.__stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]] = stream
+    def __init__(self, options: MediaPipeProcessingOptions):
         self.__options: MediaPipeProcessingOptions = options
 
-    def put(self, value: MediaPipeFrame) -> bool:
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
+
+    def put(self, value: MediaPipeFrame) -> None:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
         transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
@@ -41,11 +42,16 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
             output_shapes[MediaPipeBlendShapeEnum(shape.category_name)] = shape.score
 
         result_shapes = BlendShapesFrame(output_shapes, value.camera_frame.timestamp_ns)
+        self.__stream_root.put(result_shapes)
 
-        return self.__stream.put(result_shapes)
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+        self.__stream_root.register_stream(stream)
+
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+        self.__stream_root.unregister_stream(stream)
 
     def close(self) -> None:
-        self.__stream.close()
+        self.__stream_root.close()
 
     def __calibrate_rotation(self, rotation_matrix: ndarray) -> Rotation | None:
         try:

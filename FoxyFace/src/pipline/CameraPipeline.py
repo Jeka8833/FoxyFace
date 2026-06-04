@@ -4,12 +4,12 @@ from typing import Any, Callable
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.main.Config import Config
-from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.camera.CameraPreview import CameraPreview
 from src.stream.camera.CameraProcessingOption import CameraProcessingOption
 from src.stream.camera.CameraStream import CameraStream
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
@@ -29,10 +29,10 @@ class CameraPipeline:
 
         self.__preview_window: CameraPreview | None = None
 
-    def register_stream(self, stream: StreamWriteOnly[CameraFrame]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[CameraFrame]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream.unregister_stream(stream)
 
     def trigger_view_preview(self):

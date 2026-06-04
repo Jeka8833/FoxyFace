@@ -12,6 +12,7 @@ from src.config.ConfigManager import ConfigManager
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.CameraPipeline import CameraPipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
+from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
 from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
 from src.pipline.senders.SenderRouterPipeline import SenderRouterPipeline
@@ -27,6 +28,7 @@ from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
 from src.ui.windows.SenderSettingsWindow import SenderSettingsWindow
+from src.ui.windows.MediaPipeTongueSettingsWindow import MediaPipeTongueSettingsWindow
 
 _logger = logging.getLogger(__name__)
 
@@ -35,13 +37,15 @@ class MainWindow(FoxyWindow):
     camera_fps_signal = Signal(str)
     mediapipe_fps_signal = Signal(str)
     mediapipe_latency_signal = Signal(str)
+    mediapipe_tongue_fps_signal = Signal(str)
+    mediapipe_tongue_latency_signal = Signal(str)
     babble_fps_signal = Signal(str)
     babble_latency_signal = Signal(str)
     has_update_signal = Signal(object)
 
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
-                 mediapipe_pipeline: MediaPipePipeline, babble_pipeline: BabblePipeline,
-                 processing_pipeline: ProcessingPipeline, auto_calibration_endpoint: AutoCalibrationEndpoint,
+                 mediapipe_pipeline: MediaPipePipeline, mediapipe_tongue_pipeline: MediaPipeTonguePipeline,
+                 babble_pipeline: BabblePipeline, processing_pipeline: ProcessingPipeline, auto_calibration_endpoint: AutoCalibrationEndpoint,
                  steam_auto_run: SteamAutoRun, sender_manager: SenderRouterPipeline):
         super().__init__()
 
@@ -50,6 +54,7 @@ class MainWindow(FoxyWindow):
         self.__config_manager = config_manager
         self.__camera_pipeline = camera_pipeline
         self.__media_pipe_pipeline = mediapipe_pipeline
+        self.__media_pipe_tongue_pipeline = mediapipe_tongue_pipeline
         self.__babble_pipeline = babble_pipeline
         self.__processing_pipeline = processing_pipeline
         self.__auto_calibration_endpoint = auto_calibration_endpoint
@@ -70,6 +75,7 @@ class MainWindow(FoxyWindow):
 
         self.__camera_settings_window: CameraSettingsWindow | None = None
         self.__media_pipe_settings_window: MediaPipeSettingsWindow | None = None
+        self.__media_pipe_tongue_settings_window: MediaPipeTongueSettingsWindow | None = None
         self.__babble_settings_window: BabbleSettingsWindow | None = None
         self.__sender_settings_window: SenderSettingsWindow | None = None
         self.__auto_calibration_window: AutoCalibrationWindow | None = None
@@ -92,11 +98,15 @@ class MainWindow(FoxyWindow):
     def __update_thread(self):
         try:
             self.camera_fps_signal.emit(f"FPS: {self.__camera_pipeline.get_fps():.1f}")
-            self.mediapipe_fps_signal.emit(f"FPS: {self.__media_pipe_pipeline.get_fps():.1f}")
-            self.babble_fps_signal.emit(f"FPS: {self.__babble_pipeline.get_fps():.1f}")
+            self.mediapipe_fps_signal.emit(f"FPS: {self.__processing_pipeline.media_pipe_fps:.1f}")
+            self.babble_fps_signal.emit(f"FPS: {self.__processing_pipeline.babble_fps:.1f}")
+            self.mediapipe_tongue_fps_signal.emit(f"FPS: {self.__processing_pipeline.media_pipe_tongue_fps:.1f}")
 
-            self.mediapipe_latency_signal.emit(f"Latency: {self.__media_pipe_pipeline.get_latency() * 1000.0:.0f} ms")
-            self.babble_latency_signal.emit(f"Latency: {self.__babble_pipeline.get_latency() * 1000.0:.0f} ms")
+            self.mediapipe_latency_signal.emit(
+                f"Latency: {self.__processing_pipeline.media_pipe_latency * 1000.0:.0f} ms")
+            self.babble_latency_signal.emit(f"Latency: {self.__processing_pipeline.babble_latency * 1000.0:.0f} ms")
+            self.mediapipe_tongue_latency_signal.emit(
+                f"Latency: {self.__processing_pipeline.media_pipe_tongue_latency * 1000.0:.0f} ms")
 
             model = self.__babble_pipeline.get_model_loader().model
             if model is None or model.is_default_model:
@@ -112,6 +122,8 @@ class MainWindow(FoxyWindow):
         self.camera_fps_signal.connect(self.__ui.camera_fps_lbl.setText)
         self.mediapipe_fps_signal.connect(self.__ui.mediapipe_fps_lbl.setText)
         self.mediapipe_latency_signal.connect(self.__ui.mediapipe_latency_lbl.setText)
+        self.mediapipe_tongue_fps_signal.connect(self.__ui.mediapipe_tongue_fps_lbl.setText)
+        self.mediapipe_tongue_latency_signal.connect(self.__ui.mediapipe_tongue_latency_lbl.setText)
         self.babble_fps_signal.connect(self.__ui.babble_fps_lbl.setText)
         self.babble_latency_signal.connect(self.__ui.babble_latency_lbl.setText)
         self.has_update_signal.connect(self.__has_update)
@@ -120,6 +132,8 @@ class MainWindow(FoxyWindow):
         self.camera_fps_signal.disconnect(self.__ui.camera_fps_lbl.setText)
         self.mediapipe_fps_signal.disconnect(self.__ui.mediapipe_fps_lbl.setText)
         self.mediapipe_latency_signal.disconnect(self.__ui.mediapipe_latency_lbl.setText)
+        self.mediapipe_tongue_fps_signal.disconnect(self.__ui.mediapipe_tongue_fps_lbl.setText)
+        self.mediapipe_tongue_latency_signal.disconnect(self.__ui.mediapipe_tongue_latency_lbl.setText)
         self.babble_fps_signal.disconnect(self.__ui.babble_fps_lbl.setText)
         self.babble_latency_signal.disconnect(self.__ui.babble_latency_lbl.setText)
         self.has_update_signal.disconnect(self.__has_update)
@@ -130,6 +144,9 @@ class MainWindow(FoxyWindow):
 
         self.__ui.open_mediapipe_preview_btn.clicked.connect(self.__open_mediapipe_preview)
         self.__ui.open_mediapipe_settings_btn.clicked.connect(self.__open_mediapipe_setting)
+
+        self.__ui.open_mediapipe_tongue_preview_btn.clicked.connect(self.__open_mediapipe_tongue_preview)
+        self.__ui.open_mediapipe_tongue_settings_btn.clicked.connect(self.__open_mediapipe_tongue_setting)
 
         self.__ui.open_babble_preview_btn.clicked.connect(self.__open_babble_preview)
         self.__ui.open_babble_setting_btn.clicked.connect(self.__open_babble_setting_btn)
@@ -169,6 +186,24 @@ class MainWindow(FoxyWindow):
                 self.__media_pipe_settings_window = MediaPipeSettingsWindow(self.__config_manager)
             else:
                 self.__media_pipe_settings_window.close_event.emit()
+        except Exception:
+            _logger.warning("Failed to open mediapipe settings", exc_info=True, stack_info=True)
+
+    def __open_mediapipe_tongue_preview(self):
+        try:
+            self.__media_pipe_tongue_pipeline.trigger_view_preview()
+        except Exception:
+            _logger.warning("Failed to open mediapipe preview", exc_info=True, stack_info=True)
+
+    def __open_mediapipe_tongue_setting(self):
+        try:
+            if self.__media_pipe_tongue_settings_window is None or self.__media_pipe_tongue_settings_window.is_closed.is_set():
+                self.__media_pipe_tongue_settings_window = MediaPipeTongueSettingsWindow(
+                    self.__config_manager,
+                    self.__media_pipe_tongue_pipeline
+                )
+            else:
+                self.__media_pipe_tongue_settings_window.close_event.emit()
         except Exception:
             _logger.warning("Failed to open mediapipe settings", exc_info=True, stack_info=True)
 

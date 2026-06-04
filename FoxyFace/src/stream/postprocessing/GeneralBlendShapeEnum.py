@@ -1,7 +1,8 @@
 from enum import Enum, unique
 
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
 from src.stream.postprocessing.GeneralBlendShapeOption import GeneralBlendShapeOption
 
 
@@ -64,7 +65,8 @@ class GeneralBlendShapeEnum(Enum):
         same_as=[MediaPipeBlendShapeEnum.MouthStretchLeft, BabbleBlendShapeEnum.MouthStretchLeft])
     MouthStretchRight = GeneralBlendShapeOption(
         same_as=[MediaPipeBlendShapeEnum.MouthStretchRight, BabbleBlendShapeEnum.MouthStretchRight])
-    TongueOut = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueOut])
+    TongueOut = GeneralBlendShapeOption(
+        same_as=[MediaPipeTongueBlendShapeEnum.TongueOut, BabbleBlendShapeEnum.TongueOut])
     TongueUp = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueUp])
     TongueDown = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueDown])
     TongueLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueLeft])

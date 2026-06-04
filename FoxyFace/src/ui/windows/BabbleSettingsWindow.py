@@ -8,6 +8,7 @@ from src.config.schemas.main.core.BabbleConfig import BabbleConfig
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_BabbleSettings import Ui_BabbleSettings
+from src.util import OnnxUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -52,24 +53,30 @@ class BabbleSettingsWindow(FoxyWindow):
         self.__ui.mincutoff_sp.setValue(self.__config_manager.config.babble.mincutoff)
         self.__ui.beta_sp.setValue(self.__config_manager.config.babble.beta)
         self.__ui.selected_path_le.setText(self.__config_manager.config.babble.model_path)
-        self.__ui.try_use_gpu_cb.setChecked(self.__config_manager.config.babble.try_use_gpu)
         self.__ui.gpu_device_id_sb.setValue(self.__config_manager.config.babble.device_id)
         self.__ui.allow_spinning_cb.setChecked(self.__config_manager.config.babble.allow_spinning)
         self.__ui.thread_count_sp.setValue(self.__config_manager.config.babble.intra_op_num_threads)
 
         self.__update_model_status()
+        self.__update_provider()
 
     def __full_reset(self):
-        self.__config_manager.config.babble = BabbleConfig()
-        self.__config_manager.write()
-        self.__set_default_values()
+        try:
+            self.__config_manager.config.babble = BabbleConfig()
+            self.__config_manager.write()
+            self.__set_default_values()
+        except Exception:
+            _logger.warning("Failed to reset babble settings", exc_info=True, stack_info=True)
 
     def __path_selector(self):
-        filename, window_filter = QFileDialog.getOpenFileName(parent=self, caption='Open Babble Model', dir='.',
-                                                              filter='*.onnx')
+        try:
+            filename, window_filter = QFileDialog.getOpenFileName(parent=self, caption='Open Babble Model', dir='.',
+                                                                  filter='*.onnx')
 
-        if filename:
-            self.__ui.selected_path_le.setText(filename)
+            if filename:
+                self.__ui.selected_path_le.setText(filename)
+        except Exception:
+            _logger.warning("Failed to select model path", exc_info=True, stack_info=True)
 
     def __save(self):
         try:
@@ -79,31 +86,51 @@ class BabbleSettingsWindow(FoxyWindow):
             self.__config_manager.config.babble.mincutoff = self.__ui.mincutoff_sp.value()
             self.__config_manager.config.babble.beta = self.__ui.beta_sp.value()
             self.__config_manager.config.babble.model_path = self.__ui.selected_path_le.text()
-            self.__config_manager.config.babble.try_use_gpu = self.__ui.try_use_gpu_cb.isChecked()
             self.__config_manager.config.babble.device_id = self.__ui.gpu_device_id_sb.value()
             self.__config_manager.config.babble.allow_spinning = self.__ui.allow_spinning_cb.isChecked()
             self.__config_manager.config.babble.intra_op_num_threads = self.__ui.thread_count_sp.value()
+            self.__config_manager.config.babble.provider = self.__get_provider()
 
             self.__config_manager.write()
         except Exception:
             _logger.warning("Failed to save camera settings", exc_info=True, stack_info=True)
 
     def __update_model_status(self):
-        if self.__model_loader.model is None:
-            self.__ui.model_status_lb.setText("Fail to load model")
-            self.__ui.model_status_lb.show()
-        elif self.__model_loader.model.is_default_model:
-            self.__ui.model_status_lb.setText("Update the model for better face tracking!")
-            self.__ui.model_status_lb.show()
-        else:
-            self.__ui.model_status_lb.hide()
+        try:
+            model = self.__model_loader.model
 
-        provider: str | None = self.__model_loader.model.get_provider_name() if self.__model_loader.model is not None else None
-        if provider is None:
-            self.__ui.provider_status_lb.setText("Provider: Unknown")
-        else:
-            self.__ui.provider_status_lb.setText(f"Provider: {provider}")
+            if model is None:
+                self.__ui.model_status_lb.setText("Fail to load model")
+                self.__ui.model_status_lb.show()
+            elif model.is_default_model:
+                self.__ui.model_status_lb.setText("Update the model for better face tracking!")
+                self.__ui.model_status_lb.show()
+            else:
+                self.__ui.model_status_lb.hide()
 
-        selected_path = self.__ui.selected_path_le.text()
+            selected_path = self.__ui.selected_path_le.text()
 
-        self.__ui.reset_model_path_btn.setVisible(bool(selected_path))
+            self.__ui.reset_model_path_btn.setVisible(bool(selected_path))
+        except Exception:
+            _logger.warning("Failed to update thread", exc_info=True, stack_info=True)
+
+    def __update_provider(self):
+        self.__ui.provider_cb.clear()
+
+        self.__ui.provider_cb.addItem("Auto")
+        for provider in OnnxUtil.AVAILABLE_PROVIDERS:
+            self.__ui.provider_cb.addItem(provider)
+
+        for i in range(self.__ui.provider_cb.count()):
+            if self.__ui.provider_cb.itemText(i) == self.__config_manager.config.babble.provider:
+                self.__ui.provider_cb.setCurrentIndex(i)
+                return
+
+        self.__ui.provider_cb.setCurrentIndex(0)
+
+    def __get_provider(self) -> str | None:
+        selected_text = self.__ui.provider_cb.currentText()
+        if selected_text in OnnxUtil.AVAILABLE_PROVIDERS:
+            return selected_text
+
+        return None

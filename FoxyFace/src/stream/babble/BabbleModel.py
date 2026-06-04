@@ -22,10 +22,9 @@ class BabbleModel:
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float]:
         if self.is_input_rgb:
-            frame = (image.transpose(2, 0, 1)[numpy.newaxis, ...] / 255.0).astype(numpy.float32, copy=False)
+            frame = numpy.divide(image.transpose(2, 0, 1), 255, dtype=numpy.float32)[numpy.newaxis, ...]
         else:
-            frame = (image[numpy.newaxis, numpy.newaxis, :, :] / 255.0).astype(numpy.float32,
-                                                                               copy=False)  # (1, 1, size, size)
+            frame = numpy.divide(image, 255, dtype=numpy.float32)[numpy.newaxis, numpy.newaxis, :, :]  # (1, 1, size, size)
 
         out = self.__session.run(self.__output_names, {self.__input_name: frame})
 

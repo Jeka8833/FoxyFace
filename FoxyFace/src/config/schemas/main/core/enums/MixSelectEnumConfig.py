@@ -7,6 +7,7 @@ from src.stream.postprocessing.mixer.MixSelectEnum import MixSelectEnum
 class MixSelectEnumConfig(StrEnum):
     Disabled = MixSelectEnum.Disabled.name
     MediaPipe = MixSelectEnum.MediaPipe.name
+    MediaPipeTongue = MixSelectEnum.MediaPipeTongue.name
     Babble = MixSelectEnum.Babble.name
 
     def to_original(self) -> MixSelectEnum:

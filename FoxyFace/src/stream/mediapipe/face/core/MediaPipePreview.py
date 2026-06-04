@@ -5,8 +5,8 @@ import cv2
 from PySide6.QtGui import QImage
 
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.core.MediaPipeStream import MediaPipeStream
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
 from src.ui.windows.ImagePreviewWindow import ImagePreviewWindow
 
 _logger = logging.getLogger(__name__)
@@ -35,7 +35,10 @@ class MediaPipePreview:
 
         if do_join:
             try:
-                self.__thread.join(self.__frame_timeout * 2.0)
+                if self.__frame_timeout is None:
+                    self.__thread.join(5.0)
+                else:
+                    self.__thread.join(self.__frame_timeout * 2.0)
             except Exception:
                 _logger.warning("Failed to join MediaPipe Preview thread", exc_info=True, stack_info=True)
 
@@ -53,7 +56,7 @@ class MediaPipePreview:
             try:
                 frame = self.__single_buffer_stream.poll(self.__frame_timeout)
 
-                image = frame.camera_frame.frame.copy()
+                image = frame.camera_frame.image.copy()
 
                 if frame.face_landmarker_result.face_landmarks:
                     z_values = [point.z for point in frame.face_landmarker_result.face_landmarks[0]]

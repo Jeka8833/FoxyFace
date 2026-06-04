@@ -1,13 +1,13 @@
 import logging
 from pathlib import Path
 
-import onnxruntime
 from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
 from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
+from src.util import OnnxUtil
 from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
@@ -22,11 +22,10 @@ class BabbleModelLoader:
     def __init__(self):
         self.model: BabbleModel | None = None
 
-    def start_new_session(self, model_path: str, use_gpu: bool, intra_op_num_threads: int, allow_spinning: bool,
-                          device_id: int):
+    def start_new_session(self, model_path: str, provider_name: str | None, intra_op_num_threads: int,
+                          allow_spinning: bool, device_id: int):
         self.model = None
 
-        device_id_str = str(device_id)
 
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
@@ -35,27 +34,10 @@ class BabbleModelLoader:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        if use_gpu:
-            provider = [("DmlExecutionProvider", {"device_id": device_id_str}),
-                        ("CUDAExecutionProvider", {"device_id": device_id_str}),
-                        ("ROCMExecutionProvider", {"device_id": device_id_str}), "CoreMLExecutionProvider",
-                        "CPUExecutionProvider"]
-        else:
-            provider = ["CPUExecutionProvider"]
-
-        available_providers = onnxruntime.get_available_providers()
-
-        _logger.info(f"Available providers: {available_providers}")
-
-        final_providers = []
-        for p in provider:
-            name = p[0] if isinstance(p, tuple) else p
-            if name in available_providers:
-                final_providers.append(p)
-
         path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
 
-        session = InferenceSession(path, opts, providers=final_providers)
+        provider = OnnxUtil.get_provider(provider_name, device_id)
+        session = InferenceSession(path, opts, providers=provider)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
@@ -71,7 +53,9 @@ class BabbleModelLoader:
         if model.is_loaded_successfully():
             self.model = model
 
-            _logger.info("Babble started")
+            _logger.info(
+                f"Babble model has loaded with provider: {provider}, "
+                f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
     def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float] | None:
         if self.model is None:

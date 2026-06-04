@@ -7,11 +7,11 @@ from mediapipe.tasks.python import BaseOptions
 from mediapipe.tasks.python.vision.core.vision_task_running_mode import VisionTaskRunningMode
 from mediapipe.tasks.python.vision.face_landmarker import FaceLandmarker, FaceLandmarkerOptions, FaceLandmarkerResult
 
-from src.stream.camera.CameraFrame import CameraFrame
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
 _logger = logging.getLogger(__name__)
 
@@ -21,11 +21,11 @@ class MediaPipeStream:
     Unstable when recreated, try to avoid any reinitialization
     """
 
-    def __init__(self, image_stream: StreamReadOnly[CameraFrame], model_asset_data: bytes,
+    def __init__(self, image_stream: StreamReadOnly[ImageFrame], model_asset_data: bytes,
                  frame_timeout: float | None = 1.0, min_face_detection_confidence: float = 0.5,
                  min_face_presence_confidence: float = 0.5, min_tracking_confidence: float = 0.5,
                  frame_lost_timeout: float = 1.0, try_use_gpu: bool = True):
-        self.__image_stream: StreamReadOnly[CameraFrame] = image_stream
+        self.__image_stream: StreamReadOnly[ImageFrame] = image_stream
         self.__frame_timeout: float | None = frame_timeout
         self.__frame_lost_timeout: float = frame_lost_timeout
 
@@ -36,7 +36,7 @@ class MediaPipeStream:
         self.__condition_lock = Condition(Lock())
         self.__callback_lock = Lock()
 
-        self.__last_frame: CameraFrame | None = None
+        self.__last_frame: ImageFrame | None = None
         self.__last_packet_time_ms: int = time.perf_counter_ns() // 1_000_000
         self.__last_callback_time_ms: int = time.perf_counter_ns() // 1_000_000
 
@@ -71,7 +71,10 @@ class MediaPipeStream:
             self.__condition_lock.notify_all()
 
         try:
-            self.__thread.join(self.__frame_timeout * 2.0)
+            if self.__frame_timeout is None:
+                self.__thread.join(5.0)
+            else:
+                self.__thread.join(self.__frame_timeout * 2.0)
         except Exception:
             _logger.warning("Failed to join MediaPipe thread", exc_info=True, stack_info=True)
 
@@ -92,7 +95,7 @@ class MediaPipeStream:
                 if self.__last_packet_time_ms - packet_time_ms >= 0:
                     continue  # System lag
 
-                mp_image = mediapipe.Image(image_format=mediapipe.ImageFormat.SRGB, data=self.__last_frame.frame)
+                mp_image = mediapipe.Image(image_format=mediapipe.ImageFormat.SRGB, data=self.__last_frame.image)
 
                 self.__landmarker.detect_async(mp_image, packet_time_ms)
 

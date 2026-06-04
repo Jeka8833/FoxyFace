@@ -1,13 +1,11 @@
 import threading
 import time
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
-from src.stream.mediapipe.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 
 
-class BlendShapesFrameLatency(StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum] | MediaPipeFrame]):
+class BlendShapesFrameLatency(StreamWriteOnly[BlendShapesFrame]):
     def __init__(self):
         self.__last_latency: float = 0.0
         self.__last_latency_update_ns: int = time.perf_counter_ns()
@@ -17,18 +15,10 @@ class BlendShapesFrameLatency(StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeE
 
         self.__lock = threading.Lock()
 
-    def put(self, value: BlendShapesFrame[BabbleBlendShapeEnum] | MediaPipeFrame) -> bool:
+    def put(self, value: BlendShapesFrame) -> None:
         with self.__lock:
-            if isinstance(value, BlendShapesFrame):
-                self.__latency_sum += time.perf_counter_ns() - value.timestamp_ns
-            elif isinstance(value, MediaPipeFrame):
-                self.__latency_sum += time.perf_counter_ns() - value.camera_frame.timestamp_ns
-            else:
-                raise ValueError
-
+            self.__latency_sum += time.perf_counter_ns() - value.timestamp_ns
             self.__latency_count += 1
-
-        return True
 
     def get_latency(self) -> float:
         with self.__lock:

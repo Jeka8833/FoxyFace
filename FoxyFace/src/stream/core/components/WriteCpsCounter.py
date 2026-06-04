@@ -12,11 +12,9 @@ class WriteCpsCounter(StreamWriteOnly):
 
         self.__lock: Lock = Lock()
 
-    def put(self, value) -> bool:
+    def put(self, value) -> None:
         with self.__lock:
             self.__call_count += 1
-
-        return True
 
     def get_cps(self) -> float:
         with self.__lock:
