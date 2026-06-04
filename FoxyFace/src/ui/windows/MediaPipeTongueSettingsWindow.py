@@ -3,7 +3,7 @@ import logging
 from PySide6.QtCore import QTimer, Qt
 
 from src.config.ConfigManager import ConfigManager
-from src.config.schemas.core.MediaPipeTongueConfig import MediaPipeTongueConfig
+from src.config.schemas.main.core.MediaPipeTongueConfig import MediaPipeTongueConfig
 from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_MediaPipeTongueSettings import Ui_MediaPipeTongueSettings

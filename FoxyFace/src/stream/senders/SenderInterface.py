@@ -4,7 +4,7 @@ from blendshape_router.preset.ARKitParameter import ARKitParameter
 from blendshape_router.preset.BaseParameter import BaseParameter
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.senders.AvatarEndpoint import AvatarEndpoint
 
 

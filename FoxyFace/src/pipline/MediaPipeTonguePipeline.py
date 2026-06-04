@@ -3,7 +3,7 @@ from typing import Any, Callable
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
+from src.config.schemas.main.Config import Config
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream

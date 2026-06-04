@@ -96,7 +96,7 @@ def initialize_and_run(app, splash):
             self.__main_window: MainWindow = MainWindow(config_manager=self.__config_manager,
                                                         camera_pipeline=self.__camera_pipeline,
                                                         mediapipe_pipeline=self.__media_pipe_pipeline,
-                                                        media_pipe_tongue_pipeline=self.__media_pipe_tongue_pipeline,
+                                                        mediapipe_tongue_pipeline=self.__media_pipe_tongue_pipeline,
                                                         babble_pipeline=self.__babble_pipeline,
                                                         processing_pipeline=self.__processing_pipeline,
                                                         auto_calibration_endpoint=self.__auto_calibration_endpoint,

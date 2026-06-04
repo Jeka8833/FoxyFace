@@ -21,7 +21,7 @@ from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
 from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.senders.AvatarEndpoint import AvatarEndpoint
 from src.stream.senders.SenderInterface import SenderInterface
 from src.util.PathUtil import PathUtil

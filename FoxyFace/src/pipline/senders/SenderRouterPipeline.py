@@ -9,7 +9,7 @@ from src.pipline.senders.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
 from src.pipline.senders.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
 from src.pipline.senders.MeowFaceSenderPipeline import MeowFaceSenderPipeline
 from src.pipline.senders.VRChatSenderPipeline import VRChatSenderPipeline
-from src.stream.postprocessing.BlendShapesFrame import BlendShapesFrame
+from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.senders.AvatarEndpoint import AvatarEndpoint
 from src.stream.senders.GeneralToBlendshapeRouterMapper import GeneralToBlendshapeRouterMapper
 from src.stream.senders.SenderInterface import SenderInterface
@@ -58,7 +58,7 @@ class SenderRouterPipeline:
     def __start_loop(self):
         while not self.__close_event.is_set():
             try:
-                data = self.__processing_pipeline.get_udp_stream().poll()
+                data = self.__processing_pipeline.ui_stream_output.poll()
 
                 blendshapes = GeneralToBlendshapeRouterMapper.convert(data.blend_shapes)
 
