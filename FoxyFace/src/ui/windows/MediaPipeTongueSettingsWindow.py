@@ -1,10 +1,12 @@
 import logging
 
 from PySide6.QtCore import QTimer, Qt
+from sympy.strategies.core import switch
 
 from src.config.ConfigManager import ConfigManager
 from src.config.schemas.core.MediaPipeTongueConfig import MediaPipeTongueConfig
 from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import Status
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_MediaPipeTongueSettings import Ui_MediaPipeTongueSettings
 from src.util import OnnxUtil
@@ -82,11 +84,15 @@ class MediaPipeTongueSettingsWindow(FoxyWindow):
 
     def __update_model_status(self):
         try:
-            if self.__tongue_pipeline.good_started:
-                self.__ui.error_message_lb.hide()
-            else:
-                self.__ui.error_message_lb.setText("Fail to load model")
+            status = self.__tongue_pipeline.process_status
+            if status is Status.NOT_LOADED:
+                self.__ui.error_message_lb.setText("Fail to load model, check the console")
                 self.__ui.error_message_lb.show()
+            elif status is Status.CRASHED:
+                self.__ui.error_message_lb.setText("Model crashed, check the console")
+                self.__ui.error_message_lb.show()
+            else:
+                self.__ui.error_message_lb.hide()
         except Exception:
             _logger.warning("Failed to update thread", exc_info=True, stack_info=True)
 

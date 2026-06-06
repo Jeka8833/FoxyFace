@@ -50,8 +50,9 @@ class UpdateChecker:
             json_content = request_result.json()
 
             founded_version = Version(json_content['version'])
+            force = bool(json_content.get('force', False))
 
-            if AppConstants.VERSION < founded_version:
+            if force or AppConstants.VERSION < founded_version:
                 _logger.info(f"New version of FoxyFace is available: {founded_version}")
 
                 self.__main_window.has_update_signal.emit(founded_version)
