@@ -11,7 +11,7 @@ from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
-from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE, Status
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
@@ -34,6 +34,7 @@ class MediaPipeTongueStream:
         self.__cmd_queue = None
         self.__output_queue = None
         self.__frame_condition = None
+        self.__model_run_status = None
 
         self.__close_event = Event()
 
@@ -61,8 +62,12 @@ class MediaPipeTongueStream:
         self.__stream_root.unregister_stream(stream)
 
     @property
-    def good_started(self) -> bool:
-        return self.__good_started
+    def process_status(self) -> Status:
+        status = self.__model_run_status
+        if status is None:
+            return Status.NOT_LOADED
+
+        return Status(status.value)
 
     def load_model(self, provider_name: str | None, intra_op_num_threads: int, allow_spinning: bool,
                    device_id: int) -> None:
@@ -108,11 +113,12 @@ class MediaPipeTongueStream:
         self.__cmd_queue = self.__ctx.Queue()
         self.__output_queue = self.__ctx.Queue()
         self.__frame_condition = self.__ctx.Condition()
+        self.__model_run_status = self.__ctx.Value(ctypes.c_uint8, 0)
 
         self.__worker = self.__ctx.Process(
             target=_onnx_worker_loop,
             args=(self.__log_queue, self.__cmd_queue, self.__output_queue,
-                  self.__frame_timestamp, self.__frame_image, self.__frame_condition),
+                  self.__frame_timestamp, self.__frame_image, self.__frame_condition, self.__model_run_status),
             daemon=True,
             name="MediaPipeTongueWorker"
         )
@@ -189,12 +195,6 @@ class MediaPipeTongueStream:
         while not self.__close_event.is_set():
             try:
                 timestamp, tongue_out = self.__output_queue.get(timeout=0.05)
-
-                if timestamp is None:
-                    self.__good_started = False
-
-                    self.__close_event.wait(0.05)
-                    continue
 
                 self.__stream_root.put(BlendShapesFrame(
                     {MediaPipeTongueBlendShapeEnum.TongueOut: tongue_out},

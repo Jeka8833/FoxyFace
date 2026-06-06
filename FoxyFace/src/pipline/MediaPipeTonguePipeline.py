@@ -9,6 +9,7 @@ from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import Status
 from src.stream.mediapipe.tongue.MediaPipeTongueStream import MediaPipeTongueStream
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTonguePreview import MediaPipeTonguePreview
@@ -58,8 +59,8 @@ class MediaPipeTonguePipeline:
             self.__preview_window.close()
 
     @property
-    def good_started(self) -> bool:
-        return self.__stream.good_started
+    def process_status(self) -> Status:
+        return self.__stream.process_status
 
     def close(self):
         if self.__preview_window is not None:

@@ -2,6 +2,7 @@ import logging.handlers
 import multiprocessing
 import queue
 import time
+from enum import IntEnum
 
 import numpy
 
@@ -14,8 +15,14 @@ IMAGE_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
 IMAGE_SIZE = IMAGE_HEIGHT * IMAGE_WIDTH * IMAGE_CHANNELS
 
 
+class Status(IntEnum):
+    NOT_LOADED = 0
+    LOADED = 1
+    CRASHED = 2
+
+
 def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame_image,
-                      frame_condition):
+                      frame_condition, model_run_status):
     process_logger = logging.getLogger("MediaPipe Tongue Process")
     process_logger.setLevel(logging.INFO)
     process_logger.handlers = [logging.handlers.QueueHandler(log_queue)]
@@ -36,22 +43,24 @@ def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame
                 cmd = cmd_queue.get_nowait()
                 if cmd[0] == "load_model":
                     try:
+                        model_run_status.value = Status.NOT_LOADED
                         model = None
                         model = MediaPipeTongueModel.load_model(cmd[1], cmd[2], cmd[3], cmd[4])
                         process_logger.info(
                             f"MediaPipe Tongue model has loaded with provider: {cmd[1]}, device id: {cmd[4]}, "
                             f"intra_op_num_threads: {cmd[2]}, allow_spinning: {cmd[3]}")
+                        model_run_status.value = Status.LOADED
                     except Exception:
-                        process_logger.error("Failed to load model", exc_info=True, stack_info=True)
+                        process_logger.error("Failed to load MediaPipe Tongue model",
+                                             exc_info=True, stack_info=True)
                 elif cmd[0] == "stop":
                     return
         except queue.Empty:
             pass
         except (ValueError, OSError):
-            process_logger.error("Failed to load model", exc_info=True, stack_info=True)
+            process_logger.error("Failed to load MediaPipe Tongue model", exc_info=True, stack_info=True)
 
         if model is None:
-            output_queue.put((None, None))
             time.sleep(0.5)
 
             continue
@@ -72,11 +81,14 @@ def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame
         try:
             tongue_out = model.run(image)
             output_queue.put((timestamp, tongue_out))
+
+            model_run_status.value = Status.LOADED
         except Exception:
             try:
-                process_logger.error("Run model", exc_info=True, stack_info=True)
+                model_run_status.value = Status.CRASHED
 
-                output_queue.put((None, None))
+                process_logger.error("Fail to run MediaPipe Tongue model", exc_info=True, stack_info=True)
+
                 time.sleep(0.05)
             except Exception:
                 break
