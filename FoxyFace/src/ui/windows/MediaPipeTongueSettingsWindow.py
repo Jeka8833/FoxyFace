@@ -1,7 +1,6 @@
 import logging
 
 from PySide6.QtCore import QTimer, Qt
-from sympy.strategies.core import switch
 
 from src.config.ConfigManager import ConfigManager
 from src.config.schemas.core.MediaPipeTongueConfig import MediaPipeTongueConfig
