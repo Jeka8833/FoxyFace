@@ -58,7 +58,7 @@ class SenderRouterPipeline:
     def __start_loop(self):
         while not self.__close_event.is_set():
             try:
-                data = self.__processing_pipeline.ui_stream_output.poll()
+                data = self.__processing_pipeline.stream_output.poll()
 
                 blendshapes = GeneralToBlendshapeRouterMapper.convert(data.blend_shapes)
 

@@ -16,15 +16,15 @@ class VRChatAvatarConfigManager:
         self.avatar_folder = avatar_folder
 
         self.__lock: Lock = Lock()
-        self.__config_dict: dict[ConnectionNode, ConfigManager[AvatarConfig]] = {}
+        self.__config_dict: dict[ConnectionNode, tuple[AvatarInfo, ConfigManager[AvatarConfig]]] = {}
         self.__listener_manager: ListenerManager = ListenerManager()
 
     def get_config_or_load(self, connection: ConnectionNode, avatar_info: AvatarInfo) -> ConfigManager[AvatarConfig]:
         with self.__lock:
             config = self.__config_dict.get(connection)
 
-            if config is not None:
-                return config
+            if config is not None and config[0] == avatar_info:
+                return config[1]
 
             config_manager = ConfigManager[AvatarConfig](path=self.avatar_folder / f"{avatar_info.avatar_id}.json",
                                                          config_cls=AvatarConfig,
@@ -32,7 +32,7 @@ class VRChatAvatarConfigManager:
 
             config_manager.load(wait=True)
 
-            self.__config_dict[connection] = config_manager
+            self.__config_dict[connection] = (avatar_info, config_manager)
 
             self.__listener_manager.notify(connection, config_manager, True)
 
@@ -40,14 +40,19 @@ class VRChatAvatarConfigManager:
 
     def get_config(self, connection: ConnectionNode) -> ConfigManager[AvatarConfig] | None:
         with self.__lock:
-            return self.__config_dict.get(connection)
+            avatar_and_config = self.__config_dict.get(connection)
+
+            if avatar_and_config is None:
+                return None
+
+            return avatar_and_config[1]
 
     def close_connection(self, connection: ConnectionNode):
         with self.__lock:
             config_manager = self.__config_dict.pop(connection, None)
 
             if config_manager is not None:
-                config_manager.close()
+                config_manager[1].close()
 
                 self.__listener_manager.notify(connection, config_manager, False)
 
