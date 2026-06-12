@@ -61,7 +61,7 @@ class VRChatSenderPipeline(SenderInterface):
         self.__main_config_listener: ConfigUpdateListener = self.__register_main_config_change_update()
         self.__avatar_config_manager.subscribe_change(self.__avatar_config_list_changed)
 
-    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
+    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]):
         with self.__vrchat_lock:
             if self.__vrchat is not None:
                 for node, node_value in value.blend_shapes.items():
@@ -71,8 +71,6 @@ class VRChatSenderPipeline(SenderInterface):
                     self.__vrchat.set_parameter(node, node_value)
 
                 self.__vrchat.flush()
-
-        return True
 
     def get_endpoints(self) -> frozenset[AvatarEndpoint]:
         vrchat = self.__vrchat

@@ -41,7 +41,7 @@ class IFacialMocapSenderPipeline(SenderInterface):
         self.__main_config_listener: ConfigUpdateListener = self.__register_change_update()
         self.__avatar_config_listener: ConfigUpdateListener = self.__register_avatar_change_update()
 
-    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
+    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]):
         ifacialmocap = self.__ifacialmocap
         if ifacialmocap is not None:
             for node, node_value in value.blend_shapes.items():
@@ -51,8 +51,6 @@ class IFacialMocapSenderPipeline(SenderInterface):
                 ifacialmocap.set_parameter(node, node_value)
 
             ifacialmocap.flush()
-
-        return True
 
     def get_endpoints(self) -> frozenset[AvatarEndpoint]:
         return self.__avatar_endpoint

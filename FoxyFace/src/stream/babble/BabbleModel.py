@@ -24,7 +24,8 @@ class BabbleModel:
         if self.is_input_rgb:
             frame = numpy.divide(image.transpose(2, 0, 1), 255, dtype=numpy.float32)[numpy.newaxis, ...]
         else:
-            frame = numpy.divide(image, 255, dtype=numpy.float32)[numpy.newaxis, numpy.newaxis, :, :]  # (1, 1, size, size)
+            frame = numpy.divide(image, 255, dtype=numpy.float32)[
+                numpy.newaxis, numpy.newaxis, :, :]  # (1, 1, size, size)
 
         out = self.__session.run(self.__output_names, {self.__input_name: frame})
 
@@ -46,9 +47,3 @@ class BabbleModel:
             _logger.warning("Failed to load babble model", exc_info=True, stack_info=True)
 
         return False
-
-    def get_provider_name(self) -> str | None:
-        try:
-            return self.__session.get_providers()[0]
-        except Exception:
-            return None

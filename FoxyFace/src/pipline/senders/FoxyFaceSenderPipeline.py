@@ -40,7 +40,7 @@ class FoxyFaceSenderPipeline(SenderInterface):
         self.__main_config_listener: ConfigUpdateListener = self.__register_change_update()
         self.__avatar_config_listener: ConfigUpdateListener = self.__register_avatar_change_update()
 
-    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]) -> bool:
+    def put(self, value: BlendShapesFrame[BaseParameter | ARKitParameter]):
         foxyface = self.__foxyface
         if foxyface is not None:
             for node, node_value in value.blend_shapes.items():
@@ -50,8 +50,6 @@ class FoxyFaceSenderPipeline(SenderInterface):
                 foxyface.set_parameter(node, node_value)
 
             foxyface.flush()
-
-        return True
 
     def get_endpoints(self) -> frozenset[AvatarEndpoint]:
         return self.__avatar_endpoint

@@ -1,8 +1,8 @@
+import logging
 import multiprocessing
-import sys
+
 
 def show_splash():
-    import logging
     import sys
     from src.LoggerManager import LoggerManager
     from PySide6.QtWidgets import QApplication, QSplashScreen
@@ -24,9 +24,9 @@ def show_splash():
 
     return app, splash
 
+
 def initialize_and_run(app, splash):
     from pathlib import Path
-    import logging
     from AppConstants import AppConstants
     from src.UpdateChecker import UpdateChecker
     from src.autorun.SteamAutoRun import SteamAutoRun
@@ -74,8 +74,10 @@ def initialize_and_run(app, splash):
             self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(Path("configs/vrchat"))
 
             self.__camera_pipeline: CameraPipeline = CameraPipeline(self.__config_manager)
-            self.__media_pipe_pipeline: MediaPipePipeline = MediaPipePipeline(self.__config_manager, self.__camera_pipeline)
-            self.__media_pipe_tongue_pipeline = MediaPipeTonguePipeline(self.__config_manager, self.__media_pipe_pipeline)
+            self.__media_pipe_pipeline: MediaPipePipeline = MediaPipePipeline(self.__config_manager,
+                                                                              self.__camera_pipeline)
+            self.__media_pipe_tongue_pipeline = MediaPipeTonguePipeline(self.__config_manager,
+                                                                        self.__media_pipe_pipeline)
             self.__babble_pipeline: BabblePipeline = BabblePipeline(self.__config_manager, self.__media_pipe_pipeline)
             self.__processing_pipeline: ProcessingPipeline = ProcessingPipeline(self.__config_manager,
                                                                                 self.__media_pipe_pipeline,
@@ -90,7 +92,7 @@ def initialize_and_run(app, splash):
             self.__auto_calibration_endpoint: AutoCalibrationEndpoint = AutoCalibrationEndpoint(self.__config_manager,
                                                                                                 self.__media_pipe_pipeline,
                                                                                                 self.__processing_pipeline)
-            
+
             self.__steam_auto_run = SteamAutoRun(self.__config_manager)
 
             self.__main_window: MainWindow = MainWindow(config_manager=self.__config_manager,
@@ -133,6 +135,7 @@ def initialize_and_run(app, splash):
 
     with RunMainStream(splash):
         sys.exit(app.exec())
+
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()

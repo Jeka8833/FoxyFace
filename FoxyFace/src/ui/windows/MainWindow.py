@@ -27,8 +27,8 @@ from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
-from src.ui.windows.SenderSettingsWindow import SenderSettingsWindow
 from src.ui.windows.MediaPipeTongueSettingsWindow import MediaPipeTongueSettingsWindow
+from src.ui.windows.SenderSettingsWindow import SenderSettingsWindow
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +45,8 @@ class MainWindow(FoxyWindow):
 
     def __init__(self, config_manager: ConfigManager, camera_pipeline: CameraPipeline,
                  mediapipe_pipeline: MediaPipePipeline, mediapipe_tongue_pipeline: MediaPipeTonguePipeline,
-                 babble_pipeline: BabblePipeline, processing_pipeline: ProcessingPipeline, auto_calibration_endpoint: AutoCalibrationEndpoint,
+                 babble_pipeline: BabblePipeline, processing_pipeline: ProcessingPipeline,
+                 auto_calibration_endpoint: AutoCalibrationEndpoint,
                  steam_auto_run: SteamAutoRun, sender_manager: SenderRouterPipeline):
         super().__init__()
 

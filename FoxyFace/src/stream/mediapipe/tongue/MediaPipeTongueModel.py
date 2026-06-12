@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -7,12 +6,8 @@ from cv2.typing import MatLike
 from onnxruntime import InferenceSession, SessionOptions, GraphOptimizationLevel
 
 from AppConstants import AppConstants
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import IMAGE_WIDTH, IMAGE_HEIGHT
 from src.util import OnnxUtil
-
-_logger = logging.getLogger(__name__)
-
-MPT_IMAGE_INPUT_SIZE_X: int = 256
-MPT_IMAGE_INPUT_SIZE_Y: int = 256
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,7 +26,7 @@ class MediaPipeTongueModel:
         return float(out[0][0][0])
 
     def __run_test_image(self):
-        frame = numpy.zeros((MPT_IMAGE_INPUT_SIZE_Y, MPT_IMAGE_INPUT_SIZE_X, 3), dtype=numpy.uint8)
+        frame = numpy.zeros((IMAGE_WIDTH, IMAGE_HEIGHT, 3), dtype=numpy.uint8)
 
         self.run(frame)
 
@@ -58,9 +53,6 @@ class MediaPipeTongueModel:
         model = MediaPipeTongueModel(session, input_name, output_names, input_size_x, input_size_y)
 
         model.__run_test_image()
-
-        _logger.info(f"Media Pipe Tongue model has loaded with provider: {provider}, device id: {device_id}, "
-                     f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
         return model
 

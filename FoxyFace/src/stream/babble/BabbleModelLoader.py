@@ -26,7 +26,6 @@ class BabbleModelLoader:
                           allow_spinning: bool, device_id: int):
         self.model = None
 
-
         opts = SessionOptions()
         opts.inter_op_num_threads = 1
         opts.intra_op_num_threads = intra_op_num_threads
@@ -49,7 +48,8 @@ class BabbleModelLoader:
 
         is_default_model = BabbleModelLoader.get_base_model_path().samefile(path)
 
-        model = BabbleModel(session, input_name, output_names, is_default_model, input_color == 3, input_size_x, input_size_y)
+        model = BabbleModel(session, input_name, output_names, is_default_model, input_color == 3, input_size_x,
+                            input_size_y)
         if model.is_loaded_successfully():
             self.model = model
 
