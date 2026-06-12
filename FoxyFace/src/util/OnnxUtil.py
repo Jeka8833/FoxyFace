@@ -11,6 +11,10 @@ except ImportError:
 
 import onnxruntime
 
+if hasattr(onnxruntime, "preload_dlls"):
+    onnxruntime.preload_dlls()
+
+
 onnxruntime.disable_telemetry_events()
 
 _DEVICE_ID_KEY = "device_id"
