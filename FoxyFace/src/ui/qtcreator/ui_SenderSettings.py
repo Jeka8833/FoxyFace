@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'SenderSettings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -725,7 +725,7 @@ class Ui_SenderSettings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_4 = QWidget()
         self.scrollAreaWidgetContents_4.setObjectName(u"scrollAreaWidgetContents_4")
-        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, 0, 352, 506))
+        self.scrollAreaWidgetContents_4.setGeometry(QRect(0, -84, 352, 506))
         self.verticalLayout_7 = QVBoxLayout(self.scrollAreaWidgetContents_4)
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.meowface_enable_cb = QCheckBox(self.scrollAreaWidgetContents_4)
@@ -1027,6 +1027,306 @@ class Ui_SenderSettings(object):
         self.verticalLayout_5.addWidget(self.scrollArea_3)
 
         self.tabWidget.addTab(self.tab_2, "")
+        self.tab_5 = QWidget()
+        self.tab_5.setObjectName(u"tab_5")
+        self.verticalLayout_17 = QVBoxLayout(self.tab_5)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.scrollArea_5 = QScrollArea(self.tab_5)
+        self.scrollArea_5.setObjectName(u"scrollArea_5")
+        self.scrollArea_5.setWidgetResizable(True)
+        self.scrollAreaWidgetContents_6 = QWidget()
+        self.scrollAreaWidgetContents_6.setObjectName(u"scrollAreaWidgetContents_6")
+        self.scrollAreaWidgetContents_6.setGeometry(QRect(0, 0, 352, 479))
+        self.verticalLayout_18 = QVBoxLayout(self.scrollAreaWidgetContents_6)
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.babble_enable_cb = QCheckBox(self.scrollAreaWidgetContents_6)
+        self.babble_enable_cb.setObjectName(u"babble_enable_cb")
+        self.babble_enable_cb.setChecked(True)
+
+        self.verticalLayout_18.addWidget(self.babble_enable_cb)
+
+        self.widget_11 = QWidget(self.scrollAreaWidgetContents_6)
+        self.widget_11.setObjectName(u"widget_11")
+        self.verticalLayout_19 = QVBoxLayout(self.widget_11)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.verticalLayout_19.setContentsMargins(0, 0, 0, 0)
+        self.babble_connection_lb = QLabel(self.widget_11)
+        self.babble_connection_lb.setObjectName(u"babble_connection_lb")
+        self.babble_connection_lb.setFont(font)
+        self.babble_connection_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_19.addWidget(self.babble_connection_lb)
+
+        self.babble_connection_line = QFrame(self.widget_11)
+        self.babble_connection_line.setObjectName(u"babble_connection_line")
+        self.babble_connection_line.setFrameShape(QFrame.Shape.HLine)
+        self.babble_connection_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_19.addWidget(self.babble_connection_line)
+
+        self.babble_ip_widget = QWidget(self.widget_11)
+        self.babble_ip_widget.setObjectName(u"babble_ip_widget")
+        self.horizontalLayout_31 = QHBoxLayout(self.babble_ip_widget)
+        self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
+        self.horizontalLayout_31.setContentsMargins(0, 0, 0, 0)
+        self.babble_ip_lb = QLabel(self.babble_ip_widget)
+        self.babble_ip_lb.setObjectName(u"babble_ip_lb")
+
+        self.horizontalLayout_31.addWidget(self.babble_ip_lb)
+
+        self.babble_ip_le = QLineEdit(self.babble_ip_widget)
+        self.babble_ip_le.setObjectName(u"babble_ip_le")
+        self.babble_ip_le.setMaxLength(256)
+
+        self.horizontalLayout_31.addWidget(self.babble_ip_le)
+
+
+        self.verticalLayout_19.addWidget(self.babble_ip_widget)
+
+        self.babble_port_widget = QWidget(self.widget_11)
+        self.babble_port_widget.setObjectName(u"babble_port_widget")
+        self.horizontalLayout_32 = QHBoxLayout(self.babble_port_widget)
+        self.horizontalLayout_32.setObjectName(u"horizontalLayout_32")
+        self.horizontalLayout_32.setContentsMargins(0, 0, 0, 0)
+        self.babble_port_lb = QLabel(self.babble_port_widget)
+        self.babble_port_lb.setObjectName(u"babble_port_lb")
+
+        self.horizontalLayout_32.addWidget(self.babble_port_lb)
+
+        self.babble_port_sb = QSpinBox(self.babble_port_widget)
+        self.babble_port_sb.setObjectName(u"babble_port_sb")
+        self.babble_port_sb.setMaximum(65535)
+        self.babble_port_sb.setValue(9000)
+
+        self.horizontalLayout_32.addWidget(self.babble_port_sb)
+
+
+        self.verticalLayout_19.addWidget(self.babble_port_widget)
+
+        self.babble_solver_lb = QLabel(self.widget_11)
+        self.babble_solver_lb.setObjectName(u"babble_solver_lb")
+        self.babble_solver_lb.setFont(font)
+        self.babble_solver_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_19.addWidget(self.babble_solver_lb)
+
+        self.babble_solver_line = QFrame(self.widget_11)
+        self.babble_solver_line.setObjectName(u"babble_solver_line")
+        self.babble_solver_line.setFrameShape(QFrame.Shape.HLine)
+        self.babble_solver_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_19.addWidget(self.babble_solver_line)
+
+        self.babble_enable_solver_cb = QCheckBox(self.widget_11)
+        self.babble_enable_solver_cb.setObjectName(u"babble_enable_solver_cb")
+        self.babble_enable_solver_cb.setChecked(True)
+
+        self.verticalLayout_19.addWidget(self.babble_enable_solver_cb)
+
+        self.widget_12 = QWidget(self.widget_11)
+        self.widget_12.setObjectName(u"widget_12")
+        self.verticalLayout_20 = QVBoxLayout(self.widget_12)
+        self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_20.setContentsMargins(0, 0, 0, 0)
+        self.babble_solver_model_widget = QWidget(self.widget_12)
+        self.babble_solver_model_widget.setObjectName(u"babble_solver_model_widget")
+        self.horizontalLayout_33 = QHBoxLayout(self.babble_solver_model_widget)
+        self.horizontalLayout_33.setObjectName(u"horizontalLayout_33")
+        self.horizontalLayout_33.setContentsMargins(0, 0, 0, 0)
+        self.babble_solver_model_lb = QLabel(self.babble_solver_model_widget)
+        self.babble_solver_model_lb.setObjectName(u"babble_solver_model_lb")
+
+        self.horizontalLayout_33.addWidget(self.babble_solver_model_lb)
+
+        self.babble_solver_model_le = QLineEdit(self.babble_solver_model_widget)
+        self.babble_solver_model_le.setObjectName(u"babble_solver_model_le")
+
+        self.horizontalLayout_33.addWidget(self.babble_solver_model_le)
+
+        self.babble_solver_model_btn = QToolButton(self.babble_solver_model_widget)
+        self.babble_solver_model_btn.setObjectName(u"babble_solver_model_btn")
+
+        self.horizontalLayout_33.addWidget(self.babble_solver_model_btn)
+
+
+        self.verticalLayout_20.addWidget(self.babble_solver_model_widget)
+
+        self.babble_solver_precision_widget = QWidget(self.widget_12)
+        self.babble_solver_precision_widget.setObjectName(u"babble_solver_precision_widget")
+        self.horizontalLayout_34 = QHBoxLayout(self.babble_solver_precision_widget)
+        self.horizontalLayout_34.setObjectName(u"horizontalLayout_34")
+        self.horizontalLayout_34.setContentsMargins(0, 0, 0, 0)
+        self.babble_solver_precision_lb = QLabel(self.babble_solver_precision_widget)
+        self.babble_solver_precision_lb.setObjectName(u"babble_solver_precision_lb")
+        self.babble_solver_precision_lb.setText(u"Solver Precision (80%): ")
+
+        self.horizontalLayout_34.addWidget(self.babble_solver_precision_lb)
+
+        self.babble_solver_precision_slider = QSlider(self.babble_solver_precision_widget)
+        self.babble_solver_precision_slider.setObjectName(u"babble_solver_precision_slider")
+        self.babble_solver_precision_slider.setMinimum(1)
+        self.babble_solver_precision_slider.setMaximum(100)
+        self.babble_solver_precision_slider.setValue(80)
+        self.babble_solver_precision_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.horizontalLayout_34.addWidget(self.babble_solver_precision_slider)
+
+
+        self.verticalLayout_20.addWidget(self.babble_solver_precision_widget)
+
+        self.babble_solver_threads_widget = QWidget(self.widget_12)
+        self.babble_solver_threads_widget.setObjectName(u"babble_solver_threads_widget")
+        self.horizontalLayout_35 = QHBoxLayout(self.babble_solver_threads_widget)
+        self.horizontalLayout_35.setObjectName(u"horizontalLayout_35")
+        self.horizontalLayout_35.setContentsMargins(0, 0, 0, 0)
+        self.babble_solver_threads_lb = QLabel(self.babble_solver_threads_widget)
+        self.babble_solver_threads_lb.setObjectName(u"babble_solver_threads_lb")
+
+        self.horizontalLayout_35.addWidget(self.babble_solver_threads_lb)
+
+        self.babble_solver_threads_sb = QSpinBox(self.babble_solver_threads_widget)
+        self.babble_solver_threads_sb.setObjectName(u"babble_solver_threads_sb")
+        self.babble_solver_threads_sb.setMinimum(1)
+        self.babble_solver_threads_sb.setMaximum(32)
+        self.babble_solver_threads_sb.setValue(2)
+
+        self.horizontalLayout_35.addWidget(self.babble_solver_threads_sb)
+
+
+        self.verticalLayout_20.addWidget(self.babble_solver_threads_widget)
+
+        self.babble_solver_max_cps_widget = QWidget(self.widget_12)
+        self.babble_solver_max_cps_widget.setObjectName(u"babble_solver_max_cps_widget")
+        self.horizontalLayout_36 = QHBoxLayout(self.babble_solver_max_cps_widget)
+        self.horizontalLayout_36.setObjectName(u"horizontalLayout_36")
+        self.horizontalLayout_36.setContentsMargins(0, 0, 0, 0)
+        self.babble_solver_max_cps_lb = QLabel(self.babble_solver_max_cps_widget)
+        self.babble_solver_max_cps_lb.setObjectName(u"babble_solver_max_cps_lb")
+
+        self.horizontalLayout_36.addWidget(self.babble_solver_max_cps_lb)
+
+        self.babble_solver_max_cps_sb = QDoubleSpinBox(self.babble_solver_max_cps_widget)
+        self.babble_solver_max_cps_sb.setObjectName(u"babble_solver_max_cps_sb")
+        self.babble_solver_max_cps_sb.setMinimum(1.000000000000000)
+        self.babble_solver_max_cps_sb.setMaximum(120.000000000000000)
+        self.babble_solver_max_cps_sb.setValue(30.000000000000000)
+
+        self.horizontalLayout_36.addWidget(self.babble_solver_max_cps_sb)
+
+
+        self.verticalLayout_20.addWidget(self.babble_solver_max_cps_widget)
+
+
+        self.verticalLayout_19.addWidget(self.widget_12)
+
+        self.babble_cache_lb = QLabel(self.widget_11)
+        self.babble_cache_lb.setObjectName(u"babble_cache_lb")
+        self.babble_cache_lb.setFont(font)
+        self.babble_cache_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_19.addWidget(self.babble_cache_lb)
+
+        self.babble_cache_line = QFrame(self.widget_11)
+        self.babble_cache_line.setObjectName(u"babble_cache_line")
+        self.babble_cache_line.setFrameShape(QFrame.Shape.HLine)
+        self.babble_cache_line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_19.addWidget(self.babble_cache_line)
+
+        self.babble_cache_invalidate_widget = QWidget(self.widget_11)
+        self.babble_cache_invalidate_widget.setObjectName(u"babble_cache_invalidate_widget")
+        self.horizontalLayout_37 = QHBoxLayout(self.babble_cache_invalidate_widget)
+        self.horizontalLayout_37.setObjectName(u"horizontalLayout_37")
+        self.horizontalLayout_37.setContentsMargins(0, 0, 0, 0)
+        self.babble_cache_invalidate_lb = QLabel(self.babble_cache_invalidate_widget)
+        self.babble_cache_invalidate_lb.setObjectName(u"babble_cache_invalidate_lb")
+
+        self.horizontalLayout_37.addWidget(self.babble_cache_invalidate_lb)
+
+        self.babble_cache_invalidate_sb = QDoubleSpinBox(self.babble_cache_invalidate_widget)
+        self.babble_cache_invalidate_sb.setObjectName(u"babble_cache_invalidate_sb")
+        self.babble_cache_invalidate_sb.setMaximum(60.000000000000000)
+        self.babble_cache_invalidate_sb.setValue(5.000000000000000)
+
+        self.horizontalLayout_37.addWidget(self.babble_cache_invalidate_sb)
+
+
+        self.verticalLayout_19.addWidget(self.babble_cache_invalidate_widget)
+
+        self.babble_cache_sync_widget = QWidget(self.widget_11)
+        self.babble_cache_sync_widget.setObjectName(u"babble_cache_sync_widget")
+        self.horizontalLayout_38 = QHBoxLayout(self.babble_cache_sync_widget)
+        self.horizontalLayout_38.setObjectName(u"horizontalLayout_38")
+        self.horizontalLayout_38.setContentsMargins(0, 0, 0, 0)
+        self.babble_cache_sync_lb = QLabel(self.babble_cache_sync_widget)
+        self.babble_cache_sync_lb.setObjectName(u"babble_cache_sync_lb")
+
+        self.horizontalLayout_38.addWidget(self.babble_cache_sync_lb)
+
+        self.babble_cache_sync_sb = QDoubleSpinBox(self.babble_cache_sync_widget)
+        self.babble_cache_sync_sb.setObjectName(u"babble_cache_sync_sb")
+        self.babble_cache_sync_sb.setMaximum(60.000000000000000)
+        self.babble_cache_sync_sb.setValue(5.000000000000000)
+
+        self.horizontalLayout_38.addWidget(self.babble_cache_sync_sb)
+
+
+        self.verticalLayout_19.addWidget(self.babble_cache_sync_widget)
+
+        self.babble_cache_float_precision_widget = QWidget(self.widget_11)
+        self.babble_cache_float_precision_widget.setObjectName(u"babble_cache_float_precision_widget")
+        self.horizontalLayout_39 = QHBoxLayout(self.babble_cache_float_precision_widget)
+        self.horizontalLayout_39.setObjectName(u"horizontalLayout_39")
+        self.horizontalLayout_39.setContentsMargins(0, 0, 0, 0)
+        self.babble_cache_float_precision_lb = QLabel(self.babble_cache_float_precision_widget)
+        self.babble_cache_float_precision_lb.setObjectName(u"babble_cache_float_precision_lb")
+
+        self.horizontalLayout_39.addWidget(self.babble_cache_float_precision_lb)
+
+        self.babble_cache_float_precision_sb = QDoubleSpinBox(self.babble_cache_float_precision_widget)
+        self.babble_cache_float_precision_sb.setObjectName(u"babble_cache_float_precision_sb")
+        self.babble_cache_float_precision_sb.setDecimals(6)
+        self.babble_cache_float_precision_sb.setMaximum(0.500000000000000)
+        self.babble_cache_float_precision_sb.setValue(0.003906000000000)
+
+        self.horizontalLayout_39.addWidget(self.babble_cache_float_precision_sb)
+
+
+        self.verticalLayout_19.addWidget(self.babble_cache_float_precision_widget)
+
+        self.babble_cache_bundle_widget = QWidget(self.widget_11)
+        self.babble_cache_bundle_widget.setObjectName(u"babble_cache_bundle_widget")
+        self.horizontalLayout_40 = QHBoxLayout(self.babble_cache_bundle_widget)
+        self.horizontalLayout_40.setObjectName(u"horizontalLayout_40")
+        self.horizontalLayout_40.setContentsMargins(0, 0, 0, 0)
+        self.babble_cache_bundle_lb = QLabel(self.babble_cache_bundle_widget)
+        self.babble_cache_bundle_lb.setObjectName(u"babble_cache_bundle_lb")
+
+        self.horizontalLayout_40.addWidget(self.babble_cache_bundle_lb)
+
+        self.babble_cache_bundle_sb = QSpinBox(self.babble_cache_bundle_widget)
+        self.babble_cache_bundle_sb.setObjectName(u"babble_cache_bundle_sb")
+        self.babble_cache_bundle_sb.setMinimum(100)
+        self.babble_cache_bundle_sb.setMaximum(65506)
+        self.babble_cache_bundle_sb.setValue(4096)
+
+        self.horizontalLayout_40.addWidget(self.babble_cache_bundle_sb)
+
+
+        self.verticalLayout_19.addWidget(self.babble_cache_bundle_widget)
+
+
+        self.verticalLayout_18.addWidget(self.widget_11)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_18.addItem(self.verticalSpacer_5)
+
+        self.scrollArea_5.setWidget(self.scrollAreaWidgetContents_6)
+
+        self.verticalLayout_17.addWidget(self.scrollArea_5)
+
+        self.tabWidget.addTab(self.tab_5, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
         self.verticalLayout_6 = QVBoxLayout(self.tab_3)
@@ -1400,6 +1700,8 @@ class Ui_SenderSettings(object):
         self.meowface_ip_auto_find_cb.toggled.connect(self.meowface_port_sb.setDisabled)
         self.meowface_enable_cb.toggled.connect(self.widget_6.setVisible)
         self.meowface_enable_solver_cb.toggled.connect(self.widget_7.setEnabled)
+        self.babble_enable_cb.toggled.connect(self.widget_11.setVisible)
+        self.babble_enable_solver_cb.toggled.connect(self.widget_12.setVisible)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -1482,6 +1784,27 @@ class Ui_SenderSettings(object):
         self.meowface_cache_ping_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
         self.meowface_cache_float_percision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("SenderSettings", u"MeowFace", None))
+        self.babble_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable Babble Router", None))
+        self.babble_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
+        self.babble_ip_lb.setText(QCoreApplication.translate("SenderSettings", u"IP:", None))
+        self.babble_ip_le.setText(QCoreApplication.translate("SenderSettings", u"127.0.0.1", None))
+        self.babble_port_lb.setText(QCoreApplication.translate("SenderSettings", u"Port:", None))
+        self.babble_solver_lb.setText(QCoreApplication.translate("SenderSettings", u"Solver", None))
+        self.babble_enable_solver_cb.setText(QCoreApplication.translate("SenderSettings", u"Solver Enabled", None))
+        self.babble_solver_model_lb.setText(QCoreApplication.translate("SenderSettings", u"Model Path:", None))
+        self.babble_solver_model_le.setPlaceholderText(QCoreApplication.translate("SenderSettings", u"Default Model", None))
+        self.babble_solver_model_btn.setText(QCoreApplication.translate("SenderSettings", u"...", None))
+        self.babble_solver_threads_lb.setText(QCoreApplication.translate("SenderSettings", u"Thread Count:", None))
+        self.babble_solver_max_cps_lb.setText(QCoreApplication.translate("SenderSettings", u"Max Solver CPS:", None))
+        self.babble_cache_lb.setText(QCoreApplication.translate("SenderSettings", u"OSC Cache", None))
+        self.babble_cache_invalidate_lb.setText(QCoreApplication.translate("SenderSettings", u"Invalidate after:", None))
+        self.babble_cache_invalidate_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
+        self.babble_cache_sync_lb.setText(QCoreApplication.translate("SenderSettings", u"Full Sync Period:", None))
+        self.babble_cache_sync_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" seconds", None))
+        self.babble_cache_float_precision_lb.setText(QCoreApplication.translate("SenderSettings", u"Float precision:", None))
+        self.babble_cache_bundle_lb.setText(QCoreApplication.translate("SenderSettings", u"OSC Bundle Size:", None))
+        self.babble_cache_bundle_sb.setSuffix(QCoreApplication.translate("SenderSettings", u" bytes", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QCoreApplication.translate("SenderSettings", u"Babble", None))
         self.foxyface_enable_cb.setText(QCoreApplication.translate("SenderSettings", u"Enable FoxyFace Router", None))
         self.foxyface_connection_lb.setText(QCoreApplication.translate("SenderSettings", u"Connection", None))
         self.foxyface_ip_auto_find_cb.setText(QCoreApplication.translate("SenderSettings", u"Auto Search IP/Port", None))

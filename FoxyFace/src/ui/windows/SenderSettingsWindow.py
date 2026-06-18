@@ -3,6 +3,7 @@ import logging
 from PySide6.QtWidgets import QFileDialog
 
 from src.config.ConfigManager import ConfigManager
+from src.config.schemas.main.core.sender.BabbleSenderConfig import BabbleSenderConfig
 from src.config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
 from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
 from src.config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
@@ -45,6 +46,9 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.foxyface_solver_model_btn.clicked.connect(
             lambda: self.__open_file_dialog(self.__ui.foxyface_solver_model_le, 'Open Solver Model',
                                             'JSON Files (*.json)'))
+        self.__ui.babble_solver_model_btn.clicked.connect(
+            lambda: self.__open_file_dialog(self.__ui.babble_solver_model_le, 'Open Solver Model',
+                                            'JSON Files (*.json)'))
 
     def __open_file_dialog(self, line_edit, caption, file_filter):
         filename, _ = QFileDialog.getOpenFileName(parent=self, caption=caption, dir='.', filter=file_filter)
@@ -60,6 +64,8 @@ class SenderSettingsWindow(FoxyWindow):
             lambda v: self.__ui.meowface_solver_percision_lb.setText(f"Solver Precision ({v}%): "))
         self.__ui.foxyface_solver_sercision_slider.valueChanged.connect(
             lambda v: self.__ui.foxyface_solver_sercision_lb.setText(f"Solver Precision ({v}%): "))
+        self.__ui.babble_solver_precision_slider.valueChanged.connect(
+            lambda v: self.__ui.babble_solver_precision_lb.setText(f"Solver Precision ({v}%): "))
 
     def __disable_scroll_events(self):
         widgets = [
@@ -101,6 +107,15 @@ class SenderSettingsWindow(FoxyWindow):
             self.__ui.foxyface_cache_sync_sb,
             self.__ui.foxyface_cache_ping_sb,
             self.__ui.foxyface_cache_float_percision_sb,
+
+            self.__ui.babble_port_sb,
+            self.__ui.babble_solver_precision_slider,
+            self.__ui.babble_solver_threads_sb,
+            self.__ui.babble_solver_max_cps_sb,
+            self.__ui.babble_cache_invalidate_sb,
+            self.__ui.babble_cache_sync_sb,
+            self.__ui.babble_cache_float_precision_sb,
+            self.__ui.babble_cache_bundle_sb,
         ]
 
         for widget in widgets:
@@ -183,6 +198,22 @@ class SenderSettingsWindow(FoxyWindow):
         self.__ui.foxyface_cache_ping_sb.setValue(foxyface_config.udp_ping_interval)
         self.__ui.foxyface_cache_float_percision_sb.setValue(foxyface_config.cache_float_precision)
 
+        babble_config: BabbleSenderConfig = self.__config_manager.config.sender.babble
+
+        self.__ui.babble_enable_cb.setChecked(babble_config.enabled)
+        self.__ui.babble_ip_le.setText(babble_config.ip)
+        self.__ui.babble_port_sb.setValue(babble_config.port)
+        self.__ui.babble_enable_solver_cb.setChecked(babble_config.solver_enabled)
+        self.__ui.babble_solver_model_le.setText(babble_config.solver_model_path)
+        self.__ui.babble_solver_precision_slider.setValue(
+            int(babble_config.solver_interleaved_vertices_percentage * 100))
+        self.__ui.babble_solver_threads_sb.setValue(babble_config.solver_threads)
+        self.__ui.babble_solver_max_cps_sb.setValue(babble_config.solver_max_cps)
+        self.__ui.babble_cache_invalidate_sb.setValue(babble_config.osc_cache_invalidate_timeout)
+        self.__ui.babble_cache_sync_sb.setValue(babble_config.osc_cache_full_sync_period)
+        self.__ui.babble_cache_float_precision_sb.setValue(babble_config.osc_cache_float_precision)
+        self.__ui.babble_cache_bundle_sb.setValue(babble_config.osc_bundle_size)
+
     def __save(self):
         try:
             vrchat_config: VRChatSenderConfig = self.__config_manager.config.sender.vrchat
@@ -251,6 +282,21 @@ class SenderSettingsWindow(FoxyWindow):
             foxyface_config.cache_full_sync_period = self.__ui.foxyface_cache_sync_sb.value()
             foxyface_config.udp_ping_interval = self.__ui.foxyface_cache_ping_sb.value()
             foxyface_config.cache_float_precision = self.__ui.foxyface_cache_float_percision_sb.value()
+
+            babble_config: BabbleSenderConfig = self.__config_manager.config.sender.babble
+
+            babble_config.enabled = self.__ui.babble_enable_cb.isChecked()
+            babble_config.ip = self.__ui.babble_ip_le.text()
+            babble_config.port = self.__ui.babble_port_sb.value()
+            babble_config.solver_enabled = self.__ui.babble_enable_solver_cb.isChecked()
+            babble_config.solver_model_path = self.__ui.babble_solver_model_le.text()
+            babble_config.solver_interleaved_vertices_percentage = self.__ui.babble_solver_precision_slider.value() / 100.0
+            babble_config.solver_threads = self.__ui.babble_solver_threads_sb.value()
+            babble_config.solver_max_cps = self.__ui.babble_solver_max_cps_sb.value()
+            babble_config.osc_cache_invalidate_timeout = self.__ui.babble_cache_invalidate_sb.value()
+            babble_config.osc_cache_full_sync_period = self.__ui.babble_cache_sync_sb.value()
+            babble_config.osc_cache_float_precision = self.__ui.babble_cache_float_precision_sb.value()
+            babble_config.osc_bundle_size = self.__ui.babble_cache_bundle_sb.value()
 
             self.__config_manager.write()
         except Exception:
