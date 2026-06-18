@@ -7,12 +7,7 @@ from enum import IntEnum
 import numpy
 
 from src.stream.mediapipe.tongue.MediaPipeTongueModel import MediaPipeTongueModel
-
-IMAGE_WIDTH = 256
-IMAGE_HEIGHT = 256
-IMAGE_CHANNELS = 3
-IMAGE_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
-IMAGE_SIZE = IMAGE_HEIGHT * IMAGE_WIDTH * IMAGE_CHANNELS
+from src.stream.mediapipe.tongue.MediaPipeTongueConstants import MediaPipeTongueConstants
 
 
 class Status(IntEnum):
@@ -73,7 +68,7 @@ def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame
 
                 continue
 
-            image = numpy.frombuffer(frame_image, dtype=numpy.uint8).reshape(IMAGE_SHAPE).copy()
+            image = numpy.frombuffer(frame_image, dtype=numpy.uint8).reshape(MediaPipeTongueConstants.IMAGE_SHAPE).copy()
             timestamp = frame_timestamp.value
         finally:
             frame_condition.release()

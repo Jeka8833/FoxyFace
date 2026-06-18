@@ -4,7 +4,7 @@ from cv2.typing import MatLike
 
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.tongue.MediaPipeTongueModel import MPT_IMAGE_INPUT_SIZE_X, MPT_IMAGE_INPUT_SIZE_Y
+from src.stream.mediapipe.tongue.MediaPipeTongueConstants import MediaPipeTongueConstants
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueProcessingOptions import \
     MediaPipeTongueProcessingOptions
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
@@ -22,7 +22,7 @@ class MediaPipeTongueImageProcessing(StreamReadOnly[ImageFrame]):
             self.crop_and_align_face(
                 mediapipe_frame.camera_frame.image,
                 mediapipe_frame.face_landmarker_result.face_landmarks[0],
-                target_size=(MPT_IMAGE_INPUT_SIZE_X, MPT_IMAGE_INPUT_SIZE_Y),
+                target_size=(MediaPipeTongueConstants.IMAGE_WIDTH, MediaPipeTongueConstants.IMAGE_HEIGHT),
                 paddings=(self.__options.padding_x, self.__options.padding_top, self.__options.padding_bottom),
             ),
             mediapipe_frame.camera_frame.timestamp_ns

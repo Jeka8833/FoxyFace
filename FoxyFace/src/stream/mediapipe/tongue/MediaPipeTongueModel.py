@@ -6,7 +6,7 @@ from cv2.typing import MatLike
 from onnxruntime import InferenceSession, SessionOptions, GraphOptimizationLevel
 
 from AppConstants import AppConstants
-from src.stream.mediapipe.tongue.MediaPipeTongueProcess import IMAGE_WIDTH, IMAGE_HEIGHT
+from src.stream.mediapipe.tongue.MediaPipeTongueConstants import MediaPipeTongueConstants
 from src.util import OnnxUtil
 
 
@@ -26,7 +26,7 @@ class MediaPipeTongueModel:
         return float(out[0][0][0])
 
     def __run_test_image(self):
-        frame = numpy.zeros((IMAGE_WIDTH, IMAGE_HEIGHT, 3), dtype=numpy.uint8)
+        frame = numpy.zeros((MediaPipeTongueConstants.IMAGE_WIDTH, MediaPipeTongueConstants.IMAGE_HEIGHT, 3), dtype=numpy.uint8)
 
         self.run(frame)
 

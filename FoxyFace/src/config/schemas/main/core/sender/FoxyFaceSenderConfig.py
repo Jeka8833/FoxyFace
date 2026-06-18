@@ -9,8 +9,8 @@ class FoxyFaceSenderConfig:
 
     auto_connect_enabled: bool = FoxyFaceDefaultValue.UDP_AUTO_CONNECT_ENABLED
     host_read_timeout: int = FoxyFaceDefaultValue.HOST_READ_TIMEOUT
-    ip: str = "127.0.0.1"
-    port: int = 12345
+    ip: str = FoxyFaceDefaultValue.UDP_IP
+    port: int = FoxyFaceDefaultValue.UDP_PORT
 
     solver_enabled: bool = True
     solver_model_path: str = ""

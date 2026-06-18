@@ -5,6 +5,7 @@ from src.config.ConfigManager import ConfigManager
 from src.config.schemas.avatar.AvatarConfig import AvatarConfig
 from src.config.schemas.main.Config import Config
 from src.pipline.ProcessingPipeline import ProcessingPipeline
+from src.pipline.senders.BabbleSenderPipeline import BabbleSenderPipeline
 from src.pipline.senders.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
 from src.pipline.senders.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
 from src.pipline.senders.MeowFaceSenderPipeline import MeowFaceSenderPipeline
@@ -23,7 +24,8 @@ class SenderRouterPipeline:
                  vrchat_config_manager: VRChatAvatarConfigManager,
                  ifacialmocap_config_manager: ConfigManager[AvatarConfig],
                  foxyface_config_manager: ConfigManager[AvatarConfig],
-                 meowface_config_manager: ConfigManager[AvatarConfig]):
+                 meowface_config_manager: ConfigManager[AvatarConfig],
+                 babble_config_manager: ConfigManager[AvatarConfig]):
         self.__processing_pipeline = processing_pipeline
 
         self.__sender_list: list[SenderInterface] = [
@@ -31,6 +33,7 @@ class SenderRouterPipeline:
             IFacialMocapSenderPipeline(config_manager, ifacialmocap_config_manager),
             FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
             MeowFaceSenderPipeline(config_manager, meowface_config_manager),
+            BabbleSenderPipeline(config_manager, babble_config_manager),
         ]
 
         self.__close_event: Event = Event()

@@ -71,6 +71,11 @@ def initialize_and_run(app, splash):
                 migration_manager=AvatarConfigMigrationManager())
             self.__meowface_config.load(wait=True)
 
+            self.__babble_sender_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
+                path=Path("configs/babble_sender.json"), config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager())
+            self.__babble_sender_config.load(wait=True)
+
             self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(Path("configs/vrchat"))
 
             self.__camera_pipeline: CameraPipeline = CameraPipeline(self.__config_manager)
@@ -88,7 +93,8 @@ def initialize_and_run(app, splash):
                                                                                        self.__vrchat_config,
                                                                                        self.__ifacialmocap_config,
                                                                                        self.__foxyface_config,
-                                                                                       self.__meowface_config)
+                                                                                       self.__meowface_config,
+                                                                                       self.__babble_sender_config)
             self.__auto_calibration_endpoint: AutoCalibrationEndpoint = AutoCalibrationEndpoint(self.__config_manager,
                                                                                                 self.__media_pipe_pipeline,
                                                                                                 self.__processing_pipeline)
@@ -120,6 +126,7 @@ def initialize_and_run(app, splash):
             self.__ifacialmocap_config.close()
             self.__foxyface_config.close()
             self.__meowface_config.close()
+            self.__babble_sender_config.close()
             self.__vrchat_config.close()
 
             self.__babble_pipeline.close()

@@ -11,7 +11,8 @@ from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
 from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
-from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE, Status
+from src.stream.mediapipe.tongue.MediaPipeTongueConstants import MediaPipeTongueConstants
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, Status
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
 
@@ -29,7 +30,7 @@ class MediaPipeTongueStream:
         self.__model_params = None
 
         self.__frame_timestamp = self.__ctx.Value(ctypes.c_longlong, 0, lock=False)
-        self.__frame_image = self.__ctx.Array(ctypes.c_uint8, IMAGE_SIZE, lock=False)
+        self.__frame_image = self.__ctx.Array(ctypes.c_uint8, MediaPipeTongueConstants.IMAGE_SIZE, lock=False)
 
         self.__cmd_queue = None
         self.__output_queue = None
@@ -168,13 +169,13 @@ class MediaPipeTongueStream:
 
                 img = last_frame.image
 
-                if img.shape != IMAGE_SHAPE:
-                    _logger.error(f"Image shape mismatch! Expected {IMAGE_SHAPE}, got {img.shape}")
+                if img.shape != MediaPipeTongueConstants.IMAGE_SHAPE:
+                    _logger.error(f"Image shape mismatch! Expected {MediaPipeTongueConstants.IMAGE_SHAPE}, got {img.shape}")
                     continue
 
                 if self.__frame_condition.acquire(timeout=0.05):
                     try:
-                        dest = np.frombuffer(self.__frame_image, dtype=np.uint8).reshape(IMAGE_SHAPE)
+                        dest = np.frombuffer(self.__frame_image, dtype=np.uint8).reshape(MediaPipeTongueConstants.IMAGE_SHAPE)
                         np.copyto(dest, img)
 
                         self.__frame_timestamp.value = last_frame.timestamp_ns
