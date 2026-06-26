@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Node Graph</title>
-    <!-- Подключаем Vis.js для графа -->
+
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-    <!-- Подключаем Three.js для визуализации Rotation Vector -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Подключаем OrbitControls для управления камерой мышью -->
     <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <style>
+        *, *:before, *:after {
+            box-sizing: border-box;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
@@ -40,6 +42,8 @@
             z-index: 100;
             color: #fff;
             pointer-events: none;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         #details-panel {
@@ -48,7 +52,10 @@
             right: 15px;
             width: 340px;
             max-height: 90vh;
+            box-sizing: border-box;
             overflow-y: auto;
+            overflow-x: hidden;
+
             background: rgba(25, 25, 25, 0.95);
             padding: 15px;
             border-radius: 8px;
@@ -165,7 +172,7 @@
     <h4>Pipeline Flow</h4>
     <div class="legend-item">
         <div class="color-box" style="background:#555;"></div>
-        Compute / Input
+        Compute
     </div>
     <div class="legend-item">
         <div class="color-box" style="background:#2e7d32;"></div>
@@ -178,6 +185,14 @@
     <div class="legend-item">
         <div class="color-box" style="background:#c62828;"></div>
         Output
+    </div>
+    <div class="legend-item">
+        <div class="color-box" style="background:#7b1fa2;"></div>
+        Solver Aggregator
+    </div>
+    <div class="legend-item">
+        <div class="color-box" style="background:#00838f;"></div>
+        Face Input
     </div>
 </div>
 
@@ -198,7 +213,6 @@
     let currentRawData = {};
     let selectedNodeId = null;
 
-    // --- Three.js Setup ---
     let threeInitialized = false, renderer, scene, camera, rotMesh, controls;
 
     function initThreeJS(container) {
@@ -263,7 +277,6 @@
         rotMesh.rotation.setFromRotationMatrix(m);
     }
 
-    // --- Vis.js Граф ---
     const network = new vis.Network(document.getElementById('mynetwork'), {nodes: nodesDataSet, edges: edgesDataSet}, {
         nodes: {
             shape: 'box',
@@ -274,9 +287,7 @@
         },
         edges: {
             arrows: 'to',
-            // ДЕЛАЕМ ЛИНИИ ПОЛУПРОЗРАЧНЫМИ для снижения визуального шума
             color: {color: 'rgba(150, 150, 150, 0.3)', highlight: '#fff', hover: '#81d4fa'},
-            // Уменьшаем изгиб (roundness) чтобы линии были более прямыми и сдержанными
             smooth: {type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.35},
             width: 1.5,
             selectionWidth: 2
@@ -307,9 +318,15 @@
         let titleEl = document.getElementById('details-title');
         if (titleEl.innerText !== newTitle) titleEl.innerText = newTitle;
 
-        let newHTML = Object.entries(data).map(([k, v]) =>
-            `<div class="details-row"><span class="details-key">${k}</span><pre class="details-value">${typeof v === 'object' && v ? JSON.stringify(v, null, 2) : String(v)}</pre></div>`
-        ).join('');
+        let newHTML = Object.entries(data).map(([k, v]) => {
+            let displayValue;
+            if (typeof v === 'object' && v) {
+                displayValue = JSON.stringify(v, null, 2);
+            } else {
+                displayValue = String(v);
+            }
+            return `<div class="details-row"><span class="details-key">${k}</span><pre class="details-value">${displayValue}</pre></div>`;
+        }).join('');
 
         let contentEl = document.getElementById('details-content');
         if (contentEl.innerHTML !== newHTML) {
@@ -360,10 +377,12 @@
     }
 
     const COLORS = {
-        "Compute / Input": "#555",
+        "Compute": "#555",
         "Solver Input": "#2e7d32",
         "Solver Output": "#1565c0",
-        "Output": "#c62828"
+        "Output": "#c62828",
+        "Solver Aggregator": "#7b1fa2",
+        "Face Input": "#00838f"
     };
 
     window.updateGraph = function (data) {
@@ -423,12 +442,9 @@
 
                     let cKeys = Object.keys(columns).map(Number).sort((a, b) => a - b);
 
-                    // Координаты X/Y с алгоритмом Барицентра
                     for (let i = 0; i < cKeys.length; i++) {
                         let colNodes = columns[cKeys[i]];
 
-                        // --- УМНАЯ СОРТИРОВКА (BARYCENTER) ---
-                        // Сортирует ноды в колонке не по алфавиту, а по позициям связанных с ними нод
                         if (i > 0) {
                             colNodes.sort((a, b) => {
                                 let getAvgY = (nodeId) => {
@@ -446,7 +462,6 @@
                         } else {
                             colNodes.sort();
                         }
-                        // -------------------------------------
 
                         let startY = -((colNodes.length - 1) * 160) / 2;
                         for (let j = 0; j < colNodes.length; j++) {
@@ -523,7 +538,7 @@
                 renderDetails(false);
             }
         } catch (err) {
-            console.error("Ошибка при обновлении графа:", err);
+            console.error("Fail to update graph:", err);
         }
     };
 </script>

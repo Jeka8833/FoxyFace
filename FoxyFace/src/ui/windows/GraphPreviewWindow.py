@@ -5,6 +5,8 @@ from PySide6.QtCore import QTimer, Qt
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from blendshape_router.graph.Node import Node
 from blendshape_router.graph.util.FunctionEval import FunctionEval
+from blendshape_router.preset.ARKitParameter import ARKitParameter
+from blendshape_router.preset.BaseParameter import BaseParameter
 from blendshape_router.router.GraphContainer import GraphContainer
 from blendshape_router.solver.graph.SolverNode import SolverNode
 from scipy.spatial.transform import Rotation
@@ -65,7 +67,9 @@ class GraphPreviewWindow(FoxyWindow):
             for encoder, value in graph_container.harvest_endpoints().items():
                 if isinstance(value, dict):
                     for key, val in value.items():
-                        out_for_graph[f"{encoder.id_str()}:{key}"] = {
+                        name = encoder.id_str() if encoder.id_str() == key else f"{encoder.id_str()}:{key}"
+
+                        out_for_graph[name] = {
                             "value": GraphPreviewWindow.__normalize_value(val),
                             "next_nodes": [next_node.id for next_node in encoder.get_used_nodes()],
                             "type": "Output"
@@ -78,10 +82,14 @@ class GraphPreviewWindow(FoxyWindow):
                     }
 
             for node, function in graph_container.graph.items():
-                node_type = "Compute / Input"
+                node_type = "Compute"
                 if node in solver_inputs and graph_name == "main":
                     node_type = "Solver Input"
                 elif node in solver_outputs and graph_name == "solver":
+                    node_type = "Solver Aggregator"
+                elif isinstance(node, (BaseParameter | ARKitParameter)):
+                    node_type = "Face Input"
+                elif isinstance(node, SolverNode):
                     node_type = "Solver Output"
 
                 value = FunctionEval.eval_node(graph_container.graph, node)
