@@ -144,5 +144,6 @@ class IFacialMocapSenderPipeline(SenderInterface):
                                 endpoints=IFacialMocap.get_available_endpoints(),
                                 solver_inputs=all_solver_inputs,
                                 solver_outputs=all_solver_outputs,
+                                graphs=self.__ifacialmocap.get_graphs,
                                 test_endpoint_callable=self.__ifacialmocap.enable_parameter_testing,
                                 stop_all_test_endpoint_callable=self.__ifacialmocap.disable_parameter_testing)])

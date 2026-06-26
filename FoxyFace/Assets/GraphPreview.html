@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Graph</title>
+    <!-- Подключаем Vis.js для графа -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- Подключаем Three.js для визуализации Rotation Vector -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Подключаем OrbitControls для управления камерой мышью -->
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        #mynetwork {
+            width: 100%;
+            height: 100%;
+            outline: none;
+        }
+
+        #control-panel {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(25, 25, 25, 0.9);
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            color: #fff;
+            pointer-events: none;
+        }
+
+        #details-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 340px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(25, 25, 25, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+            z-index: 101;
+            color: #fff;
+            display: none;
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .details-header h3 {
+            margin: 0;
+            font-size: 15px;
+            word-break: break-all;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            color: #ff5252;
+            font-size: 20px;
+            font-weight: bold;
+            pointer-events: auto;
+        }
+
+        .details-row {
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .details-key {
+            color: #81d4fa;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .details-value {
+            background: #111;
+            padding: 8px;
+            border-radius: 4px;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            color: #a5d6a7;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #222;
+        }
+
+        #three-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            overflow: hidden;
+            background: #000;
+            display: none;
+            cursor: grab;
+        }
+
+        #three-container:active {
+            cursor: grabbing;
+        }
+
+        h4 {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .color-box {
+            width: 14px;
+            height: 14px;
+            margin-right: 10px;
+            border-radius: 3px;
+        }
+
+        .vis-network .vis-navigation .vis-button {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+            border-radius: 50% !important;
+            width: 36px !important;
+            height: 36px !important;
+            border: 1px solid #ccc !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .vis-network .vis-navigation .vis-button:hover {
+            background-color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5) !important;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+<div id="control-panel">
+    <h4>Pipeline Flow</h4>
+    <div class="legend-item">
+        <div class="color-box" style="background:#555;"></div>
+        Compute / Input
+    </div>
+    <div class="legend-item">
+        <div class="color-box" style="background:#2e7d32;"></div>
+        Solver Input
+    </div>
+    <div class="legend-item">
+        <div class="color-box" style="background:#1565c0;"></div>
+        Solver Output
+    </div>
+    <div class="legend-item">
+        <div class="color-box" style="background:#c62828;"></div>
+        Output
+    </div>
+</div>
+
+<div id="details-panel">
+    <div class="details-header">
+        <h3 id="details-title"></h3>
+        <div class="close-btn" onclick="closeDetails()">&times;</div>
+    </div>
+    <div id="details-content"></div>
+    <div id="three-container"></div>
+</div>
+
+<div id="mynetwork"></div>
+
+<script>
+    const nodesDataSet = new vis.DataSet();
+    const edgesDataSet = new vis.DataSet();
+    let currentRawData = {};
+    let selectedNodeId = null;
+
+    // --- Three.js Setup ---
+    let threeInitialized = false, renderer, scene, camera, rotMesh, controls;
+
+    function initThreeJS(container) {
+        if (threeInitialized) return;
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(2, 2, 3);
+
+        renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enablePan = false;
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+        const light = new THREE.DirectionalLight(0xffffff, 0.8);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+
+        const geometry = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+        const materials = [
+            new THREE.MeshStandardMaterial({color: 0xef5350}),
+            new THREE.MeshStandardMaterial({color: 0xab47bc}),
+            new THREE.MeshStandardMaterial({color: 0x66bb6a}),
+            new THREE.MeshStandardMaterial({color: 0x29b6f6}),
+            new THREE.MeshStandardMaterial({color: 0xffca28}),
+            new THREE.MeshStandardMaterial({color: 0x8d6e63})
+        ];
+        rotMesh = new THREE.Mesh(geometry, materials);
+
+        const edges = new THREE.EdgesGeometry(geometry);
+        rotMesh.add(new THREE.LineSegments(edges, new THREE.LineBasicMaterial({color: 0xffffff})));
+        rotMesh.add(new THREE.AxesHelper(1.8));
+
+        scene.add(rotMesh);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (document.getElementById('three-container').style.display !== 'none') {
+                if (controls) controls.update();
+                renderer.render(scene, camera);
+            }
+        }
+
+        animate();
+        threeInitialized = true;
+    }
+
+    function updateRotation(flatMatrix) {
+        if (!rotMesh || flatMatrix.length !== 9) return;
+        let m = new THREE.Matrix4();
+        m.set(
+            flatMatrix[0], flatMatrix[1], flatMatrix[2], 0,
+            flatMatrix[3], flatMatrix[4], flatMatrix[5], 0,
+            flatMatrix[6], flatMatrix[7], flatMatrix[8], 0,
+            0, 0, 0, 1
+        );
+        rotMesh.rotation.setFromRotationMatrix(m);
+    }
+
+    // --- Vis.js Граф ---
+    const network = new vis.Network(document.getElementById('mynetwork'), {nodes: nodesDataSet, edges: edgesDataSet}, {
+        nodes: {
+            shape: 'box',
+            font: {multi: 'html', color: '#fff', face: 'monospace', align: 'left', size: 12},
+            margin: 9,
+            borderWidth: 1,
+            shadow: {enabled: true, color: 'rgba(0,0,0,0.5)', size: 4, x: 2, y: 2}
+        },
+        edges: {
+            arrows: 'to',
+            // ДЕЛАЕМ ЛИНИИ ПОЛУПРОЗРАЧНЫМИ для снижения визуального шума
+            color: {color: 'rgba(150, 150, 150, 0.3)', highlight: '#fff', hover: '#81d4fa'},
+            // Уменьшаем изгиб (roundness) чтобы линии были более прямыми и сдержанными
+            smooth: {type: 'cubicBezier', forceDirection: 'horizontal', roundness: 0.35},
+            width: 1.5,
+            selectionWidth: 2
+        },
+        physics: {enabled: false},
+        interaction: {dragNodes: true, hover: true, navigationButtons: true, keyboard: true}
+    });
+
+    network.on("click", p => {
+        if (p.nodes.length) {
+            selectedNodeId = p.nodes[0];
+            renderDetails(true);
+        } else {
+            closeDetails();
+        }
+    });
+
+    function closeDetails() {
+        selectedNodeId = null;
+        document.getElementById('details-panel').style.display = 'none';
+    }
+
+    function renderDetails(force = false) {
+        if (!selectedNodeId || !currentRawData[selectedNodeId]) return;
+        let data = currentRawData[selectedNodeId];
+
+        let newTitle = selectedNodeId.replace('::', ' / ');
+        let titleEl = document.getElementById('details-title');
+        if (titleEl.innerText !== newTitle) titleEl.innerText = newTitle;
+
+        let newHTML = Object.entries(data).map(([k, v]) =>
+            `<div class="details-row"><span class="details-key">${k}</span><pre class="details-value">${typeof v === 'object' && v ? JSON.stringify(v, null, 2) : String(v)}</pre></div>`
+        ).join('');
+
+        let contentEl = document.getElementById('details-content');
+        if (contentEl.innerHTML !== newHTML) {
+            contentEl.innerHTML = newHTML;
+        }
+
+        if (force) document.getElementById('details-panel').style.display = 'block';
+
+        let isRotation = false;
+        let matrixFlat = [];
+
+        if (Array.isArray(data.value)) {
+            if (data.value.length === 9 && typeof data.value[0] === 'number') {
+                isRotation = true;
+                matrixFlat = data.value;
+            } else if (data.value.length === 3 && Array.isArray(data.value[0]) && data.value[0].length === 3) {
+                isRotation = true;
+                matrixFlat = [
+                    data.value[0][0], data.value[0][1], data.value[0][2],
+                    data.value[1][0], data.value[1][1], data.value[1][2],
+                    data.value[2][0], data.value[2][1], data.value[2][2]
+                ];
+            }
+        }
+
+        let threeContainer = document.getElementById('three-container');
+
+        if (isRotation) {
+            if (threeContainer.style.display !== 'block') threeContainer.style.display = 'block';
+            initThreeJS(threeContainer);
+            updateRotation(matrixFlat);
+        } else {
+            if (threeContainer.style.display !== 'none') threeContainer.style.display = 'none';
+        }
+    }
+
+    function formatVal(v) {
+        if (typeof v === 'number') return v.toFixed(4);
+        if (Array.isArray(v)) {
+            if (v.length <= 4 && typeof v[0] === 'number') return `[${v.map(n => Number(n).toFixed(3)).join(', ')}]`;
+            return `[Matrix ${v.length}x${v[0]?.length || 1}]`;
+        }
+        if (typeof v === 'object' && v) {
+            let f = Object.values(v)[0];
+            return typeof f === 'number' ? f.toFixed(4) : String(f).substring(0, 18);
+        }
+        return String(v).substring(0, 18);
+    }
+
+    const COLORS = {
+        "Compute / Input": "#555",
+        "Solver Input": "#2e7d32",
+        "Solver Output": "#1565c0",
+        "Output": "#c62828"
+    };
+
+    window.updateGraph = function (data) {
+        try {
+            let parsed = typeof data === 'string' ? JSON.parse(data) : data;
+
+            let oldIds = new Set(nodesDataSet.getIds());
+            let newIds = [];
+            for (let [gName, gData] of Object.entries(parsed)) {
+                for (let id of Object.keys(gData)) newIds.push(`${gName}::${id}`);
+            }
+
+            let isFirst = !nodesDataSet.length;
+            let addedNodes = newIds.some(id => !oldIds.has(id));
+            let forceLayout = isFirst || addedNodes;
+
+            let coords = {};
+            let currentGlobalXOffset = -800;
+
+            if (forceLayout) {
+                for (let [gName, gData] of Object.entries(parsed)) {
+                    let V = Object.keys(gData);
+                    let adj = {};
+                    for (let v of V) adj[v] = [];
+
+                    for (let [id, attrs] of Object.entries(gData)) {
+                        if (Array.isArray(attrs.next_nodes)) {
+                            attrs.next_nodes.forEach(next => {
+                                if (V.includes(next)) adj[id].push(next);
+                            });
+                        }
+                    }
+
+                    let layers = {};
+                    for (let v of V) layers[v] = 0;
+                    let changed = true;
+                    let iters = 0;
+                    while (changed && iters < V.length) {
+                        changed = false;
+                        for (let u of V) {
+                            for (let v of adj[u]) {
+                                if (layers[u] <= layers[v]) {
+                                    layers[u] = layers[v] + 1;
+                                    changed = true;
+                                }
+                            }
+                        }
+                        iters++;
+                    }
+
+                    let columns = {};
+                    for (let v of V) {
+                        let l = layers[v];
+                        if (!columns[l]) columns[l] = [];
+                        columns[l].push(v);
+                    }
+
+                    let cKeys = Object.keys(columns).map(Number).sort((a, b) => a - b);
+
+                    // Координаты X/Y с алгоритмом Барицентра
+                    for (let i = 0; i < cKeys.length; i++) {
+                        let colNodes = columns[cKeys[i]];
+
+                        // --- УМНАЯ СОРТИРОВКА (BARYCENTER) ---
+                        // Сортирует ноды в колонке не по алфавиту, а по позициям связанных с ними нод
+                        if (i > 0) {
+                            colNodes.sort((a, b) => {
+                                let getAvgY = (nodeId) => {
+                                    let yVals = [];
+                                    for (let p of V) {
+                                        if ((adj[p].includes(nodeId) || adj[nodeId].includes(p)) && coords[`${gName}::${p}`]) {
+                                            yVals.push(coords[`${gName}::${p}`].y);
+                                        }
+                                    }
+                                    return yVals.length ? (yVals.reduce((sum, y) => sum + y, 0) / yVals.length) : 0;
+                                };
+                                let diff = getAvgY(a) - getAvgY(b);
+                                return Math.abs(diff) > 0.1 ? diff : a.localeCompare(b);
+                            });
+                        } else {
+                            colNodes.sort();
+                        }
+                        // -------------------------------------
+
+                        let startY = -((colNodes.length - 1) * 160) / 2;
+                        for (let j = 0; j < colNodes.length; j++) {
+                            coords[`${gName}::${colNodes[j]}`] = {
+                                x: currentGlobalXOffset + (i * 450),
+                                y: startY + (j * 160)
+                            };
+                        }
+                    }
+
+                    currentGlobalXOffset += (cKeys.length * 450) + 500;
+                }
+            }
+
+            let allCurrentNodeIds = new Set();
+            let nodesToUpdate = [];
+            let allCurrentEdgeIds = new Set();
+            let edgesToUpdate = [];
+
+            for (let [gName, gData] of Object.entries(parsed)) {
+                for (let [id, attrs] of Object.entries(gData)) {
+                    let uid = `${gName}::${id}`;
+                    currentRawData[uid] = attrs;
+                    allCurrentNodeIds.add(uid);
+
+                    let newLabel = `<i>[${gName}]</i>\n<b>${id}</b>\nVal: ${formatVal(attrs.value)}`;
+                    let exist = nodesDataSet.get(uid);
+                    let needsUpdate = false;
+
+                    let nodeData = {
+                        id: uid,
+                        label: newLabel,
+                        color: {background: COLORS[attrs.type] || "#444", border: '#111'}
+                    };
+
+                    if (forceLayout && coords[uid]) {
+                        nodeData.x = coords[uid].x;
+                        nodeData.y = coords[uid].y;
+                        needsUpdate = true;
+                    }
+
+                    if (!exist || exist.label !== newLabel) {
+                        needsUpdate = true;
+                    }
+
+                    if (needsUpdate) nodesToUpdate.push(nodeData);
+
+                    if (Array.isArray(attrs.next_nodes)) {
+                        attrs.next_nodes.forEach(tid => {
+                            let eid = `${gName}::${tid}->${uid}`;
+                            allCurrentEdgeIds.add(eid);
+                            if (!edgesDataSet.get(eid)) {
+                                edgesToUpdate.push({id: eid, from: `${gName}::${tid}`, to: uid});
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (nodesToUpdate.length) nodesDataSet.update(nodesToUpdate);
+            if (edgesToUpdate.length) edgesDataSet.update(edgesToUpdate);
+
+            let idsToRemove = nodesDataSet.getIds().filter(id => !allCurrentNodeIds.has(id));
+            if (idsToRemove.length) nodesDataSet.remove(idsToRemove);
+
+            let eToRemove = edgesDataSet.getIds().filter(id => !allCurrentEdgeIds.has(id));
+            if (eToRemove.length) edgesDataSet.remove(eToRemove);
+
+            if (forceLayout) {
+                setTimeout(() => network.fit({animation: {duration: 800, easingFunction: 'easeInOutQuad'}}), 50);
+            }
+
+            if (selectedNodeId && document.getElementById('details-panel').style.display === 'block') {
+                renderDetails(false);
+            }
+        } catch (err) {
+            console.error("Ошибка при обновлении графа:", err);
+        }
+    };
+</script>
+</body>
+</html>

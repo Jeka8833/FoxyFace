@@ -143,5 +143,6 @@ class MeowFaceSenderPipeline(SenderInterface):
                                 endpoints=MeowFace.get_available_endpoints(),
                                 solver_inputs=all_solver_inputs,
                                 solver_outputs=all_solver_outputs,
+                                graphs=self.__meowface.get_graphs,
                                 test_endpoint_callable=self.__meowface.enable_parameter_testing,
                                 stop_all_test_endpoint_callable=self.__meowface.disable_parameter_testing)])

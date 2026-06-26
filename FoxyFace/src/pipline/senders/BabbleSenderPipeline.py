@@ -139,5 +139,6 @@ class BabbleSenderPipeline(SenderInterface):
                                 endpoints=Babble.get_available_endpoints(),
                                 solver_inputs=all_solver_inputs,
                                 solver_outputs=all_solver_outputs,
+                                graphs=self.__babble.get_graphs,
                                 test_endpoint_callable=self.__babble.enable_parameter_testing,
                                 stop_all_test_endpoint_callable=self.__babble.disable_parameter_testing)])

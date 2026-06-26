@@ -2,7 +2,7 @@ import time
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy, QWidget
+from PySide6.QtWidgets import QLabel, QSizePolicy
 
 from src.ui import UiImageUtil
 from src.ui.FoxyWindow import FoxyWindow
@@ -17,20 +17,14 @@ class ImagePreviewWindow(FoxyWindow):
         super().__init__()
 
         self.__title = title
-        self.__last_title_update: int = time.perf_counter_ns()
+        self.__last_title_update: int = time.perf_counter_ns() - ImagePreviewWindow.__TITLE_UPDATE_INTERVAL_NS
 
         self.setWindowTitle(title)
         self.resize(width, height)
 
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
-
-        horizontal_layout = QHBoxLayout(central_widget)
-        horizontal_layout.setContentsMargins(0, 0, 0, 0)
-
         self.__image_label = QLabel(scaledContents=True)
         self.__image_label.setSizePolicy(QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored))
-        horizontal_layout.addWidget(self.__image_label)
+        self.setCentralWidget(self.__image_label)
 
         self.set_image_event.connect(self.__set_image)
         self.__set_image(None)

@@ -25,6 +25,7 @@ from src.ui.windows.AvatarCalibrationWindow import AvatarCalibrationWindow
 from src.ui.windows.BabbleSettingsWindow import BabbleSettingsWindow
 from src.ui.windows.CalibrationWindow import CalibrationWindow
 from src.ui.windows.CameraSettingsWindow import CameraSettingsWindow
+from src.ui.windows.GraphPreviewWindow import GraphPreviewWindow
 from src.ui.windows.HasUpdateWindow import HasUpdateWindow
 from src.ui.windows.MediaPipeSettingsWindow import MediaPipeSettingsWindow
 from src.ui.windows.MediaPipeTongueSettingsWindow import MediaPipeTongueSettingsWindow
@@ -163,6 +164,9 @@ class MainWindow(FoxyWindow):
     def __open_camera_preview(self):
         try:
             self.__camera_pipeline.trigger_view_preview()
+
+            for avatar in self.__sender_manager.get_endpoints():
+                self.__graph = GraphPreviewWindow(avatar)
         except Exception:
             _logger.warning("Failed to open camera preview", exc_info=True, stack_info=True)
 

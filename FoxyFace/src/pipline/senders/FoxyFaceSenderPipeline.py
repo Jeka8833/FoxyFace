@@ -143,5 +143,6 @@ class FoxyFaceSenderPipeline(SenderInterface):
                                 endpoints=FoxyFace.get_available_endpoints(),
                                 solver_inputs=all_solver_inputs,
                                 solver_outputs=all_solver_outputs,
+                                graphs=self.__foxyface.get_graphs,
                                 test_endpoint_callable=self.__foxyface.enable_parameter_testing,
                                 stop_all_test_endpoint_callable=self.__foxyface.disable_parameter_testing)])

@@ -2,7 +2,9 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 from blendshape_router.graph.Node import Node
+from blendshape_router.graph.NodeFunction import NodeFunction
 from blendshape_router.router.EndpointEncoderInterface import EndpointEncoderInterface
+from blendshape_router.router.GraphContainer import GraphContainer
 from blendshape_router.solver.graph.SolverNode import SolverNode
 
 from src.config.ConfigManager import ConfigManager
@@ -18,6 +20,7 @@ class AvatarEndpoint:
     endpoints: frozenset[EndpointEncoderInterface]
     solver_inputs: frozenset[SolverNode]
     solver_outputs: frozenset[Node]
+    graphs: Callable[[], dict[str, GraphContainer]] = field(hash=False, compare=False)
 
     test_endpoint_callable: Callable[[EndpointEncoderInterface], None] = field(hash=False, compare=False)
     stop_all_test_endpoint_callable: Callable[[], None] = field(hash=False, compare=False)

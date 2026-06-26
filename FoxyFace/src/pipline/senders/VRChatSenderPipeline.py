@@ -90,10 +90,16 @@ class VRChatSenderPipeline(SenderInterface):
             all_solver_inputs = frozenset(instance.get_all_solver_input_functions())
             all_solver_outputs = frozenset(instance.get_all_solver_output_functions())
 
-            endpoints.add(AvatarEndpoint(f"{connection.name}/{avatar.avatar_id}", config_manager,
-                                         avatar.endpoints, all_solver_inputs, all_solver_outputs,
-                                         test_endpoint_callable=instance.enable_parameter_testing,
-                                         stop_all_test_endpoint_callable=instance.disable_parameter_testing))
+            endpoints.add(AvatarEndpoint(
+                f"{connection.name}/{avatar.avatar_id}",
+                config_manager,
+                avatar.endpoints,
+                all_solver_inputs,
+                all_solver_outputs,
+                graphs=instance.get_graphs,
+                test_endpoint_callable=instance.enable_parameter_testing,
+                stop_all_test_endpoint_callable=instance.disable_parameter_testing
+            ))
 
         return frozenset(endpoints)
 
