@@ -166,7 +166,7 @@ class MainWindow(FoxyWindow):
             self.__camera_pipeline.trigger_view_preview()
 
             for avatar in self.__sender_manager.get_endpoints():
-                self.__graph = GraphPreviewWindow(avatar)
+                self.__graph = GraphPreviewWindow(avatar, title=f"VRCFT Graph for: {avatar.endpoint_name}")
         except Exception:
             _logger.warning("Failed to open camera preview", exc_info=True, stack_info=True)
 

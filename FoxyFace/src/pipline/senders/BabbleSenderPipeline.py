@@ -107,7 +107,7 @@ class BabbleSenderPipeline(SenderInterface):
                 vertices_count = max(1, int(solver_model.get_vertices_count() * clamped_percentage))
 
             disabled_encoders: Iterable[EndpointEncoderInterface[dict[str, float]]] = {
-                encoder for encoder in Babble.get_available_endpoints()
+                encoder for encoder in babble_config.protocol_version.original_value.endpoints
                 if encoder.id_str() in self.__avatar_config_manager.config.disable_output_encoders
             }
 
@@ -136,7 +136,7 @@ class BabbleSenderPipeline(SenderInterface):
 
             self.__avatar_endpoint = frozenset(
                 [AvatarEndpoint(endpoint_name="Babble", config_manager=self.__avatar_config_manager,
-                                endpoints=Babble.get_available_endpoints(),
+                                endpoints=babble_config.protocol_version.original_value.endpoints,
                                 solver_inputs=all_solver_inputs,
                                 solver_outputs=all_solver_outputs,
                                 graphs=self.__babble.get_graphs,

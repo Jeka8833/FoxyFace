@@ -158,7 +158,7 @@ class ProcessingPipeline:
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
 
     def __update_mixer_options(self, config_manager: ConfigManager):
-        self.__mixer_options.enable = {key.to_original(): value.to_original() for key, value in
+        self.__mixer_options.enable = {key.original_value: value.original_value for key, value in
                                        config_manager.config.processing.source.items()}
 
     def __register_change_calibration_options(self) -> ConfigUpdateListener:
@@ -167,5 +167,5 @@ class ProcessingPipeline:
         return self.__config_manager.create_update_listener(self.__update_calibration_options, watch_array, True)
 
     def __update_calibration_options(self, config_manager: ConfigManager):
-        self.__calibration_options.blend_shape_options = {key.to_original(): value for key, value in
+        self.__calibration_options.blend_shape_options = {key.original_value: value for key, value in
                                                           config_manager.config.processing.calibration.items()}

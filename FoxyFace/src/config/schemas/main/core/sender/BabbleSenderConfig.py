@@ -2,6 +2,8 @@ from dataclasses import dataclass
 
 from blendshape_router.facades.babble import BabbleDefaultValue
 
+from src.config.schemas.main.core.enums.BabbleProtocolEnumConfig import BabbleProtocolEnumConfig
+
 
 @dataclass(slots=True)
 class BabbleSenderConfig:
@@ -9,6 +11,8 @@ class BabbleSenderConfig:
 
     ip: str = BabbleDefaultValue.OSC_IP
     port: int = BabbleDefaultValue.OSC_PORT
+
+    protocol_version: BabbleProtocolEnumConfig = BabbleProtocolEnumConfig.MaximumCompatibility
 
     solver_enabled: bool = True
     solver_model_path: str = ""

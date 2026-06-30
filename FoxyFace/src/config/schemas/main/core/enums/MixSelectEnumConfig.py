@@ -10,7 +10,8 @@ class MixSelectEnumConfig(StrEnum):
     MediaPipeTongue = MixSelectEnum.MediaPipeTongue.name
     Babble = MixSelectEnum.Babble.name
 
-    def to_original(self) -> MixSelectEnum:
+    @property
+    def original_value(self) -> MixSelectEnum:
         return MixSelectEnum[self.name]
 
     @staticmethod

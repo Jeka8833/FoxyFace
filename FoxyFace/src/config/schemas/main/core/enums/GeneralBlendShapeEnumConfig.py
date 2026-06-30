@@ -77,7 +77,8 @@ class GeneralBlendShapeEnumConfig(StrEnum):
     HeadZ = GeneralBlendShapeEnum.HeadZ.name
     HeadRotation = GeneralBlendShapeEnum.HeadRotation.name
 
-    def to_original(self) -> GeneralBlendShapeEnum:
+    @property
+    def original_value(self) -> GeneralBlendShapeEnum:
         return GeneralBlendShapeEnum[self.name]
 
     @staticmethod
