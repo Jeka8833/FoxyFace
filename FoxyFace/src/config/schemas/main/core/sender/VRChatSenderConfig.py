@@ -2,12 +2,16 @@ from dataclasses import dataclass, field
 
 from blendshape_router.facades.vrchat import VRChatDefaultValue
 
+from src.config.schemas.main.core.enums.VRChatProtocolEnumConfig import VRChatProtocolEnumConfig
+
 
 @dataclass(slots=True)
 class VRChatSenderConfig:
     enabled: bool = True
 
     blocked_ips: list[str] = field(default_factory=list)
+
+    protocol_version: VRChatProtocolEnumConfig = VRChatProtocolEnumConfig.MaximumCompatibility
 
     avatar_update_period: float = VRChatDefaultValue.AVATAR_UPDATE_PERIOD
     avatar_error_sleep_time: float = VRChatDefaultValue.AVATAR_ERROR_SLEEP_TIME
@@ -25,7 +29,6 @@ class VRChatSenderConfig:
     cache_float_precision: float = VRChatDefaultValue.OSC_CACHE_FLOAT_PRECISION
     osc_bundle_size: int = VRChatDefaultValue.OSC_BUNDLE_SIZE
 
-    allow_legacy_graph: bool = VRChatDefaultValue.ALLOW_LEGACY_GRAPH
     parser_max_binary_bits: int = VRChatDefaultValue.PARSER_MAX_BINARY_BITS
     test_send_period: float = VRChatDefaultValue.ENCODER_TEST_SEND_PERIOD
     test_animation_period: float = VRChatDefaultValue.ENCODER_TEST_ANIMATION_PERIOD

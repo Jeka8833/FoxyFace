@@ -1,6 +1,6 @@
 from enum import StrEnum
 
-from blendshape_router.plugin.endpoints.babble.ProtocolVersion import ProtocolVersion
+from blendshape_router.facades.babble.BabbleGraphVersion import BabbleGraphVersion
 
 
 class BabbleProtocolEnumConfig(StrEnum):
@@ -8,21 +8,21 @@ class BabbleProtocolEnumConfig(StrEnum):
     V2 = "v2"
 
     @property
-    def original_value(self) -> ProtocolVersion:
+    def original_value(self) -> BabbleGraphVersion:
         match self:
             case BabbleProtocolEnumConfig.MaximumCompatibility:
-                return ProtocolVersion.MAXIMUM_COMPATIBILITY
+                return BabbleGraphVersion.MAXIMUM_COMPATIBILITY
             case BabbleProtocolEnumConfig.V2:
-                return ProtocolVersion.V2
+                return BabbleGraphVersion.V2
             case _:
                 raise ValueError("Unknown protocol")
 
     @staticmethod
-    def from_original(original: ProtocolVersion) -> 'BabbleProtocolEnumConfig':
+    def from_original(original: BabbleGraphVersion) -> 'BabbleProtocolEnumConfig':
         match original:
-            case ProtocolVersion.MAXIMUM_COMPATIBILITY:
+            case BabbleGraphVersion.MAXIMUM_COMPATIBILITY:
                 return BabbleProtocolEnumConfig.MaximumCompatibility
-            case ProtocolVersion.V2:
+            case BabbleGraphVersion.V2:
                 return BabbleProtocolEnumConfig.V2
             case _:
                 raise ValueError("Unknown protocol")

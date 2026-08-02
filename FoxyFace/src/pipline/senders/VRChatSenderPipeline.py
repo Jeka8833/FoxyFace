@@ -152,7 +152,7 @@ class VRChatSenderPipeline(SenderInterface):
                              .with_osc_cache_full_sync_period(vrchat_config.cache_full_sync_period)
                              .with_osc_cache_float_precision(vrchat_config.cache_float_precision)
                              .with_osc_bundle_size(vrchat_config.osc_bundle_size)
-                             .with_legacy_graph(vrchat_config.allow_legacy_graph)
+                             .with_graph_version(vrchat_config.protocol_version.original_value)
                              .with_parser_max_binary_bits(vrchat_config.parser_max_binary_bits)
                              .with_test_send_period(vrchat_config.test_send_period)
                              .with_test_animation_period(vrchat_config.test_animation_period)
