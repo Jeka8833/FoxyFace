@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from src.config.schemas.main.core.sender.BabbleSenderConfig import BabbleSenderConfig
 from src.config.schemas.main.core.sender.FoxyFaceSenderConfig import FoxyFaceSenderConfig
 from src.config.schemas.main.core.sender.IFacialMocapSenderConfig import IFacialMocapSenderConfig
+from src.config.schemas.main.core.sender.LiveLinkSenderConfig import LiveLinkSenderConfig
 from src.config.schemas.main.core.sender.MeowFaceSenderConfig import MeowFaceSenderConfig
 from src.config.schemas.main.core.sender.VRChatSenderConfig import VRChatSenderConfig
 
@@ -12,5 +13,6 @@ class SenderConfig:
     babble: BabbleSenderConfig = field(default_factory=BabbleSenderConfig)
     foxyface: FoxyFaceSenderConfig = field(default_factory=FoxyFaceSenderConfig)
     ifacialmocap: IFacialMocapSenderConfig = field(default_factory=IFacialMocapSenderConfig)
+    livelink: LiveLinkSenderConfig = field(default_factory=LiveLinkSenderConfig)
     meowface: MeowFaceSenderConfig = field(default_factory=MeowFaceSenderConfig)
     vrchat: VRChatSenderConfig = field(default_factory=VRChatSenderConfig)

@@ -1,5 +1,5 @@
 import logging
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, Future
 from pathlib import Path
 from typing import Any, Callable, Type
 
@@ -22,14 +22,18 @@ class ConfigManager[T]:
 
         self.__update_listeners: set[ConfigUpdateListener[T]] = set()
 
-    def load(self, wait: bool = False):
+    def load(self, wait: bool = False) -> Future | None:
         try:
             future = self.__thread_pool.submit(self.__read_task)
 
             if wait:
                 future.result()
+
+            return future
         except Exception:
             pass
+
+        return None
 
     def write(self, wait: bool = False):
         try:

@@ -10,7 +10,7 @@ class GeneralToBlendshapeRouterMapper:
 
     @staticmethod
     def convert(general_values: dict[GeneralBlendShapeEnum, float | Rotation]) -> dict[
-        BaseParameter | ARKitParameter, float | Rotation]:
+        BaseParameter | ARKitParameter, float | Rotation | None]:
         return {
 
             BaseParameter.CheekPuffLeft: general_values.get(GeneralBlendShapeEnum.CheekPuffLeft,

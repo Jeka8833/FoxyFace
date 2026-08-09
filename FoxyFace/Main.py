@@ -44,6 +44,7 @@ def initialize_and_run(app, splash):
     from src.stream.senders.vrchat.VRchatAvatarConfigManager import VRChatAvatarConfigManager
     from src.pipline.calibration.AutoCalibrationEndpoint import AutoCalibrationEndpoint
     from src.ui.windows.MainWindow import MainWindow
+    from concurrent.futures import wait, ALL_COMPLETED
     import sys
 
     logger = logging.getLogger(__name__)
@@ -52,29 +53,51 @@ def initialize_and_run(app, splash):
         def __init__(self, splash_screen=None):
             logger.info(f"Hello, I'm FoxyFace {str(AppConstants.VERSION)}")
 
+            config_futures = []
+
             self.__config_manager: ConfigManager[Config] = ConfigManager[Config](
-                path=Path("configs/config.json"), config_cls=Config, migration_manager=MainConfigMigrationManager())
-            self.__config_manager.load(wait=True)
+                path=Path("configs/config.json"),
+                config_cls=Config,
+                migration_manager=MainConfigMigrationManager()
+            )
+            config_futures.append(self.__config_manager.load())
 
             self.__ifacialmocap_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-                path=Path("configs/ifacialmocap.json"), config_cls=AvatarConfig,
-                migration_manager=AvatarConfigMigrationManager())
-            self.__ifacialmocap_config.load(wait=True)
+                path=Path("configs/ifacialmocap.json"),
+                config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager()
+            )
+            config_futures.append(self.__ifacialmocap_config.load())
 
             self.__foxyface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-                path=Path("configs/foxyface.json"), config_cls=AvatarConfig,
-                migration_manager=AvatarConfigMigrationManager())
-            self.__foxyface_config.load(wait=True)
+                path=Path("configs/foxyface.json"),
+                config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager()
+            )
+            config_futures.append(self.__foxyface_config.load())
 
             self.__meowface_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-                path=Path("configs/meowface.json"), config_cls=AvatarConfig,
-                migration_manager=AvatarConfigMigrationManager())
-            self.__meowface_config.load(wait=True)
+                path=Path("configs/meowface.json"),
+                config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager()
+            )
+            config_futures.append(self.__meowface_config.load())
+
+            self.__livelink_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
+                path=Path("configs/livelink.json"),
+                config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager()
+            )
+            config_futures.append(self.__livelink_config.load())
 
             self.__babble_config: ConfigManager[AvatarConfig] = ConfigManager[AvatarConfig](
-                path=Path("configs/babble.json"), config_cls=AvatarConfig,
-                migration_manager=AvatarConfigMigrationManager())
-            self.__babble_config.load(wait=True)
+                path=Path("configs/babble.json"),
+                config_cls=AvatarConfig,
+                migration_manager=AvatarConfigMigrationManager()
+            )
+            config_futures.append(self.__babble_config.load())
+
+            wait(config_futures, return_when=ALL_COMPLETED)
 
             self.__vrchat_config: VRChatAvatarConfigManager = VRChatAvatarConfigManager(Path("configs/vrchat"))
 
@@ -88,28 +111,33 @@ def initialize_and_run(app, splash):
                                                                                 self.__media_pipe_pipeline,
                                                                                 self.__media_pipe_tongue_pipeline,
                                                                                 self.__babble_pipeline)
-            self.__sender_router_pipeline: SenderRouterPipeline = SenderRouterPipeline(self.__config_manager,
-                                                                                       self.__processing_pipeline,
-                                                                                       self.__vrchat_config,
-                                                                                       self.__ifacialmocap_config,
-                                                                                       self.__foxyface_config,
-                                                                                       self.__meowface_config,
-                                                                                       self.__babble_config)
+            self.__sender_router_pipeline: SenderRouterPipeline = SenderRouterPipeline(
+                config_manager=self.__config_manager,
+                processing_pipeline=self.__processing_pipeline,
+                vrchat_config_manager=self.__vrchat_config,
+                ifacialmocap_config_manager=self.__ifacialmocap_config,
+                livelink_config_manager=self.__livelink_config,
+                foxyface_config_manager=self.__foxyface_config,
+                meowface_config_manager=self.__meowface_config,
+                babble_config_manager=self.__babble_config
+            )
             self.__auto_calibration_endpoint: AutoCalibrationEndpoint = AutoCalibrationEndpoint(self.__config_manager,
                                                                                                 self.__media_pipe_pipeline,
                                                                                                 self.__processing_pipeline)
 
             self.__steam_auto_run = SteamAutoRun(self.__config_manager)
 
-            self.__main_window: MainWindow = MainWindow(config_manager=self.__config_manager,
-                                                        camera_pipeline=self.__camera_pipeline,
-                                                        mediapipe_pipeline=self.__media_pipe_pipeline,
-                                                        mediapipe_tongue_pipeline=self.__media_pipe_tongue_pipeline,
-                                                        babble_pipeline=self.__babble_pipeline,
-                                                        processing_pipeline=self.__processing_pipeline,
-                                                        auto_calibration_endpoint=self.__auto_calibration_endpoint,
-                                                        steam_auto_run=self.__steam_auto_run,
-                                                        sender_manager=self.__sender_router_pipeline)
+            self.__main_window: MainWindow = MainWindow(
+                config_manager=self.__config_manager,
+                camera_pipeline=self.__camera_pipeline,
+                mediapipe_pipeline=self.__media_pipe_pipeline,
+                mediapipe_tongue_pipeline=self.__media_pipe_tongue_pipeline,
+                babble_pipeline=self.__babble_pipeline,
+                processing_pipeline=self.__processing_pipeline,
+                auto_calibration_endpoint=self.__auto_calibration_endpoint,
+                steam_auto_run=self.__steam_auto_run,
+                sender_manager=self.__sender_router_pipeline
+            )
 
             if splash_screen is not None:
                 splash_screen.finish(self.__main_window)
@@ -126,6 +154,7 @@ def initialize_and_run(app, splash):
             self.__ifacialmocap_config.close()
             self.__foxyface_config.close()
             self.__meowface_config.close()
+            self.__livelink_config.close()
             self.__babble_config.close()
             self.__vrchat_config.close()
 

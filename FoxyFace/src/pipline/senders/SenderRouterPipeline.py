@@ -8,6 +8,7 @@ from src.pipline.ProcessingPipeline import ProcessingPipeline
 from src.pipline.senders.BabbleSenderPipeline import BabbleSenderPipeline
 from src.pipline.senders.FoxyFaceSenderPipeline import FoxyFaceSenderPipeline
 from src.pipline.senders.IFacialMocapSenderPipeline import IFacialMocapSenderPipeline
+from src.pipline.senders.LiveLinkSenderPipeline import LiveLinkSenderPipeline
 from src.pipline.senders.MeowFaceSenderPipeline import MeowFaceSenderPipeline
 from src.pipline.senders.VRChatSenderPipeline import VRChatSenderPipeline
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
@@ -20,9 +21,12 @@ _logger = logging.getLogger(__name__)
 
 
 class SenderRouterPipeline:
-    def __init__(self, config_manager: ConfigManager[Config], processing_pipeline: ProcessingPipeline,
+    def __init__(self,
+                 config_manager: ConfigManager[Config],
+                 processing_pipeline: ProcessingPipeline,
                  vrchat_config_manager: VRChatAvatarConfigManager,
                  ifacialmocap_config_manager: ConfigManager[AvatarConfig],
+                 livelink_config_manager: ConfigManager[AvatarConfig],
                  foxyface_config_manager: ConfigManager[AvatarConfig],
                  meowface_config_manager: ConfigManager[AvatarConfig],
                  babble_config_manager: ConfigManager[AvatarConfig]):
@@ -31,6 +35,7 @@ class SenderRouterPipeline:
         self.__sender_list: list[SenderInterface] = [
             VRChatSenderPipeline(config_manager, vrchat_config_manager),
             IFacialMocapSenderPipeline(config_manager, ifacialmocap_config_manager),
+            LiveLinkSenderPipeline(config_manager, livelink_config_manager),
             FoxyFaceSenderPipeline(config_manager, foxyface_config_manager),
             MeowFaceSenderPipeline(config_manager, meowface_config_manager),
             BabbleSenderPipeline(config_manager, babble_config_manager),
