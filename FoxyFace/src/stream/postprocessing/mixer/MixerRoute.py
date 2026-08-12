@@ -1,8 +1,8 @@
 from enum import unique, StrEnum, Enum
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
-from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendshapeEnum import MediaPipeBlendshapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendshapeEnum import MediaPipeTongueBlendshapeEnum
 
 
 @unique
@@ -12,7 +12,6 @@ class MixerRoute(StrEnum):
     MEDIA_PIPE = "MediaPipe"
     MEDIA_PIPE_TONGUE = "MediaPipe Tongue"
     BABBLE = "Babble"
-    MEOW_FACE = "MeowFace"
 
     @property
     def encoder_enum(self) -> type[Enum] | None:
@@ -20,13 +19,11 @@ class MixerRoute(StrEnum):
             case MixerRoute.DISABLED | MixerRoute.AUTO:
                 return None
             case MixerRoute.MEDIA_PIPE:
-                return MediaPipeBlendShapeEnum
+                return MediaPipeBlendshapeEnum
             case MixerRoute.MEDIA_PIPE_TONGUE:
-                return MediaPipeTongueBlendShapeEnum
+                return MediaPipeTongueBlendshapeEnum
             case MixerRoute.BABBLE:
-                return BabbleBlendShapeEnum
-            case MixerRoute.MEOW_FACE:
-                return None
+                return BabbleBlendshapeEnum
             case _:
                 raise ValueError(f"Unsupported MixerRoute: {self}")
 

@@ -5,7 +5,7 @@ from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
 from AppConstants import AppConstants
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
 from src.util import OnnxUtil
 from src.util.PathUtil import PathUtil
@@ -50,7 +50,7 @@ class BabbleModelLoader:
                 f"Babble model has loaded with provider: {provider}, "
                 f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
-    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float] | None:
+    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendshapeEnum, float] | None:
         if self.model is None:
             return None
 

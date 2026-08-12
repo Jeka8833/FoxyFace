@@ -7,7 +7,7 @@ from scipy.spatial.transform import Rotation
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendshapeEnum import MediaPipeBlendshapeEnum
 from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
@@ -19,23 +19,28 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
     def __init__(self, options: MediaPipeProcessingOptions):
         self.__options: MediaPipeProcessingOptions = options
 
-        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendshapeEnum]]()
 
     def put(self, value: MediaPipeFrame) -> None:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
         transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
-        shapes = {MediaPipeBlendShapeEnum.HeadX: bottom_point.x, MediaPipeBlendShapeEnum.HeadY: 1.0 - bottom_point.y,
-                  MediaPipeBlendShapeEnum.HeadZ: transformation_matrix[2, 3], MediaPipeBlendShapeEnum.EyeXLeft: 0.0,
-                  MediaPipeBlendShapeEnum.EyeXRight: 0.0, MediaPipeBlendShapeEnum.EyeYLeft: 0.0,
-                  MediaPipeBlendShapeEnum.EyeYRight: 0.0}
+        shapes = {
+            MediaPipeBlendshapeEnum.HeadX: bottom_point.x,
+            MediaPipeBlendshapeEnum.HeadY: 1.0 - bottom_point.y,
+            MediaPipeBlendshapeEnum.HeadZ: transformation_matrix[2, 3],
+            MediaPipeBlendshapeEnum.EyeXLeft: 0.0,
+            MediaPipeBlendshapeEnum.EyeXRight: 0.0,
+            MediaPipeBlendshapeEnum.EyeYLeft: 0.0,
+            MediaPipeBlendshapeEnum.EyeYRight: 0.0
+        }
 
         rotation = self.__transformed_normalized_euler_zxy_rotation(transformation_matrix)
 
         if rotation is not None:
-            shapes[MediaPipeBlendShapeEnum.HeadPitch] = rotation[1]
-            shapes[MediaPipeBlendShapeEnum.HeadYaw] = rotation[2]
-            shapes[MediaPipeBlendShapeEnum.HeadRoll] = rotation[0]
+            shapes[MediaPipeBlendshapeEnum.HeadPitch] = rotation[1]
+            shapes[MediaPipeBlendshapeEnum.HeadYaw] = rotation[2]
+            shapes[MediaPipeBlendshapeEnum.HeadRoll] = rotation[0]
 
         for shape in value.face_landmarker_result.face_blendshapes[0]:
             # noinspection PyUnreachableCode
@@ -43,32 +48,32 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
                 case "_neutral":
                     pass
                 case "eyeLookInLeft":
-                    shapes[MediaPipeBlendShapeEnum.EyeXRight] += shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeXRight] += shape.score
                 case "eyeLookOutLeft":
-                    shapes[MediaPipeBlendShapeEnum.EyeXRight] -= shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeXRight] -= shape.score
                 case "eyeLookInRight":
-                    shapes[MediaPipeBlendShapeEnum.EyeXLeft] -= shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeXLeft] -= shape.score
                 case "eyeLookOutRight":
-                    shapes[MediaPipeBlendShapeEnum.EyeXLeft] += shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeXLeft] += shape.score
                 case "eyeLookDownLeft":
-                    shapes[MediaPipeBlendShapeEnum.EyeYLeft] -= shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeYLeft] -= shape.score
                 case "eyeLookUpLeft":
-                    shapes[MediaPipeBlendShapeEnum.EyeYLeft] += shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeYLeft] += shape.score
                 case "eyeLookDownRight":
-                    shapes[MediaPipeBlendShapeEnum.EyeYRight] -= shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeYRight] -= shape.score
                 case "eyeLookUpRight":
-                    shapes[MediaPipeBlendShapeEnum.EyeYRight] += shape.score
+                    shapes[MediaPipeBlendshapeEnum.EyeYRight] += shape.score
                 case _:
-                    shapes[MediaPipeBlendShapeEnum(shape.category_name)] = shape.score
+                    shapes[MediaPipeBlendshapeEnum(shape.category_name)] = shape.score
 
         new_value = BlendShapesFrame(shapes, value.camera_frame.timestamp_ns)
 
         self.__stream_root.put(new_value)
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendshapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendshapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
 
     def close(self) -> None:

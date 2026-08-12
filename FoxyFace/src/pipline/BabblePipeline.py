@@ -5,7 +5,7 @@ from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
 from src.config.schemas.Config import Config
 from src.pipline.MediaPipePipeline import MediaPipePipeline
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.stream.babble.BabbleStream import BabbleStream
 from src.stream.babble.imageprocessing.BabbleImageProcessing import BabbleImageProcessing
@@ -34,7 +34,7 @@ class BabblePipeline:
         self.__stream = BabbleStream(processed_stream, 1.0, self.__babble_loader)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
-        self.__babble_stream = BlendShapesOneEuroFilter[BabbleBlendShapeEnum](self.__filter_processing_options)
+        self.__babble_stream = BlendShapesOneEuroFilter[BabbleBlendshapeEnum](self.__filter_processing_options)
         self.__stream.register_stream(self.__babble_stream)
 
         self.__babble_loader_options_listener: ConfigUpdateListener = self.__register_change_babble_loader_options()
@@ -44,10 +44,10 @@ class BabblePipeline:
 
         self.__preview_window: BabblePreview | None = None
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
         self.__babble_stream.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
         self.__babble_stream.unregister_stream(stream)
 
     def trigger_view_preview(self):

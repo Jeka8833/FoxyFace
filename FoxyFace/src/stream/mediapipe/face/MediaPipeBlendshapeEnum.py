@@ -2,7 +2,7 @@ from enum import unique, StrEnum
 
 
 @unique
-class MediaPipeBlendShapeEnum(StrEnum):
+class MediaPipeBlendshapeEnum(StrEnum):
     BrowDownLeft = "browDownLeft"
     BrowDownRight = "browDownRight"
     BrowInnerUp = "browInnerUp"

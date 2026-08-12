@@ -10,7 +10,7 @@ import numpy as np
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendshapeEnum import MediaPipeTongueBlendshapeEnum
 from src.stream.mediapipe.tongue.MediaPipeTongueProcess import _onnx_worker_loop, IMAGE_SIZE, IMAGE_SHAPE, Status
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
@@ -22,7 +22,7 @@ class MediaPipeTongueStream:
     def __init__(self, image_stream: StreamReadOnly[ImageFrame], frame_timeout: float | None):
         self.__image_stream = image_stream
         self.__frame_timeout = frame_timeout
-        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]()
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeTongueBlendshapeEnum]]()
 
         self.__ctx = mp.get_context("spawn")
         self.__worker = None
@@ -55,10 +55,10 @@ class MediaPipeTongueStream:
         self.__result_thread.start()
         self.__good_started = False
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendshapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendshapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
 
     @property
@@ -197,7 +197,7 @@ class MediaPipeTongueStream:
                 timestamp, tongue_out = self.__output_queue.get(timeout=0.05)
 
                 self.__stream_root.put(BlendShapesFrame(
-                    {MediaPipeTongueBlendShapeEnum.TongueOut: tongue_out},
+                    {MediaPipeTongueBlendshapeEnum.TongueOut: tongue_out},
                     timestamp)
                 )
                 self.__good_started = True

@@ -155,9 +155,11 @@ class ProcessingPipeline:
         self.close()
 
     def __register_change_mixer_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.processing.source,
-                                                      lambda config: config.media_pipe_tongue.enabled,
-                                                      lambda config: config.babble.enabled]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.processing.source,
+            lambda config: config.media_pipe_tongue.enabled,
+            lambda config: config.babble.enabled
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
 
@@ -175,7 +177,9 @@ class ProcessingPipeline:
         self.mixer.update_routes(custom_route, disabled_routes)
 
     def __register_change_calibration_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.processing.calibration]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.processing.calibration
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_calibration_options, watch_array, True)
 

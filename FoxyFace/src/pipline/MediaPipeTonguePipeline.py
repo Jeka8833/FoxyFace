@@ -8,7 +8,7 @@ from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.SingleBufferStream import SingleBufferStream
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
-from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendshapeEnum import MediaPipeTongueBlendshapeEnum
 from src.stream.mediapipe.tongue.MediaPipeTongueProcess import Status
 from src.stream.mediapipe.tongue.MediaPipeTongueStream import MediaPipeTongueStream
 from src.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
@@ -35,7 +35,7 @@ class MediaPipeTonguePipeline:
         self.__stream = MediaPipeTongueStream(processed_stream, 1.0)
 
         self.__filter_processing_options = BlendShapesOneEuroFilterOptions()
-        self.__media_pipe_tongue_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendShapeEnum](
+        self.__media_pipe_tongue_stream = BlendShapesOneEuroFilter[MediaPipeTongueBlendshapeEnum](
             self.__filter_processing_options)
         self.__stream.register_stream(self.__media_pipe_tongue_stream)
 
@@ -46,10 +46,10 @@ class MediaPipeTonguePipeline:
 
         self.__preview_window: MediaPipeTonguePreview | None = None
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendshapeEnum]]) -> None:
         self.__media_pipe_tongue_stream.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeTongueBlendshapeEnum]]) -> None:
         self.__media_pipe_tongue_stream.unregister_stream(stream)
 
     def trigger_view_preview(self):

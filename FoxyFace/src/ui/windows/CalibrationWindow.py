@@ -140,14 +140,14 @@ class CalibrationWindow(FoxyWindow):
     def __statistic_loop(self):
         while not self.is_closed.is_set():
             try:
-                input_blendshapes = []
+                input_blendshapes = {}
                 try:
                     frame = self.__processing_pipeline.ui_stream_input.poll(timeout=1.0)
                     input_blendshapes = frame.blend_shapes
                 except TimeoutError:
                     pass
 
-                output_blendshapes = []
+                output_blendshapes = {}
                 try:
                     frame = self.__processing_pipeline.ui_stream_output.poll(timeout=1.0)
                     output_blendshapes = frame.blend_shapes

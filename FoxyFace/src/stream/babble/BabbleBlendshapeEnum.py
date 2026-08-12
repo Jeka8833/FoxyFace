@@ -2,7 +2,7 @@ from enum import unique, IntEnum
 
 
 @unique
-class BabbleBlendShapeEnum(IntEnum):
+class BabbleBlendshapeEnum(IntEnum):
     CheekPuffLeft = 0
     CheekPuffRight = 1
     CheekSuckLeft = 2
