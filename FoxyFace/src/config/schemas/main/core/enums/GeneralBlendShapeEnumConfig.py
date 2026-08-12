@@ -79,7 +79,7 @@ class GeneralBlendShapeEnumConfig(StrEnum):
 
     @property
     def original_value(self) -> GeneralBlendShapeEnum:
-        return GeneralBlendShapeEnum[self.name]
+        return GeneralBlendShapeEnum[self.value]
 
     @staticmethod
     def from_original(original: GeneralBlendShapeEnum) -> 'GeneralBlendShapeEnumConfig':

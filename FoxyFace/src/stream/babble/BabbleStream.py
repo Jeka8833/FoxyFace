@@ -1,7 +1,7 @@
 import logging
 from threading import Event, Thread
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 from src.stream.babble.BabbleModelLoader import BabbleModelLoader
 from src.stream.core.StreamReadOnly import StreamReadOnly
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
@@ -21,15 +21,15 @@ class BabbleStream:
 
         self.__close_event = Event()
 
-        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[BabbleBlendShapeEnum]]()
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[BabbleBlendshapeEnum]]()
 
         self.__thread = Thread(target=self.__loop, daemon=True, name="Babble Thread")
         self.__thread.start()
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
 
     def close(self):

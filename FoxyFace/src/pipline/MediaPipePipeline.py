@@ -29,12 +29,15 @@ class MediaPipePipeline:
         self.__camera_pipeline.register_stream(self.__buffer)
         processed_stream = CameraProcessing(self.__buffer, self.__camera_pipeline.get_processing_options())
 
-        self.__stream: MediaPipeStream = MediaPipeStream(processed_stream, MediaPipePipeline.__read_media_pipe_model(),
-                                                         min_face_detection_confidence=self.__config_manager.config.media_pipe.min_face_detection_confidence,
-                                                         min_face_presence_confidence=self.__config_manager.config.media_pipe.min_face_presence_confidence,
-                                                         min_tracking_confidence=self.__config_manager.config.media_pipe.min_tracking_confidence,
-                                                         frame_lost_timeout=self.__config_manager.config.media_pipe.frame_lost_timeout,
-                                                         try_use_gpu=self.__config_manager.config.media_pipe.try_use_gpu)
+        self.__stream: MediaPipeStream = MediaPipeStream(
+            processed_stream,
+            MediaPipePipeline.__read_media_pipe_model(),
+            min_face_detection_confidence=self.__config_manager.config.media_pipe.min_face_detection_confidence,
+            min_face_presence_confidence=self.__config_manager.config.media_pipe.min_face_presence_confidence,
+            min_tracking_confidence=self.__config_manager.config.media_pipe.min_tracking_confidence,
+            frame_lost_timeout=self.__config_manager.config.media_pipe.frame_lost_timeout,
+            try_use_gpu=self.__config_manager.config.media_pipe.try_use_gpu
+        )
 
         self.__processing_options = MediaPipeProcessingOptions()
         self.__processing_options_listener: ConfigUpdateListener = self.__register_change_processing_options()
@@ -75,7 +78,9 @@ class MediaPipePipeline:
         self.close()
 
     def __register_change_processing_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe.head_rotation_transformation]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.media_pipe.head_rotation_transformation
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_processing_options, watch_array, True)
 
@@ -83,7 +88,6 @@ class MediaPipePipeline:
         try:
             matrix = config_manager.config.media_pipe.head_rotation_transformation
 
-            # noinspection PyArgumentList
             Rotation.from_matrix(matrix)  # Crash if matrix is not valid
 
             self.__processing_options.initial_rotation = matrix
@@ -91,8 +95,10 @@ class MediaPipePipeline:
             _logger.warning("Failed to update post processing options", exc_info=True, stack_info=True)
 
     def __register_change_fps_limit(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.media_pipe.enable_fps_limit,
-                                                      lambda config: config.media_pipe.fps_limit]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.media_pipe.enable_fps_limit,
+            lambda config: config.media_pipe.fps_limit
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_fps_limit, watch_array, True)
 

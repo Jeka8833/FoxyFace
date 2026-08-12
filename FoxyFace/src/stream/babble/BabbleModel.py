@@ -5,7 +5,7 @@ import numpy
 from cv2.typing import MatLike
 from onnxruntime import InferenceSession
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ class BabbleModel:
     input_size_x: int
     input_size_y: int
 
-    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float]:
+    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendshapeEnum, float]:
         if self.is_input_rgb:
             frame = numpy.divide(image.transpose(2, 0, 1), 255, dtype=numpy.float32)[numpy.newaxis, ...]
         else:
@@ -31,7 +31,7 @@ class BabbleModel:
 
         arr = out[0][0].tolist()
 
-        return {blend_shape: arr[blend_shape.value] for blend_shape in BabbleBlendShapeEnum}
+        return {blend_shape: arr[blend_shape.value] for blend_shape in BabbleBlendshapeEnum}
 
     def is_loaded_successfully(self) -> bool:
         try:
@@ -47,3 +47,9 @@ class BabbleModel:
             _logger.warning("Failed to load babble model", exc_info=True, stack_info=True)
 
         return False
+
+    def get_provider_name(self) -> str | None:
+        try:
+            return self.__session.get_providers()[0]
+        except Exception:
+            return None

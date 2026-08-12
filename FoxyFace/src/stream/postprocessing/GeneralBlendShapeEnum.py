@@ -1,108 +1,108 @@
 from enum import Enum, unique
 
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
-from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
-from src.stream.mediapipe.tongue.MediaPipeTongueBlendShapeEnum import MediaPipeTongueBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendshapeEnum import MediaPipeBlendshapeEnum
+from src.stream.mediapipe.tongue.MediaPipeTongueBlendshapeEnum import MediaPipeTongueBlendshapeEnum
 from src.stream.postprocessing.GeneralBlendShapeOption import GeneralBlendShapeOption
 
 
 @unique
 class GeneralBlendShapeEnum(Enum):
     # Babble + MediaPipe
-    CheekPuffLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.CheekPuffLeft])
-    CheekPuffRight = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.CheekPuffRight])
-    CheekSuckLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.CheekSuckLeft])
-    CheekSuckRight = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.CheekSuckRight])
-    JawOpen = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.JawOpen, BabbleBlendShapeEnum.JawOpen])
-    JawForward = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.JawForward, BabbleBlendShapeEnum.JawForward])
-    JawLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.JawLeft, BabbleBlendShapeEnum.JawLeft])
-    JawRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.JawRight, BabbleBlendShapeEnum.JawRight])
+    CheekPuffLeft = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.CheekPuffLeft])
+    CheekPuffRight = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.CheekPuffRight])
+    CheekSuckLeft = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.CheekSuckLeft])
+    CheekSuckRight = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.CheekSuckRight])
+    JawOpen = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.JawOpen, BabbleBlendshapeEnum.JawOpen])
+    JawForward = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.JawForward, BabbleBlendshapeEnum.JawForward])
+    JawLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.JawLeft, BabbleBlendshapeEnum.JawLeft])
+    JawRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.JawRight, BabbleBlendshapeEnum.JawRight])
     NoseSneerLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.NoseSneerLeft, BabbleBlendShapeEnum.NoseSneerLeft])
+        same_as=[MediaPipeBlendshapeEnum.NoseSneerLeft, BabbleBlendshapeEnum.NoseSneerLeft])
     NoseSneerRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.NoseSneerRight, BabbleBlendShapeEnum.NoseSneerRight])
+        same_as=[MediaPipeBlendshapeEnum.NoseSneerRight, BabbleBlendshapeEnum.NoseSneerRight])
     MouthFunnel = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthFunnel, BabbleBlendShapeEnum.MouthFunnel])
+        same_as=[MediaPipeBlendshapeEnum.MouthFunnel, BabbleBlendshapeEnum.MouthFunnel])
     MouthPucker = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthPucker, BabbleBlendShapeEnum.MouthPucker])
-    MouthLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.MouthLeft, BabbleBlendShapeEnum.MouthLeft])
-    MouthRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.MouthRight, BabbleBlendShapeEnum.MouthRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthPucker, BabbleBlendshapeEnum.MouthPucker])
+    MouthLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.MouthLeft, BabbleBlendshapeEnum.MouthLeft])
+    MouthRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.MouthRight, BabbleBlendshapeEnum.MouthRight])
     MouthRollUpper = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthRollUpper, BabbleBlendShapeEnum.MouthRollUpper])
+        same_as=[MediaPipeBlendshapeEnum.MouthRollUpper, BabbleBlendshapeEnum.MouthRollUpper])
     MouthRollLower = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthRollLower, BabbleBlendShapeEnum.MouthRollLower])
+        same_as=[MediaPipeBlendshapeEnum.MouthRollLower, BabbleBlendshapeEnum.MouthRollLower])
     MouthRaiserUpper = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthShrugUpper, BabbleBlendShapeEnum.MouthRaiserUpper])
+        same_as=[MediaPipeBlendshapeEnum.MouthShrugUpper, BabbleBlendshapeEnum.MouthRaiserUpper])
     MouthRaiserLower = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthShrugLower, BabbleBlendShapeEnum.MouthRaiserLower])
+        same_as=[MediaPipeBlendshapeEnum.MouthShrugLower, BabbleBlendshapeEnum.MouthRaiserLower])
     MouthClosed = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthClose, BabbleBlendShapeEnum.MouthClosed])
+        same_as=[MediaPipeBlendshapeEnum.MouthClose, BabbleBlendshapeEnum.MouthClosed])
     MouthSmileLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthSmileLeft, BabbleBlendShapeEnum.MouthSmileLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthSmileLeft, BabbleBlendshapeEnum.MouthSmileLeft])
     MouthSmileRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthSmileRight, BabbleBlendShapeEnum.MouthSmileRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthSmileRight, BabbleBlendshapeEnum.MouthSmileRight])
     MouthFrownLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthFrownLeft, BabbleBlendShapeEnum.MouthFrownLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthFrownLeft, BabbleBlendshapeEnum.MouthFrownLeft])
     MouthFrownRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthFrownRight, BabbleBlendShapeEnum.MouthFrownRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthFrownRight, BabbleBlendshapeEnum.MouthFrownRight])
     MouthDimpleLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthDimpleLeft, BabbleBlendShapeEnum.MouthDimpleLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthDimpleLeft, BabbleBlendshapeEnum.MouthDimpleLeft])
     MouthDimpleRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthDimpleRight, BabbleBlendShapeEnum.MouthDimpleRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthDimpleRight, BabbleBlendshapeEnum.MouthDimpleRight])
     MouthUpperUpLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthUpperUpLeft, BabbleBlendShapeEnum.MouthUpperUpLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthUpperUpLeft, BabbleBlendshapeEnum.MouthUpperUpLeft])
     MouthUpperUpRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthUpperUpRight, BabbleBlendShapeEnum.MouthUpperUpRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthUpperUpRight, BabbleBlendshapeEnum.MouthUpperUpRight])
     MouthLowerDownLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthLowerDownLeft, BabbleBlendShapeEnum.MouthLowerDownLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthLowerDownLeft, BabbleBlendshapeEnum.MouthLowerDownLeft])
     MouthLowerDownRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthLowerDownRight, BabbleBlendShapeEnum.MouthLowerDownRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthLowerDownRight, BabbleBlendshapeEnum.MouthLowerDownRight])
     MouthPressLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthPressLeft, BabbleBlendShapeEnum.MouthPressLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthPressLeft, BabbleBlendshapeEnum.MouthPressLeft])
     MouthPressRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthPressRight, BabbleBlendShapeEnum.MouthPressRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthPressRight, BabbleBlendshapeEnum.MouthPressRight])
     MouthStretchLeft = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthStretchLeft, BabbleBlendShapeEnum.MouthStretchLeft])
+        same_as=[MediaPipeBlendshapeEnum.MouthStretchLeft, BabbleBlendshapeEnum.MouthStretchLeft])
     MouthStretchRight = GeneralBlendShapeOption(
-        same_as=[MediaPipeBlendShapeEnum.MouthStretchRight, BabbleBlendShapeEnum.MouthStretchRight])
+        same_as=[MediaPipeBlendshapeEnum.MouthStretchRight, BabbleBlendshapeEnum.MouthStretchRight])
     TongueOut = GeneralBlendShapeOption(
-        same_as=[MediaPipeTongueBlendShapeEnum.TongueOut, BabbleBlendShapeEnum.TongueOut])
-    TongueUp = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueUp])
-    TongueDown = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueDown])
-    TongueLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueLeft])
-    TongueRight = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueRight])
-    TongueRoll = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueRoll])
-    TongueBendDown = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueBendDown])
-    TongueCurlUp = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueCurlUp])
-    TongueSquish = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueSquish])
-    TongueFlat = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueFlat])
-    TongueTwistLeft = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueTwistLeft])
-    TongueTwistRight = GeneralBlendShapeOption(same_as=[BabbleBlendShapeEnum.TongueTwistRight])
+        same_as=[MediaPipeTongueBlendshapeEnum.TongueOut, BabbleBlendshapeEnum.TongueOut])
+    TongueUp = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueUp])
+    TongueDown = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueDown])
+    TongueLeft = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueLeft])
+    TongueRight = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueRight])
+    TongueRoll = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueRoll])
+    TongueBendDown = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueBendDown])
+    TongueCurlUp = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueCurlUp])
+    TongueSquish = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueSquish])
+    TongueFlat = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueFlat])
+    TongueTwistLeft = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueTwistLeft])
+    TongueTwistRight = GeneralBlendShapeOption(same_as=[BabbleBlendshapeEnum.TongueTwistRight])
 
     # MediaPipe
-    BrowDownLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.BrowDownLeft])
-    BrowDownRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.BrowDownRight])
-    BrowInnerUp = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.BrowInnerUp])
-    BrowOuterUpLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.BrowOuterUpLeft])
-    BrowOuterUpRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.BrowOuterUpRight])
-    CheekPuff = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.CheekPuff])
-    CheekSquintLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.CheekSquintLeft])
-    CheekSquintRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.CheekSquintRight])
-    EyeBlinkLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeBlinkLeft])
-    EyeBlinkRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeBlinkRight])
-    EyeLookDownLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookDownLeft])
-    EyeLookDownRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookDownRight])
-    EyeLookInLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookInLeft])
-    EyeLookInRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookInRight])
-    EyeLookOutLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookOutLeft])
-    EyeLookOutRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookOutRight])
-    EyeLookUpLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookUpLeft])
-    EyeLookUpRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeLookUpRight])
-    EyeSquintLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeSquintLeft])
-    EyeSquintRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeSquintRight])
+    BrowDownLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.BrowDownLeft])
+    BrowDownRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.BrowDownRight])
+    BrowInnerUp = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.BrowInnerUp])
+    BrowOuterUpLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.BrowOuterUpLeft])
+    BrowOuterUpRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.BrowOuterUpRight])
+    CheekPuff = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.CheekPuff])
+    CheekSquintLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.CheekSquintLeft])
+    CheekSquintRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.CheekSquintRight])
+    EyeBlinkLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeBlinkLeft])
+    EyeBlinkRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeBlinkRight])
+    EyeLookDownLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookDownLeft])
+    EyeLookDownRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookDownRight])
+    EyeLookInLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookInLeft])
+    EyeLookInRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookInRight])
+    EyeLookOutLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookOutLeft])
+    EyeLookOutRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookOutRight])
+    EyeLookUpLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookUpLeft])
+    EyeLookUpRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeLookUpRight])
+    EyeSquintLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeSquintLeft])
+    EyeSquintRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeSquintRight])
     EyeWideLeft = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeWideLeft])
-    EyeWideRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.EyeWideRight])
-    HeadX = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadX], min_value=-1.0, has_center=True)
-    HeadY = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadY], min_value=-1.0, has_center=True)
-    HeadZ = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadZ], min_value=-1.0, has_center=True)
+    EyeWideRight = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.EyeWideRight])
+    HeadX = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.HeadX], min_value=-1.0, has_center=True)
+    HeadY = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.HeadY], min_value=-1.0, has_center=True)
+    HeadZ = GeneralBlendShapeOption(same_as=[MediaPipeBlendshapeEnum.HeadZ], min_value=-1.0, has_center=True)
     HeadRotation = GeneralBlendShapeOption(same_as=[MediaPipeBlendShapeEnum.HeadRotation], disable_calibration=True)

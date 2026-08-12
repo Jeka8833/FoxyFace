@@ -5,10 +5,9 @@ from cv2.typing import MatLike
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
 from AppConstants import AppConstants
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
+from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
 from src.util import OnnxUtil
-from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -33,7 +32,10 @@ class BabbleModelLoader:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
+        if model_path and not model_path.isspace():
+            path = Path(model_path).resolve(strict=True)
+        else:
+            path = BabbleModelLoader.get_base_model_path()
 
         provider = OnnxUtil.get_provider(provider_name, device_id)
         session = InferenceSession(path, opts, providers=provider)
@@ -57,7 +59,7 @@ class BabbleModelLoader:
                 f"Babble model has loaded with provider: {provider}, "
                 f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
-    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendShapeEnum, float] | None:
+    def process_gray_image(self, image: MatLike) -> dict[BabbleBlendshapeEnum, float] | None:
         if self.model is None:
             return None
 

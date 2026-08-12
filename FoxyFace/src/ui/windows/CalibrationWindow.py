@@ -113,7 +113,7 @@ class CalibrationWindow(FoxyWindow):
 
     def __set_default_values(self):
         for enu in _head_global:
-            calibration_widget = CalibrationWidget(enu, self.__config_manager)
+            calibration_widget = CalibrationWidget(enu, self.__config_manager, self.__processing_pipeline.mixer)
 
             self.__ui.head_global_container.addWidget(calibration_widget)
             self.__calibration_widgets[enu] = calibration_widget
@@ -122,7 +122,7 @@ class CalibrationWindow(FoxyWindow):
 
         _head_upper.sort(key=lambda element: element.name)
         for enu in _head_upper:
-            calibration_widget = CalibrationWidget(enu, self.__config_manager)
+            calibration_widget = CalibrationWidget(enu, self.__config_manager, self.__processing_pipeline.mixer)
 
             self.__ui.head_upper_container.addWidget(calibration_widget)
             self.__calibration_widgets[enu] = calibration_widget
@@ -131,7 +131,7 @@ class CalibrationWindow(FoxyWindow):
 
         _head_bottom.sort(key=lambda element: element.name)
         for enu in _head_bottom:
-            calibration_widget = CalibrationWidget(enu, self.__config_manager)
+            calibration_widget = CalibrationWidget(enu, self.__config_manager, self.__processing_pipeline.mixer)
 
             self.__ui.head_bottom_container.addWidget(calibration_widget)
             self.__calibration_widgets[enu] = calibration_widget
@@ -141,34 +141,32 @@ class CalibrationWindow(FoxyWindow):
     def __statistic_loop(self):
         while not self.is_closed.is_set():
             try:
-                input_frame = None
+                input_blendshapes = {}
                 try:
-                    input_frame = self.__processing_pipeline.ui_stream_input.poll(timeout=1.0)
+                    frame = self.__processing_pipeline.ui_stream_input.poll(timeout=1.0)
+                    input_blendshapes = frame.blend_shapes
                 except TimeoutError:
                     pass
 
-                output_frame = None
+                output_blendshapes = {}
                 try:
-                    output_frame = self.__processing_pipeline.ui_stream_output.poll(timeout=1.0)
+                    frame = self.__processing_pipeline.ui_stream_output.poll(timeout=1.0)
+                    output_blendshapes = frame.blend_shapes
                 except TimeoutError:
                     pass
 
-                self.update_statistic_event.emit(input_frame.blend_shapes if input_frame else None,
-                                                 output_frame.blend_shapes if output_frame else None)
+                self.update_statistic_event.emit(input_blendshapes, output_blendshapes)
             except InterruptedError:
                 return
             except Exception:
                 _logger.warning("Error in statistic thread", exc_info=True, stack_info=True)
 
-    def __update_statistic_value(self, input_values: dict[GeneralBlendShapeEnum, float] | None,
-                                 output_values: dict[GeneralBlendShapeEnum, float] | None):
-        if time.perf_counter_ns() - self.__last_label_update_time > 250_000_000 or (
-                not input_values and not output_values):
-            update_label = True
+    def __update_statistic_value(self, input_values: dict[GeneralBlendShapeEnum, float],
+                                 output_values: dict[GeneralBlendShapeEnum, float]):
+        update_label = time.perf_counter_ns() - self.__last_label_update_time > 250_000_000
+
+        if update_label:
             self.__last_label_update_time = time.perf_counter_ns()
-        else:
-            update_label = False
 
         for key, widget in self.__calibration_widgets.items():
-            widget.update_value(update_label, input_values.get(key) if input_values else None,
-                                output_values.get(key) if output_values else None)
+            widget.update_value(update_label, input_values.get(key), output_values.get(key))
