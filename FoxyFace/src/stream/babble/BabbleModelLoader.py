@@ -8,7 +8,6 @@ from AppConstants import AppConstants
 from src.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
 from src.stream.babble.BabbleModel import BabbleModel
 from src.util import OnnxUtil
-from src.util.PathUtil import PathUtil
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +27,10 @@ class BabbleModelLoader:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        path = PathUtil.to_path_or_default(model_path, BabbleModelLoader.get_base_model_path(), strict=True)
+        if model_path and not model_path.isspace():
+            path = Path(model_path).resolve(strict=True)
+        else:
+            path = BabbleModelLoader.get_base_model_path()
 
         provider = OnnxUtil.get_provider(provider_name, device_id)
         session = InferenceSession(path, opts, providers=provider)

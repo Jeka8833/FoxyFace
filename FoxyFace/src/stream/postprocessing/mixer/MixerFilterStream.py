@@ -67,7 +67,7 @@ class MixerFilterStream(StreamReadOnly[BlendShapesFrame[GeneralBlendShapeEnum]])
                             mapped_blendshape = same_as
                             break
 
-            if mapped_blendshape:
+            if mapped_blendshape is not None:
                 out_list[general_blendshape] = mapped_blendshape
                 current_route_dict[general_blendshape] = type_to_route[type(mapped_blendshape)]
 

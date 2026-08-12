@@ -11,6 +11,7 @@ from src.stream.core.components.BlendshapeMigrationBufferStream import Blendshap
 from src.stream.core.components.SingleReadStreamSplitter import SingleReadStreamSplitter
 from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
 from src.stream.mediapipe.face.MediaPipeProcessing import MediaPipeProcessing
+from src.stream.mediapipe.tongue.MediaPipeTongueProcess import Status
 from src.stream.postprocessing.BlendShapeTimedBuffer import BlendShapeTimedBuffer
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.ValidateGeneralBlendShapes import ValidateGeneralBlendShapes
@@ -158,7 +159,13 @@ class ProcessingPipeline:
         watch_array: list[Callable[[Config], Any]] = [
             lambda config: config.processing.source,
             lambda config: config.media_pipe_tongue.enabled,
-            lambda config: config.babble.enabled
+            lambda config: config.media_pipe_tongue.device_id,
+            lambda config: config.media_pipe_tongue.provider,
+            lambda config: config.babble.enabled,
+            lambda config: config.babble.device_id,
+            lambda config: config.babble.model_path,
+            lambda config: config.babble.provider,
+
         ]
 
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
@@ -168,8 +175,10 @@ class ProcessingPipeline:
                         config_manager.config.processing.source.items()}
 
         disabled_routes_dict = {
-            MixerRoute.MEDIA_PIPE_TONGUE: config_manager.config.media_pipe_tongue.enabled,
-            MixerRoute.BABBLE: config_manager.config.babble.enabled,
+            MixerRoute.MEDIA_PIPE_TONGUE: config_manager.config.media_pipe_tongue.enabled
+                                          and self.__media_pipe_tongue_pipeline.process_status is not Status.CRASHED,
+            MixerRoute.BABBLE: config_manager.config.babble.enabled
+                               and self.__babble_pipeline.get_model_loader().model,
         }
 
         disabled_routes = {key for key, value in disabled_routes_dict.items() if not value}
