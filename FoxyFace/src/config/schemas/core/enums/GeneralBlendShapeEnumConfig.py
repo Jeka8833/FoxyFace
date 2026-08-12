@@ -76,7 +76,7 @@ class GeneralBlendShapeEnumConfig(StrEnum):
     HeadRoll = GeneralBlendShapeEnum.HeadRoll.name
 
     def to_original(self) -> GeneralBlendShapeEnum:
-        return GeneralBlendShapeEnum[self.name]
+        return GeneralBlendShapeEnum[self.value]
 
     @staticmethod
     def from_original(original: GeneralBlendShapeEnum) -> 'GeneralBlendShapeEnumConfig':

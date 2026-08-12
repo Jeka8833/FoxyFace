@@ -125,6 +125,7 @@ class MediaPipeStream:
 
     def __async_result(self, result: FaceLandmarkerResult, image, timestamp_ms):
         last_packet = self.__last_frame
+        assert last_packet
 
         with self.__condition_lock:
             self.__condition_lock.notify()

@@ -55,7 +55,7 @@ class ConfigManager:
         self.__write_task()
 
     def create_update_listener(self, update_callback: Callable[["ConfigManager"], None],
-                               watched_elements: list[Callable[[Config], Any]] = None,
+                               watched_elements: list[Callable[[Config], Any]] | None = None,
                                call_on_create: bool = False) -> ConfigUpdateListener:
         listener = ConfigUpdateListener(self, update_callback, call_on_create, watched_elements)
 

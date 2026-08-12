@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 
 class PathUtil:
     @staticmethod
-    def to_path_or_default(path: str | Path | None, default: str | Path, strict: bool = True) -> Path:
+    def to_path_or_default(path: str | None, default: str | Path, strict: bool = True) -> Path:
         try:
             if path and not path.isspace():
                 return Path(path).resolve(strict=strict)

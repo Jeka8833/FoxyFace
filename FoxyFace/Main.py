@@ -115,6 +115,6 @@ def initialize_and_run(app, splash):
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
-    app_instance, splash_instance = show_splash() # Must be without any heavy imports, danke
+    app_instance, splash_instance = show_splash()  # Must be without any heavy imports, danke
 
     initialize_and_run(app_instance, splash_instance)

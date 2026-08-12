@@ -1,8 +1,8 @@
-from enum import Enum, unique
+from enum import unique, IntEnum
 
 
 @unique
-class BabbleBlendShapeEnum(Enum):
+class BabbleBlendShapeEnum(IntEnum):
     CheekPuffLeft = 0
     CheekPuffRight = 1
     CheekSuckLeft = 2

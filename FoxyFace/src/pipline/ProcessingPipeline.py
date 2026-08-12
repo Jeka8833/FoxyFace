@@ -6,12 +6,10 @@ from src.config.schemas.Config import Config
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
-from src.stream.babble.BabbleBlendShapeEnum import BabbleBlendShapeEnum
 from src.stream.core.StreamReadOnly import StreamReadOnly
-from src.stream.core.components.BufferStream import BufferStream
+from src.stream.core.components.BlendshapeMigrationBufferStream import BlendshapeMigrationBufferStream
 from src.stream.core.components.SingleReadStreamSplitter import SingleReadStreamSplitter
 from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
-from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
 from src.stream.mediapipe.face.MediaPipeProcessing import MediaPipeProcessing
 from src.stream.postprocessing.BlendShapeTimedBuffer import BlendShapeTimedBuffer
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
@@ -19,8 +17,8 @@ from src.stream.postprocessing.ValidateGeneralBlendShapes import ValidateGeneral
 from src.stream.postprocessing.calibration.CalibrateProcessing import CalibrateProcessing
 from src.stream.postprocessing.calibration.CalibrateProcessingOptions import CalibrateProcessingOptions
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
-from src.stream.postprocessing.mixer.MixerProcessing import MixerProcessing
-from src.stream.postprocessing.mixer.MixerProcessingOptions import MixerProcessingOptions
+from src.stream.postprocessing.mixer.MixerFilterStream import MixerFilterStream
+from src.stream.postprocessing.mixer.MixerRoute import MixerRoute
 from src.stream.ui.BlendShapesFrameLatency import BlendShapesFrameLatency
 
 
@@ -32,7 +30,7 @@ class ProcessingPipeline:
         self.__media_pipe_tongue_pipeline = media_pipe_tongue_pipeline
         self.__babble_pipeline = babble_pipeline
 
-        self.__buffer = BufferStream[BlendShapesFrame[MediaPipeBlendShapeEnum | BabbleBlendShapeEnum]](16)
+        self.__buffer = BlendshapeMigrationBufferStream()
 
         # ==== MediaPipe Block ====
         self.__media_pipe_fps_counter = WriteCpsCounter()
@@ -61,14 +59,14 @@ class ProcessingPipeline:
         self.__babble_pipeline.register_stream(self.__babble_latency_counter)
 
         # ==== Other Staff Block ====
-        self.__mixer_options = MixerProcessingOptions()
+        self.__mixer = MixerFilterStream(self.__buffer)
         self.__mixer_options_listener: ConfigUpdateListener = self.__register_change_mixer_options()
 
         self.__calibration_options = CalibrateProcessingOptions()
         self.__calibration_options_listener: ConfigUpdateListener = self.__register_change_calibration_options()
 
         self.__stream_without_calibration_first = SingleReadStreamSplitter(
-            MixerProcessing(self.__buffer, self.__mixer_options)
+            self.__mixer
         )
 
         self.__stream_without_calibration_second = SingleReadStreamSplitter(self.__stream_without_calibration_first)
@@ -122,6 +120,10 @@ class ProcessingPipeline:
     def babble_latency(self) -> float:
         return self.__babble_latency_counter.get_latency()
 
+    @property
+    def mixer(self):
+        return self.__mixer
+
     def close(self):
         self.__buffer.close()
 
@@ -153,13 +155,24 @@ class ProcessingPipeline:
         self.close()
 
     def __register_change_mixer_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.processing.source]
+        watch_array: list[Callable[[Config], Any]] = [lambda config: config.processing.source,
+                                                      lambda config: config.media_pipe_tongue.enabled,
+                                                      lambda config: config.babble.enabled]
 
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
 
     def __update_mixer_options(self, config_manager: ConfigManager):
-        self.__mixer_options.enable = {key.to_original(): value.to_original() for key, value in
-                                       config_manager.config.processing.source.items()}
+        custom_route = {key.to_original(): value for key, value in
+                        config_manager.config.processing.source.items()}
+
+        disabled_routes_dict = {
+            MixerRoute.MEDIA_PIPE_TONGUE: config_manager.config.media_pipe_tongue.enabled,
+            MixerRoute.BABBLE: config_manager.config.babble.enabled,
+        }
+
+        disabled_routes = {key for key, value in disabled_routes_dict.items() if not value}
+
+        self.mixer.update_routes(custom_route, disabled_routes)
 
     def __register_change_calibration_options(self) -> ConfigUpdateListener:
         watch_array: list[Callable[[Config], Any]] = [lambda config: config.processing.calibration]

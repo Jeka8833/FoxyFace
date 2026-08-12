@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class ConfigUpdateListener:
     def __init__(self, config_manager: "ConfigManager", update_callback: Callable[["ConfigManager"], None],
-                 call_on_create: bool = False, watched_elements: list[Callable[[Config], Any]] = None):
+                 call_on_create: bool = False, watched_elements: list[Callable[[Config], Any]] | None = None):
         self.__config_manager = config_manager
         self.__update_callback: Callable[[ConfigManager], None] = update_callback
         self.__watched_elements: list[Callable[[Config], Any]] | None = watched_elements

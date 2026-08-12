@@ -15,14 +15,14 @@ class VRCFTUdpSocket:
         self.target_address: tuple[str, int] = target_address
         self.ping_connection_time: float = ping_connection_time
 
-        self.__sock: socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.__sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.__lock: Lock = Lock()
 
         self.__last_statistic_time_ns: int = time.perf_counter_ns()
 
         self.__packet_count: int = 0
 
-        self.__last_pps: int = 0
+        self.__last_pps: float = 0
         self.__has_error: bool = False
 
         self.__close_event: Event = Event()
