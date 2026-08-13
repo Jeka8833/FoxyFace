@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
+from src.config.schemas.main.Config import Config
 from src.pipline.BabblePipeline import BabblePipeline
 from src.pipline.MediaPipePipeline import MediaPipePipeline
 from src.pipline.MediaPipeTonguePipeline import MediaPipeTonguePipeline
@@ -171,7 +171,7 @@ class ProcessingPipeline:
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
 
     def __update_mixer_options(self, config_manager: ConfigManager):
-        custom_route = {key.to_original(): value for key, value in
+        custom_route = {key.original_value: value for key, value in
                         config_manager.config.processing.source.items()}
 
         disabled_routes_dict = {
@@ -193,5 +193,5 @@ class ProcessingPipeline:
         return self.__config_manager.create_update_listener(self.__update_calibration_options, watch_array, True)
 
     def __update_calibration_options(self, config_manager: ConfigManager):
-        self.__calibration_options.blend_shape_options = {key.to_original(): value for key, value in
+        self.__calibration_options.blend_shape_options = {key.original_value: value for key, value in
                                                           config_manager.config.processing.calibration.items()}

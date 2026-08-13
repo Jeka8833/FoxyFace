@@ -6,7 +6,7 @@ from scipy.spatial.transform import Rotation
 
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
-from src.stream.mediapipe.face.MediaPipeBlendShapeEnum import MediaPipeBlendShapeEnum
+from src.stream.mediapipe.face.MediaPipeBlendshapeEnum import MediaPipeBlendshapeEnum
 from src.stream.mediapipe.face.MediaPipeProcessingOptions import MediaPipeProcessingOptions
 from src.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from src.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
@@ -18,36 +18,36 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
     def __init__(self, options: MediaPipeProcessingOptions):
         self.__options: MediaPipeProcessingOptions = options
 
-        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendShapeEnum]]()
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[MediaPipeBlendshapeEnum]]()
 
     def put(self, value: MediaPipeFrame) -> None:
         bottom_point = value.face_landmarker_result.face_landmarks[0][152]
         transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
-        output_shapes: dict[MediaPipeBlendShapeEnum, float | Rotation] = {
-            MediaPipeBlendShapeEnum.HeadX: float(bottom_point.x),
-            MediaPipeBlendShapeEnum.HeadY: float(1.0 - bottom_point.y),
-            MediaPipeBlendShapeEnum.HeadZ: float(transformation_matrix[2, 3]),
+        output_shapes: dict[MediaPipeBlendshapeEnum, float | Rotation] = {
+            MediaPipeBlendshapeEnum.HeadX: float(bottom_point.x),
+            MediaPipeBlendshapeEnum.HeadY: float(1.0 - bottom_point.y),
+            MediaPipeBlendshapeEnum.HeadZ: float(transformation_matrix[2, 3]),
         }
 
         rotation = self.__calibrate_rotation(transformation_matrix)
 
         if rotation is not None:
-            output_shapes[MediaPipeBlendShapeEnum.HeadRotation] = rotation
+            output_shapes[MediaPipeBlendshapeEnum.HeadRotation] = rotation
 
         for shape in value.face_landmarker_result.face_blendshapes[0]:
             if shape.category_name == "_neutral":
                 continue
 
-            output_shapes[MediaPipeBlendShapeEnum(shape.category_name)] = shape.score
+            output_shapes[MediaPipeBlendshapeEnum(shape.category_name)] = shape.score
 
         result_shapes = BlendShapesFrame(output_shapes, value.camera_frame.timestamp_ns)
         self.__stream_root.put(result_shapes)
 
-    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendshapeEnum]]) -> None:
         self.__stream_root.register_stream(stream)
 
-    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendShapeEnum]]) -> None:
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[MediaPipeBlendshapeEnum]]) -> None:
         self.__stream_root.unregister_stream(stream)
 
     def close(self) -> None:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from src.config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 from src.stream.postprocessing.mixer.MixerRoute import MixerRoute
 

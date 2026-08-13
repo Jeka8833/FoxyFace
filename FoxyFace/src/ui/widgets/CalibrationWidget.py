@@ -5,8 +5,8 @@ from PySide6.QtWidgets import QWidget
 
 from src.config.ConfigManager import ConfigManager
 from src.config.ConfigUpdateListener import ConfigUpdateListener
-from src.config.schemas.Config import Config
-from src.config.schemas.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
+from src.config.schemas.main.Config import Config
+from src.config.schemas.main.core.enums.GeneralBlendShapeEnumConfig import GeneralBlendShapeEnumConfig
 from src.stream.postprocessing.GeneralBlendShapeEnum import GeneralBlendShapeEnum
 from src.stream.postprocessing.calibration.BlendShapeOption import BlendShapeOption
 from src.stream.postprocessing.mixer.MixerFilterStream import MixerFilterStream
