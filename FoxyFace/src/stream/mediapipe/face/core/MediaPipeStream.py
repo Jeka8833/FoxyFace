@@ -97,10 +97,11 @@ class MediaPipeStream:
 
                 mp_image = mediapipe.Image(image_format=mediapipe.ImageFormat.SRGB, data=self.__last_frame.image)
 
-                self.__landmarker.detect_async(mp_image, packet_time_ms)
+                # Sync detect (VIDEO mode) instead of async live-stream to avoid
+                # mediapipe Python-binding result retention (unbounded memory leak)
+                result = self.__landmarker.detect_for_video(mp_image, packet_time_ms)
 
-                with self.__condition_lock:  # not ideal back-pressure, we can load more to achieve more FPS, but latency will increase
-                    self.__condition_lock.wait(self.__frame_lost_timeout)
+                self.__async_result(result, mp_image, packet_time_ms)
 
                 fps_limit = self.__fps_limit_ns
                 if fps_limit is not None:
@@ -162,16 +163,16 @@ class MediaPipeStream:
 
             return FaceLandmarker.create_from_options(FaceLandmarkerOptions(
                 base_options=BaseOptions(model_asset_buffer=model_asset_data, delegate=BaseOptions.Delegate.GPU),
-                running_mode=VisionTaskRunningMode.LIVE_STREAM, num_faces=1,
+                running_mode=VisionTaskRunningMode.VIDEO, num_faces=1,
                 min_face_detection_confidence=min_face_detection_confidence,
                 min_face_presence_confidence=min_face_presence_confidence,
                 min_tracking_confidence=min_tracking_confidence, output_face_blendshapes=True,
-                output_facial_transformation_matrixes=True, result_callback=self.__async_result))
+                output_facial_transformation_matrixes=True))
         except Exception:
             return FaceLandmarker.create_from_options(
                 FaceLandmarkerOptions(base_options=BaseOptions(model_asset_buffer=model_asset_data),
-                                      running_mode=VisionTaskRunningMode.LIVE_STREAM, num_faces=1,
+                                      running_mode=VisionTaskRunningMode.VIDEO, num_faces=1,
                                       min_face_detection_confidence=min_face_detection_confidence,
                                       min_face_presence_confidence=min_face_presence_confidence,
                                       min_tracking_confidence=min_tracking_confidence, output_face_blendshapes=True,
-                                      output_facial_transformation_matrixes=True, result_callback=self.__async_result))
+                                      output_facial_transformation_matrixes=True))
