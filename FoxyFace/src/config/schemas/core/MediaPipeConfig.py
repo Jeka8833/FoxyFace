@@ -13,4 +13,3 @@ class MediaPipeConfig:
     min_face_detection_confidence: float = 0.5
     min_face_presence_confidence: float = 0.5
     min_tracking_confidence: float = 0.5
-    frame_lost_timeout: float = 1.0
