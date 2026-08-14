@@ -35,7 +35,6 @@ class MediaPipePipeline:
             min_face_detection_confidence=self.__config_manager.config.media_pipe.min_face_detection_confidence,
             min_face_presence_confidence=self.__config_manager.config.media_pipe.min_face_presence_confidence,
             min_tracking_confidence=self.__config_manager.config.media_pipe.min_tracking_confidence,
-            frame_lost_timeout=self.__config_manager.config.media_pipe.frame_lost_timeout,
             try_use_gpu=self.__config_manager.config.media_pipe.try_use_gpu
         )
 
