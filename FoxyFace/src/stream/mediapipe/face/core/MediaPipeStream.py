@@ -102,7 +102,8 @@ class MediaPipeStream:
                 # https://github.com/Jeka8833/FoxyFace/pull/21
                 result = self.__landmarker.detect_for_video(mp_image, packet_time_ms)
 
-                self.__stream_root.put(MediaPipeFrame(frame, result))
+                if result.face_blendshapes and result.facial_transformation_matrixes and result.face_landmarks:
+                    self.__stream_root.put(MediaPipeFrame(frame, result))
 
                 fps_limit = self.__fps_limit_ns
                 if fps_limit is not None:
