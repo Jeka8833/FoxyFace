@@ -1,10 +1,11 @@
 import logging
-import platform
 import time
 from threading import Event, Thread
 
 import cv2
 
+from src.stream.camera.info.CameraEntry import CameraEntry
+from src.stream.camera.info.CameraList import CameraList
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
@@ -13,7 +14,9 @@ _logger = logging.getLogger(__name__)
 
 
 class CameraStream:
-    def __init__(self):
+    def __init__(self, camera_list: CameraList):
+        self.__camera_list: CameraList = camera_list
+
         self.__stream_root = WriteStreamSplitter[ImageFrame]()
 
         self.__camera: cv2.VideoCapture | None = None
@@ -23,12 +26,9 @@ class CameraStream:
         self.__thread = Thread(target=self.__start_loop, daemon=True, name="Camera Stream")
         self.__thread.start()
 
-    def start_new_camera(self, camera_id: int, width: int, height: int):
+    def start_new_camera(self, camera_info: CameraEntry, width: int, height: int):
         if self.__close_event.is_set():
             raise RuntimeError("CameraStream is closed")
-
-        if not isinstance(camera_id, int) or camera_id < 0:
-            raise ValueError("Invalid camera id")
 
         if not isinstance(width, int) or width <= 0 or width % 2 != 0:
             raise ValueError("Invalid width")
@@ -36,21 +36,20 @@ class CameraStream:
         if not isinstance(height, int) or height <= 0 or height % 2 != 0:
             raise ValueError("Invalid height")
 
+        best_camera = self.__camera_list.find_best(camera_info)
+
         camera = self.__camera
         if camera is not None:
             camera.release()
 
-        if platform.system() == "Windows":
-            camera = cv2.VideoCapture(camera_id, cv2.CAP_DSHOW)
-        else:
-            camera = cv2.VideoCapture(camera_id)
+        camera = cv2.VideoCapture(best_camera.index, best_camera.backend)
 
         camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
         self.__camera = camera
 
-        _logger.info("Camera started")
+        _logger.info(f"Camera {best_camera} started")
 
     def register_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream_root.register_stream(stream)

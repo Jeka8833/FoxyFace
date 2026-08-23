@@ -1,6 +1,7 @@
 import logging
 
 from src.config.ConfigManager import ConfigManager
+from src.stream.camera.info.CameraList import CameraList
 from src.ui.FoxyWindow import FoxyWindow
 from src.ui.qtcreator.ui_camerasettings import Ui_CameraSettings
 
@@ -8,10 +9,11 @@ _logger = logging.getLogger(__name__)
 
 
 class CameraSettingsWindow(FoxyWindow):
-    def __init__(self, config_manager: ConfigManager):
+    def __init__(self, config_manager: ConfigManager, camera_list: CameraList):
         super().__init__()
 
         self.__config_manager = config_manager
+        self.__camera_list = camera_list
 
         self.__ui = Ui_CameraSettings()
         self.__ui.setupUi(self)

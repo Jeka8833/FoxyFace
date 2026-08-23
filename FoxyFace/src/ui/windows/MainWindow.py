@@ -173,7 +173,10 @@ class MainWindow(FoxyWindow):
     def __open_camera_setting(self):
         try:
             if self.__camera_settings_window is None or self.__camera_settings_window.is_closed.is_set():
-                self.__camera_settings_window = CameraSettingsWindow(self.__config_manager)
+                self.__camera_settings_window = CameraSettingsWindow(
+                    self.__config_manager,
+                    self.__camera_pipeline.get_camera_list
+                )
             else:
                 self.__camera_settings_window.close_event.emit()
         except Exception:
@@ -221,8 +224,10 @@ class MainWindow(FoxyWindow):
     def __open_babble_setting_btn(self):
         try:
             if self.__babble_settings_window is None or self.__babble_settings_window.is_closed.is_set():
-                self.__babble_settings_window = BabbleSettingsWindow(self.__config_manager,
-                                                                     self.__babble_pipeline.get_model_loader())
+                self.__babble_settings_window = BabbleSettingsWindow(
+                    self.__config_manager,
+                    self.__babble_pipeline.get_model_loader()
+                )
             else:
                 self.__babble_settings_window.close_event.emit()
         except Exception:
@@ -231,8 +236,10 @@ class MainWindow(FoxyWindow):
     def __open_processing_calibration(self):
         try:
             if self.__auto_calibration_window is None or self.__auto_calibration_window.is_closed.is_set():
-                self.__auto_calibration_window = AutoCalibrationWindow(self.__config_manager,
-                                                                       self.__auto_calibration_endpoint)
+                self.__auto_calibration_window = AutoCalibrationWindow(
+                    self.__config_manager,
+                    self.__auto_calibration_endpoint
+                )
             else:
                 self.__auto_calibration_window.close_event.emit()
         except Exception:
@@ -241,7 +248,10 @@ class MainWindow(FoxyWindow):
     def __open_processing_settings(self):
         try:
             if self.__calibration_window is None or self.__calibration_window.is_closed.is_set():
-                self.__calibration_window = CalibrationWindow(self.__config_manager, self.__processing_pipeline)
+                self.__calibration_window = CalibrationWindow(
+                    self.__config_manager,
+                    self.__processing_pipeline
+                )
             else:
                 self.__calibration_window.close_event.emit()
         except Exception:
@@ -250,7 +260,10 @@ class MainWindow(FoxyWindow):
     def __open_vrcft_settings(self):
         try:
             if self.__vrcft_settings_window is None or self.__vrcft_settings_window.is_closed.is_set():
-                self.__vrcft_settings_window = VrcftSettingsWindow(self.__config_manager, self.__steam_auto_run)
+                self.__vrcft_settings_window = VrcftSettingsWindow(
+                    self.__config_manager,
+                    self.__steam_auto_run
+                )
             else:
                 self.__vrcft_settings_window.close_event.emit()
         except Exception:
@@ -259,6 +272,9 @@ class MainWindow(FoxyWindow):
     def __has_update(self, founded_version: Version):
         try:
             if self.__has_update_window is None or self.__has_update_window.is_closed.is_set():
-                self.__has_update_window = HasUpdateWindow(self.__config_manager, founded_version)
+                self.__has_update_window = HasUpdateWindow(
+                    self.__config_manager,
+                    founded_version
+                )
         except Exception:
             _logger.warning("Failed to open has update window", exc_info=True, stack_info=True)

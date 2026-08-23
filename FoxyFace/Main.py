@@ -53,6 +53,9 @@ def initialize_and_run(app, splash):
             self.__config_manager.load(wait=True)
 
             self.__camera_pipeline = CameraPipeline(self.__config_manager)
+            logger.info(f"Available camera backends: {self.__camera_pipeline.get_camera_list.backends}")
+            logger.info(f"Available cameras: {self.__camera_pipeline.get_camera_list.get_all_cameras()}")
+
             self.__media_pipe_pipeline = MediaPipePipeline(self.__config_manager, self.__camera_pipeline)
             self.__media_pipe_tongue_pipeline = MediaPipeTonguePipeline(
                 self.__config_manager,
