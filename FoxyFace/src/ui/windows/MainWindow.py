@@ -175,7 +175,7 @@ class MainWindow(FoxyWindow):
             if self.__camera_settings_window is None or self.__camera_settings_window.is_closed.is_set():
                 self.__camera_settings_window = CameraSettingsWindow(
                     self.__config_manager,
-                    self.__camera_pipeline.get_camera_list
+                    self.__camera_pipeline
                 )
             else:
                 self.__camera_settings_window.close_event.emit()

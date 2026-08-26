@@ -1,6 +1,6 @@
 import logging
 import time
-from threading import Event, Thread
+from threading import Event, Thread, Lock
 
 import cv2
 
@@ -23,10 +23,13 @@ class CameraStream:
 
         self.__close_event = Event()
 
+        self.__request_lock = Lock()
+        self.__pending_request: tuple[CameraEntry, int, int] | None = None
+
         self.__thread = Thread(target=self.__start_loop, daemon=True, name="Camera Stream")
         self.__thread.start()
 
-    def start_new_camera(self, camera_info: CameraEntry, width: int, height: int):
+    def start_new_camera_async(self, camera_info: CameraEntry, width: int, height: int):
         if self.__close_event.is_set():
             raise RuntimeError("CameraStream is closed")
 
@@ -36,20 +39,8 @@ class CameraStream:
         if not isinstance(height, int) or height <= 0 or height % 2 != 0:
             raise ValueError("Invalid height")
 
-        best_camera = self.__camera_list.find_best(camera_info)
-
-        camera = self.__camera
-        if camera is not None:
-            camera.release()
-
-        camera = cv2.VideoCapture(best_camera.index, best_camera.backend)
-
-        camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-        camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-
-        self.__camera = camera
-
-        _logger.info(f"Camera {best_camera} started")
+        with self.__request_lock:
+            self.__pending_request = (camera_info, width, height)
 
     def register_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream_root.register_stream(stream)
@@ -76,8 +67,30 @@ class CameraStream:
     def __start_loop(self):
         while not self.__close_event.is_set():
             try:
+                request = None
+                with self.__request_lock:
+                    if self.__pending_request is not None:
+                        request = self.__pending_request
+                        self.__pending_request = None
+
+                if request is not None:
+                    camera_info, width, height = request
+                    best_camera = self.__camera_list.find_best(camera_info)
+
+                    if self.__camera is not None:
+                        self.__camera.release()
+
+                    camera = cv2.VideoCapture(best_camera.index, best_camera.backend)
+
+                    camera.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+                    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+
+                    self.__camera = camera
+
+                    _logger.info(f"Camera {best_camera} started")
+
                 if self.__camera is not None and self.__camera.isOpened():
-                    success, numpy_frame_from_opencv = self.__camera.read()  # fast close not guaranteed
+                    success, numpy_frame_from_opencv = self.__camera.read()
                     if success:
                         current_time = time.perf_counter_ns()
 

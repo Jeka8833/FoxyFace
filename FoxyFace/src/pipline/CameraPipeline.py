@@ -46,6 +46,9 @@ class CameraPipeline:
     def get_fps(self):
         return self.__fps_counter.get_cps()
 
+    def camera_restart_async(self):
+        self.__update_camera_options(self.__config_manager)
+
     @property
     def get_processing_options(self) -> CameraProcessingOption:
         return self.__processing_options
@@ -96,7 +99,7 @@ class CameraPipeline:
 
     def __update_camera_options(self, config_manager: ConfigManager):
         try:
-            self.__stream.start_new_camera(
+            self.__stream.start_new_camera_async(
                 config_manager.config.camera.camera_info,
                 (config_manager.config.camera.width // 2) * 2,
                 (config_manager.config.camera.height // 2) * 2

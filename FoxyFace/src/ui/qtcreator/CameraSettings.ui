@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>229</width>
-    <height>287</height>
+    <width>318</width>
+    <height>325</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,41 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="camera_id_lbl">
+     <widget class="QCheckBox" name="manual_mode_cb">
       <property name="text">
-       <string>Camera ID:</string>
+       <string>Manual Camera Selection</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QSpinBox" name="camera_id_sp"/>
+     <widget class="QWidget" name="manual_camera_widget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QComboBox" name="manual_backend_cb"/>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="manual_index_sb"/>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="manual_index_le"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="available_cameras_cb"/>
     </item>
     <item>
      <widget class="QLabel" name="width_lbl">
@@ -93,7 +120,27 @@
      </widget>
     </item>
     <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="bottom_buttons">
+      <item>
+       <widget class="QPushButton" name="camera_restart_btn">
+        <property name="text">
+         <string>Camera Restart</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -120,5 +167,38 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>manual_mode_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>manual_camera_widget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>26</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>93</x>
+     <y>73</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>manual_mode_cb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>available_cameras_cb</receiver>
+   <slot>setHidden(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>173</x>
+     <y>107</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

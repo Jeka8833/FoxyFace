@@ -11,14 +11,14 @@ _logger = logging.getLogger(__name__)
 class CameraList:
     def __init__(self):
         self.__is_loaded = self.__try_enable_lib()
-        self.__backends: set[CameraBackend] = self.__get_all_backends()
+        self.__backends: dict[int, CameraBackend] = self.__get_all_backends()
 
     @property
     def is_loaded(self) -> bool:
         return self.__is_loaded
 
     @property
-    def backends(self) -> set[CameraBackend]:
+    def backends(self) -> dict[int, CameraBackend]:
         return self.__backends
 
     def get_all_cameras(self) -> list[CameraEntry]:
@@ -30,8 +30,7 @@ class CameraList:
 
         camera_entries = [CameraEntry.create_using_camera_info(info) for info in cameras_info]
 
-        backend_indices = {b.index for b in self.backends}
-        return [entry for entry in camera_entries if entry.backend in backend_indices]
+        return [entry for entry in camera_entries if entry.backend in self.backends]
 
     def find_or_create_by_backend_and_index(self, backend: int, index: int | str) -> CameraEntry:
         all_cameras = self.get_all_cameras()
@@ -54,18 +53,18 @@ class CameraList:
         return max(all_cameras, key=lambda camera: camera.compare(selected_camera))
 
     @staticmethod
-    def __get_all_backends() -> set[CameraBackend]:
+    def __get_all_backends() -> dict[int, CameraBackend]:
         backends = cv2.videoio_registry.getCameraBackends()
-        result: set[CameraBackend] = set()
+        result: dict[int, CameraBackend] = {}
 
         for backend_id in backends:
             try:
                 if CameraList.__is_backend_functional(backend_id):
-                    result.add(CameraBackend(
+                    result[backend_id] = CameraBackend(
                         name=cv2.videoio_registry.getBackendName(backend_id),
                         index=backend_id,
                         input_type=CameraList.__backend_2_input_type(backend_id)
-                    ))
+                    )
             except Exception as e:
                 _logger.info(f"Failed to check backend {backend_id}: {e}")
 
@@ -94,7 +93,9 @@ class CameraList:
     def __try_enable_lib() -> bool:
         try:
             import cv2_enumerate_cameras
-            cv2_enumerate_cameras.enumerate_cameras()  # Test
+            raw_cameras = cv2_enumerate_cameras.enumerate_cameras()  # Test
+
+            _logger.info(f"Available raw cameras: {raw_cameras}")
 
             return True
         except Exception:
