@@ -56,18 +56,6 @@ class VrcftSettingsWindow(FoxyWindow):
 
         self.__timer.stop()
 
-        self.__update_ip_signal.disconnect(self.__update_ip)
-        self.__ui.save_btn.clicked.disconnect(self.__save)
-        self.__ui.force_run_btn.clicked.disconnect(self.__force_auto_run)
-
-        self.__ui.run_vrchat_strategy_cb.currentIndexChanged.disconnect(self.__auto_run_changed)
-        self.__ui.run_vrcft_strategy_cb.currentIndexChanged.disconnect(self.__auto_run_changed)
-        self.__ui.vrchat_file_path_le.textChanged.disconnect(self.__auto_run_changed)
-        self.__ui.vrcft_file_path_le.textChanged.disconnect(self.__auto_run_changed)
-
-        self.__ui.vrchat_file_path_select_btn.clicked.disconnect(self.__change_vrchat_path)
-        self.__ui.vrcft_file_path_select_btn.clicked.disconnect(self.__change_vrcft_path)
-
     def __set_default_values(self):
         self.__ui.auto_connect_cb.setChecked(self.__config_manager.config.socket.auto_connect)
         self.__ui.read_timeout_sp.setValue(self.__config_manager.config.socket.udp_read_timeout)

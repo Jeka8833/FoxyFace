@@ -7,6 +7,7 @@ from src.config.schemas.Config import Config
 from src.stream.camera.CameraPreview import CameraPreview
 from src.stream.camera.CameraProcessingOption import CameraProcessingOption
 from src.stream.camera.CameraStream import CameraStream
+from src.stream.camera.info.CameraList import CameraList
 from src.stream.core.StreamWriteOnly import StreamWriteOnly
 from src.stream.core.components.WriteCpsCounter import WriteCpsCounter
 from src.stream.postprocessing.frames.ImageFrame import ImageFrame
@@ -18,7 +19,8 @@ class CameraPipeline:
     def __init__(self, config_manager: ConfigManager):
         self.__config_manager: ConfigManager = config_manager
 
-        self.__stream: CameraStream = CameraStream()
+        self.__camera_list = CameraList()
+        self.__stream: CameraStream = CameraStream(self.__camera_list)
         self.__stream_listener: ConfigUpdateListener = self.__register_change_camera_options()
 
         self.__processing_options: CameraProcessingOption = CameraProcessingOption()
@@ -41,11 +43,19 @@ class CameraPipeline:
         else:
             self.__preview_window.close()
 
+    def get_fps(self):
+        return self.__fps_counter.get_cps()
+
+    def camera_restart_async(self):
+        self.__update_camera_options(self.__config_manager)
+
+    @property
     def get_processing_options(self) -> CameraProcessingOption:
         return self.__processing_options
 
-    def get_fps(self):
-        return self.__fps_counter.get_cps()
+    @property
+    def get_camera_list(self) -> CameraList:
+        return self.__camera_list
 
     def close(self):
         if self.__preview_window is not None:
@@ -65,9 +75,11 @@ class CameraPipeline:
         self.close()
 
     def __register_change_processing_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.camera.mirror_x,
-                                                      lambda config: config.camera.mirror_y,
-                                                      lambda config: config.camera.rotate_ninety]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.camera.mirror_x,
+            lambda config: config.camera.mirror_y,
+            lambda config: config.camera.rotate_ninety
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_processing_options, watch_array, True)
 
@@ -77,16 +89,20 @@ class CameraPipeline:
         self.__processing_options.rotate_ninety = config_manager.config.camera.rotate_ninety
 
     def __register_change_camera_options(self) -> ConfigUpdateListener:
-        watch_array: list[Callable[[Config], Any]] = [lambda config: config.camera.width,
-                                                      lambda config: config.camera.height,
-                                                      lambda config: config.camera.camera_id]
+        watch_array: list[Callable[[Config], Any]] = [
+            lambda config: config.camera.width,
+            lambda config: config.camera.height,
+            lambda config: config.camera.camera_info
+        ]
 
         return self.__config_manager.create_update_listener(self.__update_camera_options, watch_array, True)
 
     def __update_camera_options(self, config_manager: ConfigManager):
         try:
-            self.__stream.start_new_camera(config_manager.config.camera.camera_id,
-                                           (config_manager.config.camera.width // 2) * 2,
-                                           (config_manager.config.camera.height // 2) * 2)
+            self.__stream.start_new_camera_async(
+                config_manager.config.camera.camera_info,
+                (config_manager.config.camera.width // 2) * 2,
+                (config_manager.config.camera.height // 2) * 2
+            )
         except Exception:
             _logger.warning("Failed to recreate camera", exc_info=True, stack_info=True)

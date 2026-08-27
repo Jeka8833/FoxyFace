@@ -51,11 +51,3 @@ class ImagePreviewWindow(FoxyWindow):
                 self.__last_title_update = current_time_ns
 
                 self.setWindowTitle(f"{self.__title} > Size: {image.width()}x{image.height()}")
-
-    def closeEvent(self, event, /) -> None:
-        super().closeEvent(event)
-
-        try:
-            self.set_image_event.disconnect(self.__set_image)
-        except Exception:
-            pass

@@ -95,11 +95,6 @@ class CalibrationWindow(FoxyWindow):
         for widget in self.__calibration_widgets.values():
             widget.close()
 
-        self.__ui.full_reset_btn.clicked.disconnect(self.__full_reset)
-        self.__ui.save_btn.clicked.disconnect(self.__save)
-
-        self.update_statistic_event.disconnect(self.__update_statistic_value)
-
     def __reset_head_center(self):
         self.__config_manager.config.media_pipe.head_rotation_transformation = []
 

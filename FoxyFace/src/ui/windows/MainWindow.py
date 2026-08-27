@@ -1,5 +1,4 @@
 import logging
-import threading
 
 from PySide6.QtCore import QTimer, Qt, Signal
 from PySide6.QtGui import QIcon
@@ -49,8 +48,6 @@ class MainWindow(FoxyWindow):
                  auto_calibration_endpoint: AutoCalibrationEndpoint, steam_auto_run: SteamAutoRun):
         super().__init__()
 
-        self.is_closed: threading.Event = threading.Event()
-
         self.__config_manager = config_manager
         self.__camera_pipeline = camera_pipeline
         self.__media_pipe_pipeline = mediapipe_pipeline
@@ -85,9 +82,7 @@ class MainWindow(FoxyWindow):
         self.show()
 
     def closeEvent(self, event):
-        self.is_closed.set()
-
-        self.__unregister_signals()
+        super().closeEvent(event)
 
         self.__timer.stop()
 
@@ -134,18 +129,6 @@ class MainWindow(FoxyWindow):
         self.udp_status_signal.connect(self.__ui.vrcft_status_lbl.setText)
         self.has_update_signal.connect(self.__has_update)
 
-    def __unregister_signals(self):
-        self.camera_fps_signal.disconnect(self.__ui.camera_fps_lbl.setText)
-        self.mediapipe_fps_signal.disconnect(self.__ui.mediapipe_fps_lbl.setText)
-        self.mediapipe_latency_signal.disconnect(self.__ui.mediapipe_latency_lbl.setText)
-        self.mediapipe_tongue_fps_signal.disconnect(self.__ui.mediapipe_tongue_fps_lbl.setText)
-        self.mediapipe_tongue_latency_signal.disconnect(self.__ui.mediapipe_tongue_latency_lbl.setText)
-        self.babble_fps_signal.disconnect(self.__ui.babble_fps_lbl.setText)
-        self.babble_latency_signal.disconnect(self.__ui.babble_latency_lbl.setText)
-        self.udp_pps_signal.disconnect(self.__ui.vrcft_pps_lbl.setText)
-        self.udp_status_signal.disconnect(self.__ui.vrcft_status_lbl.setText)
-        self.has_update_signal.disconnect(self.__has_update)
-
     def __register_events(self):
         self.__ui.open_camera_preview_btn.clicked.connect(self.__open_camera_preview)
         self.__ui.open_camera_settings_btn.clicked.connect(self.__open_camera_setting)
@@ -173,7 +156,10 @@ class MainWindow(FoxyWindow):
     def __open_camera_setting(self):
         try:
             if self.__camera_settings_window is None or self.__camera_settings_window.is_closed.is_set():
-                self.__camera_settings_window = CameraSettingsWindow(self.__config_manager)
+                self.__camera_settings_window = CameraSettingsWindow(
+                    self.__config_manager,
+                    self.__camera_pipeline
+                )
             else:
                 self.__camera_settings_window.close_event.emit()
         except Exception:
@@ -221,8 +207,10 @@ class MainWindow(FoxyWindow):
     def __open_babble_setting_btn(self):
         try:
             if self.__babble_settings_window is None or self.__babble_settings_window.is_closed.is_set():
-                self.__babble_settings_window = BabbleSettingsWindow(self.__config_manager,
-                                                                     self.__babble_pipeline.get_model_loader())
+                self.__babble_settings_window = BabbleSettingsWindow(
+                    self.__config_manager,
+                    self.__babble_pipeline.get_model_loader()
+                )
             else:
                 self.__babble_settings_window.close_event.emit()
         except Exception:
@@ -231,8 +219,10 @@ class MainWindow(FoxyWindow):
     def __open_processing_calibration(self):
         try:
             if self.__auto_calibration_window is None or self.__auto_calibration_window.is_closed.is_set():
-                self.__auto_calibration_window = AutoCalibrationWindow(self.__config_manager,
-                                                                       self.__auto_calibration_endpoint)
+                self.__auto_calibration_window = AutoCalibrationWindow(
+                    self.__config_manager,
+                    self.__auto_calibration_endpoint
+                )
             else:
                 self.__auto_calibration_window.close_event.emit()
         except Exception:
@@ -241,7 +231,10 @@ class MainWindow(FoxyWindow):
     def __open_processing_settings(self):
         try:
             if self.__calibration_window is None or self.__calibration_window.is_closed.is_set():
-                self.__calibration_window = CalibrationWindow(self.__config_manager, self.__processing_pipeline)
+                self.__calibration_window = CalibrationWindow(
+                    self.__config_manager,
+                    self.__processing_pipeline
+                )
             else:
                 self.__calibration_window.close_event.emit()
         except Exception:
@@ -250,7 +243,10 @@ class MainWindow(FoxyWindow):
     def __open_vrcft_settings(self):
         try:
             if self.__vrcft_settings_window is None or self.__vrcft_settings_window.is_closed.is_set():
-                self.__vrcft_settings_window = VrcftSettingsWindow(self.__config_manager, self.__steam_auto_run)
+                self.__vrcft_settings_window = VrcftSettingsWindow(
+                    self.__config_manager,
+                    self.__steam_auto_run
+                )
             else:
                 self.__vrcft_settings_window.close_event.emit()
         except Exception:
@@ -259,6 +255,9 @@ class MainWindow(FoxyWindow):
     def __has_update(self, founded_version: Version):
         try:
             if self.__has_update_window is None or self.__has_update_window.is_closed.is_set():
-                self.__has_update_window = HasUpdateWindow(self.__config_manager, founded_version)
+                self.__has_update_window = HasUpdateWindow(
+                    self.__config_manager,
+                    founded_version
+                )
         except Exception:
             _logger.warning("Failed to open has update window", exc_info=True, stack_info=True)

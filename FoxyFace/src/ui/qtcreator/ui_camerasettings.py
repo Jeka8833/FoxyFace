@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'CameraSettings.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.0
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,28 +15,52 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QHBoxLayout, QLabel,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QSpinBox, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QVBoxLayout,
+    QWidget)
 
 class Ui_CameraSettings(object):
     def setupUi(self, CameraSettings):
         if not CameraSettings.objectName():
             CameraSettings.setObjectName(u"CameraSettings")
-        CameraSettings.resize(229, 287)
+        CameraSettings.resize(318, 325)
         self.centralwidget = QWidget(CameraSettings)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.camera_id_lbl = QLabel(self.centralwidget)
-        self.camera_id_lbl.setObjectName(u"camera_id_lbl")
+        self.manual_mode_cb = QCheckBox(self.centralwidget)
+        self.manual_mode_cb.setObjectName(u"manual_mode_cb")
 
-        self.verticalLayout.addWidget(self.camera_id_lbl)
+        self.verticalLayout.addWidget(self.manual_mode_cb)
 
-        self.camera_id_sp = QSpinBox(self.centralwidget)
-        self.camera_id_sp.setObjectName(u"camera_id_sp")
+        self.manual_camera_widget = QWidget(self.centralwidget)
+        self.manual_camera_widget.setObjectName(u"manual_camera_widget")
+        self.horizontalLayout = QHBoxLayout(self.manual_camera_widget)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.manual_backend_cb = QComboBox(self.manual_camera_widget)
+        self.manual_backend_cb.setObjectName(u"manual_backend_cb")
 
-        self.verticalLayout.addWidget(self.camera_id_sp)
+        self.horizontalLayout.addWidget(self.manual_backend_cb)
+
+        self.manual_index_sb = QSpinBox(self.manual_camera_widget)
+        self.manual_index_sb.setObjectName(u"manual_index_sb")
+
+        self.horizontalLayout.addWidget(self.manual_index_sb)
+
+        self.manual_index_le = QLineEdit(self.manual_camera_widget)
+        self.manual_index_le.setObjectName(u"manual_index_le")
+
+        self.horizontalLayout.addWidget(self.manual_index_le)
+
+
+        self.verticalLayout.addWidget(self.manual_camera_widget)
+
+        self.available_cameras_cb = QComboBox(self.centralwidget)
+        self.available_cameras_cb.setObjectName(u"available_cameras_cb")
+
+        self.verticalLayout.addWidget(self.available_cameras_cb)
 
         self.width_lbl = QLabel(self.centralwidget)
         self.width_lbl.setObjectName(u"width_lbl")
@@ -81,8 +105,17 @@ class Ui_CameraSettings(object):
 
         self.verticalLayout.addWidget(self.rotate_90_cb)
 
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
         self.bottom_buttons = QHBoxLayout()
         self.bottom_buttons.setObjectName(u"bottom_buttons")
+        self.camera_restart_btn = QPushButton(self.centralwidget)
+        self.camera_restart_btn.setObjectName(u"camera_restart_btn")
+
+        self.bottom_buttons.addWidget(self.camera_restart_btn)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.bottom_buttons.addItem(self.horizontalSpacer)
@@ -98,18 +131,21 @@ class Ui_CameraSettings(object):
         CameraSettings.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(CameraSettings)
+        self.manual_mode_cb.toggled.connect(self.manual_camera_widget.setVisible)
+        self.manual_mode_cb.toggled.connect(self.available_cameras_cb.setHidden)
 
         QMetaObject.connectSlotsByName(CameraSettings)
     # setupUi
 
     def retranslateUi(self, CameraSettings):
         CameraSettings.setWindowTitle(QCoreApplication.translate("CameraSettings", u"Camera Settings", None))
-        self.camera_id_lbl.setText(QCoreApplication.translate("CameraSettings", u"Camera ID:", None))
+        self.manual_mode_cb.setText(QCoreApplication.translate("CameraSettings", u"Manual Camera Selection", None))
         self.width_lbl.setText(QCoreApplication.translate("CameraSettings", u"Width:", None))
         self.height_lbl.setText(QCoreApplication.translate("CameraSettings", u"Height:", None))
         self.vertical_flip_cb.setText(QCoreApplication.translate("CameraSettings", u"Vertical Flip", None))
         self.horizontal_flip_cb.setText(QCoreApplication.translate("CameraSettings", u"Horizontal Flip", None))
         self.rotate_90_cb.setText(QCoreApplication.translate("CameraSettings", u"Rotate 90 Degree ", None))
+        self.camera_restart_btn.setText(QCoreApplication.translate("CameraSettings", u"Camera Restart", None))
         self.apply_and_save_btn.setText(QCoreApplication.translate("CameraSettings", u"Apply and Save", None))
     # retranslateUi
 

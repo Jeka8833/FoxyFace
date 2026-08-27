@@ -27,7 +27,7 @@ class MediaPipePipeline:
 
         self.__buffer = SingleBufferStream[ImageFrame]()
         self.__camera_pipeline.register_stream(self.__buffer)
-        processed_stream = CameraProcessing(self.__buffer, self.__camera_pipeline.get_processing_options())
+        processed_stream = CameraProcessing(self.__buffer, self.__camera_pipeline.get_processing_options)
 
         self.__stream: MediaPipeStream = MediaPipeStream(
             processed_stream,

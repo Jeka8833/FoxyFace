@@ -106,11 +106,11 @@ class ProcessingPipeline:
         return self.__media_pipe_latency_counter.get_latency()
 
     @property
-    def media_pipe_tongue_fps(self):
+    def media_pipe_tongue_fps(self) -> float:
         return self.__media_pipe_tongue_fps_counter.get_cps()
 
     @property
-    def media_pipe_tongue_latency(self):
+    def media_pipe_tongue_latency(self) -> float:
         return self.__media_pipe_tongue_latency_counter.get_latency()
 
     @property
@@ -122,7 +122,7 @@ class ProcessingPipeline:
         return self.__babble_latency_counter.get_latency()
 
     @property
-    def mixer(self):
+    def mixer(self) -> MixerFilterStream:
         return self.__mixer
 
     def close(self):
@@ -165,7 +165,6 @@ class ProcessingPipeline:
             lambda config: config.babble.device_id,
             lambda config: config.babble.model_path,
             lambda config: config.babble.provider,
-
         ]
 
         return self.__config_manager.create_update_listener(self.__update_mixer_options, watch_array, True)
