@@ -175,6 +175,6 @@ class MixerFilterStream(StreamReadOnly[BlendShapesFrame[GeneralBlendShapeEnum]])
         for general_blendshape, required_blendshape in self.__blendshape_mapping.items():
             value = flushed_blendshapes.blend_shapes.get(required_blendshape)
             if value is not None:
-                result_blendshapes[general_blendshape] = value
+                result_blendshapes[general_blendshape] = float(value)
 
         return BlendShapesFrame(result_blendshapes, flushed_blendshapes.timestamp_ns)

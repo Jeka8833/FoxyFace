@@ -41,11 +41,6 @@ class BabbleSettingsWindow(FoxyWindow):
 
         self.__timer.stop()
 
-        self.__ui.save_btn.clicked.disconnect(self.__save)
-        self.__ui.select_path_btn.clicked.disconnect(self.__path_selector)
-        self.__ui.full_reset_btn.clicked.disconnect(self.__full_reset)
-        self.__ui.selected_path_le.textChanged.disconnect(self.__update_model_status)
-
     def __set_default_values(self):
         self.__ui.use_babble_cb.setChecked(self.__config_manager.config.babble.enabled)
         self.__ui.max_head_rotation_x_sp.setValue(self.__config_manager.config.babble.max_head_rotation_x)

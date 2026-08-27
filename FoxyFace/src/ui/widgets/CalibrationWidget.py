@@ -110,16 +110,6 @@ class CalibrationWidget(QWidget):
         self.__neutral_options_listener.unregister()
         self.__positive_options_listener.unregister()
 
-        self.__ui.source_combobox.currentIndexChanged.disconnect(self.__changed_source)
-        self.__ui.negative_sp.valueChanged.disconnect(self.__changed_negative)
-        self.__ui.neutral_sp.valueChanged.disconnect(self.__changed_neutral)
-        self.__ui.positive_sp.valueChanged.disconnect(self.__changed_positive)
-
-        self.__recreate_source_list.disconnect(self.__recreate_source)
-        self.__set_negative_sp.disconnect(self.__ui.negative_sp.setValue)
-        self.__set_neutral_sp.disconnect(self.__ui.neutral_sp.setValue)
-        self.__set_positive_sp.disconnect(self.__ui.positive_sp.setValue)
-
     def __changed_source(self):
         current_index = self.__ui.source_combobox.currentIndex()
         if current_index < 0:

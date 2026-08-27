@@ -45,13 +45,10 @@ class CameraSettingsWindow(FoxyWindow):
 
         return super().eventFilter(watched, event)
 
-    def closeEvent(self, event, /):
-        super().closeEvent(event)
-
-        self.__ui.apply_and_save_btn.clicked.disconnect(self.__save)
-        self.__ui.camera_restart_btn.clicked.disconnect(self.__camera_restart)
-
     def __init_camera_lists(self):
+        self.__ui.manual_backend_cb.clear()
+        self.__ui.available_cameras_cb.clear()
+
         for backend in sorted(self.__camera_list.backends.values(), key=lambda b: b.name):
             self.__ui.manual_backend_cb.addItem(backend.name, backend)
 
@@ -59,13 +56,6 @@ class CameraSettingsWindow(FoxyWindow):
             display_name = f"[{self.__camera_list.backends[camera.backend].name}] {camera.name}"
 
             self.__ui.available_cameras_cb.addItem(display_name, camera)
-
-    def __set_default_values(self):
-        self.__ui.width_sp.setValue((self.__config_manager.config.camera.width // 2) * 2)
-        self.__ui.height_sp.setValue((self.__config_manager.config.camera.height // 2) * 2)
-        self.__ui.horizontal_flip_cb.setChecked(self.__config_manager.config.camera.mirror_x)
-        self.__ui.vertical_flip_cb.setChecked(self.__config_manager.config.camera.mirror_y)
-        self.__ui.rotate_90_cb.setChecked(self.__config_manager.config.camera.rotate_ninety)
 
         try:
             saved_entry = self.__config_manager.config.camera.camera_info
@@ -94,6 +84,13 @@ class CameraSettingsWindow(FoxyWindow):
                         break
         except Exception as e:
             _logger.warning(f"Failed to load default camera entry: {e}")
+
+    def __set_default_values(self):
+        self.__ui.width_sp.setValue((self.__config_manager.config.camera.width // 2) * 2)
+        self.__ui.height_sp.setValue((self.__config_manager.config.camera.height // 2) * 2)
+        self.__ui.horizontal_flip_cb.setChecked(self.__config_manager.config.camera.mirror_x)
+        self.__ui.vertical_flip_cb.setChecked(self.__config_manager.config.camera.mirror_y)
+        self.__ui.rotate_90_cb.setChecked(self.__config_manager.config.camera.rotate_ninety)
 
         self.__on_manual_mode_toggled(self.__ui.manual_mode_cb.isChecked())
 
@@ -153,3 +150,4 @@ class CameraSettingsWindow(FoxyWindow):
 
     def __camera_restart(self):
         self.__camera_pipeline.camera_restart_async()
+        self.__init_camera_lists()

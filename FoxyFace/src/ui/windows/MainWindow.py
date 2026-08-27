@@ -1,5 +1,4 @@
 import logging
-import threading
 
 from PySide6.QtCore import QTimer, Qt, Signal
 from PySide6.QtGui import QIcon
@@ -49,8 +48,6 @@ class MainWindow(FoxyWindow):
                  auto_calibration_endpoint: AutoCalibrationEndpoint, steam_auto_run: SteamAutoRun):
         super().__init__()
 
-        self.is_closed: threading.Event = threading.Event()
-
         self.__config_manager = config_manager
         self.__camera_pipeline = camera_pipeline
         self.__media_pipe_pipeline = mediapipe_pipeline
@@ -85,9 +82,7 @@ class MainWindow(FoxyWindow):
         self.show()
 
     def closeEvent(self, event):
-        self.is_closed.set()
-
-        self.__unregister_signals()
+        super().closeEvent(event)
 
         self.__timer.stop()
 
@@ -133,18 +128,6 @@ class MainWindow(FoxyWindow):
         self.udp_pps_signal.connect(self.__ui.vrcft_pps_lbl.setText)
         self.udp_status_signal.connect(self.__ui.vrcft_status_lbl.setText)
         self.has_update_signal.connect(self.__has_update)
-
-    def __unregister_signals(self):
-        self.camera_fps_signal.disconnect(self.__ui.camera_fps_lbl.setText)
-        self.mediapipe_fps_signal.disconnect(self.__ui.mediapipe_fps_lbl.setText)
-        self.mediapipe_latency_signal.disconnect(self.__ui.mediapipe_latency_lbl.setText)
-        self.mediapipe_tongue_fps_signal.disconnect(self.__ui.mediapipe_tongue_fps_lbl.setText)
-        self.mediapipe_tongue_latency_signal.disconnect(self.__ui.mediapipe_tongue_latency_lbl.setText)
-        self.babble_fps_signal.disconnect(self.__ui.babble_fps_lbl.setText)
-        self.babble_latency_signal.disconnect(self.__ui.babble_latency_lbl.setText)
-        self.udp_pps_signal.disconnect(self.__ui.vrcft_pps_lbl.setText)
-        self.udp_status_signal.disconnect(self.__ui.vrcft_status_lbl.setText)
-        self.has_update_signal.disconnect(self.__has_update)
 
     def __register_events(self):
         self.__ui.open_camera_preview_btn.clicked.connect(self.__open_camera_preview)

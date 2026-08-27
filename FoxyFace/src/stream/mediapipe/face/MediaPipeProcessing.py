@@ -26,9 +26,9 @@ class MediaPipeProcessing(StreamWriteOnly[MediaPipeFrame]):
         transformation_matrix = value.face_landmarker_result.facial_transformation_matrixes[0]
 
         shapes = {
-            MediaPipeBlendshapeEnum.HeadX: bottom_point.x,
-            MediaPipeBlendshapeEnum.HeadY: 1.0 - bottom_point.y,
-            MediaPipeBlendshapeEnum.HeadZ: transformation_matrix[2, 3],
+            MediaPipeBlendshapeEnum.HeadX: float(bottom_point.x),
+            MediaPipeBlendshapeEnum.HeadY: float(1.0 - bottom_point.y),
+            MediaPipeBlendshapeEnum.HeadZ: float(transformation_matrix[2, 3]),
             MediaPipeBlendshapeEnum.EyeXLeft: 0.0,
             MediaPipeBlendshapeEnum.EyeXRight: 0.0,
             MediaPipeBlendshapeEnum.EyeYLeft: 0.0,

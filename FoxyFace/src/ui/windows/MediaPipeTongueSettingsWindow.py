@@ -39,9 +39,6 @@ class MediaPipeTongueSettingsWindow(FoxyWindow):
 
         self.__timer.stop()
 
-        self.__ui.apply_and_save_btn.clicked.disconnect(self.__save)
-        self.__ui.full_reset_btn.clicked.disconnect(self.__full_reset)
-
     def __set_default_values(self):
         self.__ui.use_nn_cb.setChecked(self.__config_manager.config.media_pipe_tongue.enabled)
         self.__ui.mincutoff_dsb.setValue(self.__config_manager.config.media_pipe_tongue.mincutoff)

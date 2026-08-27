@@ -52,16 +52,6 @@ class AutoCalibrationWindow(FoxyWindow):
     def closeEvent(self, event, /):
         super().closeEvent(event)
 
-        self.__ui.normal_pose_selected_list.itemSelectionChanged.disconnect(self.__list_changed_normal_pose)
-        self.__ui.max_pose_selected_list.itemSelectionChanged.disconnect(self.__list_changed_max_pose)
-
-        self.__ui.normal_pose_delay_sp.valueChanged.disconnect(self.__changed_delay_normal_pose)
-        self.__ui.normal_pose_start_btn.clicked.disconnect(self.__start_normal_pose_delayed)
-        self.__ui.max_pose_start_btn.toggled.disconnect(self.__toggle_max_pose)
-
-        self.__update_global_state_signal.disconnect(self.__update_global_state)
-        self.__fail_calibration_signal.disconnect(self.__bad_message)
-
         self.__config_manager.write()
         self.__thread_pool.shutdown(wait=True, cancel_futures=True)
 
