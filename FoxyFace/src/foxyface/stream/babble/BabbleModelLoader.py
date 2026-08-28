@@ -30,7 +30,7 @@ class BabbleModelLoader:
         if model_path and not model_path.isspace():
             path = Path(model_path).resolve(strict=True)
         else:
-            path = BabbleModelLoader.get_base_model_path()
+            path = AppConstants.get_baballonia_face_model_path()
 
         provider = OnnxUtil.get_provider(provider_name, device_id)
         session = InferenceSession(path, opts, providers=provider)
@@ -42,7 +42,7 @@ class BabbleModelLoader:
 
         output_names = [session.get_outputs()[0].name]
 
-        is_default_model = BabbleModelLoader.get_base_model_path().samefile(path)
+        is_default_model = AppConstants.get_baballonia_face_model_path().samefile(path)
 
         model = BabbleModel(session, input_name, output_names, is_default_model, input_size_x, input_size_y)
         if model.is_loaded_successfully():
@@ -57,7 +57,3 @@ class BabbleModelLoader:
             return None
 
         return self.model.process_gray_image(image)
-
-    @staticmethod
-    def get_base_model_path() -> Path:
-        return AppConstants.get_application_root() / "Baballonia" / "foxyface" / "Baballonia" / "faceModel.onnx"
