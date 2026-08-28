@@ -1,0 +1,69 @@
+import logging
+from threading import Event, Thread
+
+from foxyface.stream.babble.BabbleBlendshapeEnum import BabbleBlendshapeEnum
+from foxyface.stream.babble.BabbleModelLoader import BabbleModelLoader
+from foxyface.stream.core.StreamReadOnly import StreamReadOnly
+from foxyface.stream.core.StreamWriteOnly import StreamWriteOnly
+from foxyface.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
+from foxyface.stream.postprocessing.frames.BlendShapesFrame import BlendShapesFrame
+from foxyface.stream.postprocessing.frames.ImageFrame import ImageFrame
+
+_logger = logging.getLogger(__name__)
+
+
+class BabbleStream:
+    def __init__(self, image_stream: StreamReadOnly[ImageFrame], frame_timeout: float | None,
+                 model: BabbleModelLoader):
+        self.__babble_image_stream: StreamReadOnly[ImageFrame] = image_stream
+        self.__frame_timeout: float | None = frame_timeout
+        self.__model = model
+
+        self.__close_event = Event()
+
+        self.__stream_root = WriteStreamSplitter[BlendShapesFrame[BabbleBlendshapeEnum]]()
+
+        self.__thread = Thread(target=self.__loop, daemon=True, name="Babble Thread")
+        self.__thread.start()
+
+    def register_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
+        self.__stream_root.register_stream(stream)
+
+    def unregister_stream(self, stream: StreamWriteOnly[BlendShapesFrame[BabbleBlendshapeEnum]]) -> None:
+        self.__stream_root.unregister_stream(stream)
+
+    def close(self):
+        self.__close_event.set()
+        self.__stream_root.close()
+
+        try:
+            if self.__frame_timeout is None:
+                self.__thread.join(5.0)
+            else:
+                self.__thread.join(self.__frame_timeout * 2.0)
+        except Exception:
+            _logger.warning("Failed to join Babble thread", exc_info=True, stack_info=True)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def __loop(self):
+        while not self.__close_event.is_set():
+            try:
+                last_frame = self.__babble_image_stream.poll(self.__frame_timeout)
+                bend_shapes = self.__model.process_gray_image(last_frame.image)
+                if bend_shapes is None:
+                    continue
+
+                self.__stream_root.put(BlendShapesFrame(bend_shapes, last_frame.timestamp_ns))
+            except TimeoutError:
+                continue
+            except InterruptedError:
+                return
+            except Exception:
+                _logger.warning("Exception in Babble loop", exc_info=True, stack_info=True)
+
+                self.__close_event.wait(0.001)

@@ -1,0 +1,162 @@
+import logging
+import time
+from threading import Event, Thread
+
+import mediapipe
+from mediapipe.tasks.python import BaseOptions
+from mediapipe.tasks.python.vision.core.vision_task_running_mode import VisionTaskRunningMode
+from mediapipe.tasks.python.vision.face_landmarker import FaceLandmarker, FaceLandmarkerOptions
+
+from foxyface.stream.core.StreamReadOnly import StreamReadOnly
+from foxyface.stream.core.StreamWriteOnly import StreamWriteOnly
+from foxyface.stream.core.components.WriteStreamSplitter import WriteStreamSplitter
+from foxyface.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
+from foxyface.stream.postprocessing.frames.ImageFrame import ImageFrame
+
+_logger = logging.getLogger(__name__)
+
+
+class MediaPipeStream:
+    """
+    Unstable when recreated, try to avoid any reinitialization
+    """
+
+    def __init__(self,
+                 image_stream: StreamReadOnly[ImageFrame],
+                 model_asset_data: bytes,
+                 frame_timeout: float | None = 1.0,
+                 min_face_detection_confidence: float = 0.5,
+                 min_face_presence_confidence: float = 0.5,
+                 min_tracking_confidence: float = 0.5,
+                 try_use_gpu: bool = True):
+        self.__image_stream: StreamReadOnly[ImageFrame] = image_stream
+        self.__frame_timeout: float | None = frame_timeout
+
+        self.__landmarker = self.__create_landmarker(
+            model_asset_data=model_asset_data,
+            min_face_detection_confidence=min_face_detection_confidence,
+            min_face_presence_confidence=min_face_presence_confidence,
+            min_tracking_confidence=min_tracking_confidence,
+            try_use_gpu=try_use_gpu
+        )
+
+        self.__close_event = Event()
+
+        self.__last_packet_time_ms: int = time.perf_counter_ns() // 1_000_000
+
+        self.__stream_root = WriteStreamSplitter[MediaPipeFrame]()
+
+        self.__fps_limiter_time: int = time.perf_counter_ns()
+        self.__fps_limit_ns: int | None = None
+
+        self.__thread = Thread(target=self.__loop, daemon=True, name="MediaPipe Thread")
+        self.__thread.start()
+
+    def register_stream(self, stream: StreamWriteOnly[MediaPipeFrame]) -> None:
+        self.__stream_root.register_stream(stream)
+
+    def unregister_stream(self, stream: StreamWriteOnly[MediaPipeFrame]) -> None:
+        self.__stream_root.unregister_stream(stream)
+
+    def set_fps_limit(self, fps_limit: int | None):
+        if fps_limit is None:
+            self.__fps_limit_ns = None
+        else:
+            if fps_limit <= 0:
+                raise ValueError("fps_limit must be positive")
+
+            self.__fps_limit_ns = 1_000_000_000 // fps_limit
+
+    def close(self):
+        self.__close_event.set()
+        self.__stream_root.close()
+
+        try:
+            if self.__frame_timeout is None:
+                self.__thread.join(5.0)
+            else:
+                self.__thread.join(self.__frame_timeout * 2.0)
+        except Exception:
+            _logger.warning("Failed to join MediaPipe thread", exc_info=True, stack_info=True)
+
+        self.__landmarker.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
+    def __loop(self):
+        while not self.__close_event.is_set():
+            try:
+                frame = self.__image_stream.poll(self.__frame_timeout)
+                packet_time_ms = frame.timestamp_ns // 1_000_000
+
+                if self.__last_packet_time_ms - packet_time_ms >= 0:
+                    continue  # System lag
+
+                mp_image = mediapipe.Image(image_format=mediapipe.ImageFormat.SRGB, data=frame.image)
+
+                # Sync detect (VIDEO mode) instead of async live-stream to avoid unbounded memory leak
+                # https://github.com/Jeka8833/FoxyFace/pull/21
+                result = self.__landmarker.detect_for_video(mp_image, packet_time_ms)
+
+                if result.face_blendshapes and result.facial_transformation_matrixes and result.face_landmarks:
+                    self.__stream_root.put(MediaPipeFrame(frame, result))
+
+                fps_limit = self.__fps_limit_ns
+                if fps_limit is not None:
+                    target_frame_completion_time_ns = self.__fps_limiter_time + fps_limit
+                    current_actual_time_ns = time.perf_counter_ns()
+                    sleep_duration_ns = target_frame_completion_time_ns - current_actual_time_ns
+                    if sleep_duration_ns > 0:
+                        self.__close_event.wait(sleep_duration_ns / 1_000_000_000)
+                        self.__fps_limiter_time = target_frame_completion_time_ns
+                    else:
+                        self.__fps_limiter_time = current_actual_time_ns
+
+                self.__last_packet_time_ms = packet_time_ms
+            except TimeoutError:
+                continue
+            except InterruptedError:
+                return
+            except Exception:
+                _logger.warning("Exception in MediaPipe loop", exc_info=True, stack_info=True)
+
+                self.__close_event.wait(0.001)
+
+    @staticmethod
+    def __create_landmarker(model_asset_data: bytes,
+                            min_face_detection_confidence: float,
+                            min_face_presence_confidence: float,
+                            min_tracking_confidence: float,
+                            try_use_gpu: bool = True) -> FaceLandmarker:
+        if min_face_detection_confidence < 0.0 or min_face_detection_confidence > 1.0:
+            raise ValueError("min_face_detection_confidence must be in range [0.0, 1.0]")
+
+        if min_face_presence_confidence < 0.0 or min_face_presence_confidence > 1.0:
+            raise ValueError("min_face_presence_confidence must be in range [0.0, 1.0]")
+
+        if min_tracking_confidence < 0.0 or min_tracking_confidence > 1.0:
+            raise ValueError("min_tracking_confidence must be in range [0.0, 1.0]")
+
+        try:  # Ubuntu
+            if not try_use_gpu:
+                raise Exception
+
+            return FaceLandmarker.create_from_options(FaceLandmarkerOptions(
+                base_options=BaseOptions(model_asset_buffer=model_asset_data, delegate=BaseOptions.Delegate.GPU),
+                running_mode=VisionTaskRunningMode.VIDEO, num_faces=1,
+                min_face_detection_confidence=min_face_detection_confidence,
+                min_face_presence_confidence=min_face_presence_confidence,
+                min_tracking_confidence=min_tracking_confidence, output_face_blendshapes=True,
+                output_facial_transformation_matrixes=True))
+        except Exception:
+            return FaceLandmarker.create_from_options(
+                FaceLandmarkerOptions(base_options=BaseOptions(model_asset_buffer=model_asset_data),
+                                      running_mode=VisionTaskRunningMode.VIDEO, num_faces=1,
+                                      min_face_detection_confidence=min_face_detection_confidence,
+                                      min_face_presence_confidence=min_face_presence_confidence,
+                                      min_tracking_confidence=min_tracking_confidence, output_face_blendshapes=True,
+                                      output_facial_transformation_matrixes=True))
