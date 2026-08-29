@@ -29,15 +29,33 @@ public class FoxyFacePacketProcessor
         GenerateUnifiedExpressionsDictionary();
 
     private readonly bool _headRotationAllowed = UnifiedTracking.Data.GetType().GetField("Head") != null;
+    
+    private string _trackingMode = "both";
 
     public FoxyFacePacketProcessor(ILogger logger)
     {
         logger.LogInformation("Available {} unified expressions. Head Position/Rotation Allowed: {}",
             _unifiedExpressionsDictionary.Count, _headRotationAllowed);
     }
+    
+    public void SetTrackingMode(string trackingMode)
+    {
+        _trackingMode = trackingMode?.ToLower() ?? "both";
+    }
 
     public void UpdateEyes(Dictionary<string, float> foxyFaceValues)
     {
+        if (_trackingMode == "mouth")
+        {
+            UnifiedTracking.Data.Eye.Right.Gaze.x = 0;
+            UnifiedTracking.Data.Eye.Right.Gaze.y = 0;
+            UnifiedTracking.Data.Eye.Right.Openness = 0;
+            UnifiedTracking.Data.Eye.Left.Gaze.x = 0;
+            UnifiedTracking.Data.Eye.Left.Gaze.y = 0;
+            UnifiedTracking.Data.Eye.Left.Openness = 0;
+            return;
+        }
+        
         if (foxyFaceValues.TryGetValue(EyeRightX, out float eyeRightXValue))
         {
             UnifiedTracking.Data.Eye.Right.Gaze.x = eyeRightXValue;
@@ -81,6 +99,9 @@ public class FoxyFacePacketProcessor
 
     public void UpdateExpression(Dictionary<string, float> foxyFaceValues)
     {
+        // Skip expression updates if tracking mode is "eyes"
+        if (_trackingMode == "eyes") return;
+        
         foreach (KeyValuePair<string, float> pair in foxyFaceValues)
         {
             if (_unifiedExpressionsDictionary.TryGetValue(pair.Key, out int shapeKey))
