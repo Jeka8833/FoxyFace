@@ -25,6 +25,10 @@ def show_splash():
 
 
 def initialize_and_run(app, splash):
+    # Try to load ONNX runtime or crash
+    # noinspection PyUnusedImports
+    import foxyface.util.OnnxUtil
+
     from pathlib import Path
     import logging
     from foxyface.AppConstants import AppConstants

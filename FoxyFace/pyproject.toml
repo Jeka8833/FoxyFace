@@ -38,10 +38,7 @@ keywords = [
     "vrcft",
     "face-tracking",
     "mediapipe",
-    "babble",
-    "pyside6",
     "facial-tracking",
-    "osc",
     "vtuber",
 ]
 dependencies = [

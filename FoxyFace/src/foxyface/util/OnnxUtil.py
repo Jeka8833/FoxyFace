@@ -9,7 +9,15 @@ try:
 except ImportError:
     _logger.info("Failed to import torch. Some compute acceleration for onnxruntime may not work")
 
-import onnxruntime
+try:
+    import onnxruntime
+except ImportError:
+    _logger.fatal("The program is not installed correctly on Linux. ")
+    _logger.fatal("Please follow the instructions in the README.md file or visit the link:")
+    _logger.fatal(
+        "https://foxyface.jeka8833.pp.ua/docs/FoxyFace/install-update-uninstall/install/Install-FoxyFace-Linux/")
+
+    raise
 
 onnxruntime.disable_telemetry_events()
 
