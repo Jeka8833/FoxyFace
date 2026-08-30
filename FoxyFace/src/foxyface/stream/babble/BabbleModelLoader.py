@@ -1,4 +1,5 @@
 import logging
+from importlib import resources
 from pathlib import Path
 
 from cv2.typing import MatLike
@@ -27,13 +28,17 @@ class BabbleModelLoader:
         opts.add_session_config_entry("session.intra_op.allow_spinning", "1" if allow_spinning else "0")
         opts.enable_mem_pattern = False
 
-        if model_path and not model_path.isspace():
-            path = Path(model_path).resolve(strict=True)
-        else:
-            path = AppConstants.get_baballonia_face_model_path()
+        is_default_model = not model_path or model_path.isspace()
 
-        provider = OnnxUtil.get_provider(provider_name, device_id)
-        session = InferenceSession(path, opts, providers=provider)
+        if is_default_model:
+            with resources.as_file(AppConstants.get_baballonia_face_model_path()) as default_model_path:
+                path = default_model_path
+                provider = OnnxUtil.get_provider(provider_name, device_id)
+                session = InferenceSession(path, opts, providers=provider)
+        else:
+            path = Path(model_path).resolve(strict=True)
+            provider = OnnxUtil.get_provider(provider_name, device_id)
+            session = InferenceSession(path, opts, providers=provider)
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
@@ -41,8 +46,6 @@ class BabbleModelLoader:
         input_size_y = first_input.shape[3]
 
         output_names = [session.get_outputs()[0].name]
-
-        is_default_model = AppConstants.get_baballonia_face_model_path().samefile(path)
 
         model = BabbleModel(session, input_name, output_names, is_default_model, input_size_x, input_size_y)
         if model.is_loaded_successfully():

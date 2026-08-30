@@ -1,13 +1,6 @@
 import logging
 from typing import Any, Callable
 
-from scipy.spatial.transform import Rotation
-
-from foxyface.AppConstants import AppConstants
-from foxyface.config.ConfigManager import ConfigManager
-from foxyface.config.ConfigUpdateListener import ConfigUpdateListener
-from foxyface.config.schemas.Config import Config
-from foxyface.pipline.CameraPipeline import CameraPipeline
 from foxyface.stream.camera.CameraProcessing import CameraProcessing
 from foxyface.stream.core.StreamWriteOnly import StreamWriteOnly
 from foxyface.stream.core.components.SingleBufferStream import SingleBufferStream
@@ -16,6 +9,13 @@ from foxyface.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from foxyface.stream.mediapipe.face.core.MediaPipePreview import MediaPipePreview
 from foxyface.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
 from foxyface.stream.postprocessing.frames.ImageFrame import ImageFrame
+from scipy.spatial.transform import Rotation
+
+from foxyface.AppConstants import AppConstants
+from foxyface.config.ConfigManager import ConfigManager
+from foxyface.config.ConfigUpdateListener import ConfigUpdateListener
+from foxyface.config.schemas.Config import Config
+from foxyface.pipline.CameraPipeline import CameraPipeline
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class MediaPipePipeline:
 
         self.__stream: MediaPipeStream = MediaPipeStream(
             processed_stream,
-            MediaPipePipeline.__read_media_pipe_model(),
+            AppConstants.get_file_from_assets("face_landmarker.task").read_bytes(),
             min_face_detection_confidence=self.__config_manager.config.media_pipe.min_face_detection_confidence,
             min_face_presence_confidence=self.__config_manager.config.media_pipe.min_face_presence_confidence,
             min_tracking_confidence=self.__config_manager.config.media_pipe.min_tracking_confidence,
@@ -106,7 +106,3 @@ class MediaPipePipeline:
             self.__stream.set_fps_limit(config_manager.config.media_pipe.fps_limit)
         else:
             self.__stream.set_fps_limit(None)
-
-    @staticmethod
-    def __read_media_pipe_model() -> bytes:
-        return (AppConstants.get_application_root() / 'Assets' / 'face_landmarker.task').read_bytes()

@@ -1,6 +1,5 @@
 import logging
 from dataclasses import dataclass
-from pathlib import Path
 
 import numpy
 from cv2.typing import MatLike
@@ -46,7 +45,11 @@ class MediaPipeTongueModel:
         opts.enable_mem_pattern = False
 
         provider = OnnxUtil.get_provider(provider_name, device_id)
-        session = InferenceSession(MediaPipeTongueModel.get_base_model_path(), opts, providers=provider)
+        session = InferenceSession(
+            AppConstants.get_file_from_assets("tongue_detector.onnx").read_bytes(),
+            opts,
+            providers=provider
+        )
 
         first_input = session.get_inputs()[0]
         input_name = first_input.name
@@ -63,7 +66,3 @@ class MediaPipeTongueModel:
                      f"intra_op_num_threads: {intra_op_num_threads}, allow_spinning: {allow_spinning}")
 
         return model
-
-    @staticmethod
-    def get_base_model_path() -> Path:
-        return AppConstants.get_application_root() / "Assets" / "tongue_detector.onnx"

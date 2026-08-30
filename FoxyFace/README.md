@@ -110,3 +110,35 @@ Run the application:
 venv/bin/foxyface
 ```
 *(or just `foxyface` if the virtual environment is activated)*
+
+
+### 3. Development / From Source
+
+If you want to contribute or modify the source code:
+
+#### 1. Clone the repository
+Make sure to include submodules during cloning:
+```bash
+git clone --recurse-submodules https://github.com/Jeka8833/FoxyFace.git
+cd FoxyFace/FoxyFace
+```
+
+#### 2. Set up a virtual environment
+You can let your IDE (e.g., PyCharm, VS Code) automatically create and manage the virtual environment, or create one manually:
+
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+**Linux / macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 3. Install in editable mode
+```bash
+pip install -e .
+```

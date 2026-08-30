@@ -1,48 +1,29 @@
-import importlib
-import sys
+import logging
+from importlib import resources
+from importlib.abc import Traversable
 from pathlib import Path
 from typing import Final
 
 from packaging.version import Version
+
+_logger = logging.getLogger(__name__)
 
 
 class AppConstants:
     VERSION: Final[Version] = Version("1.0.5.1")
 
     @staticmethod
-    def get_application_root() -> Path:
-        if getattr(sys, "frozen", False):
-            if hasattr(sys, "_MEIPASS"):
-                return Path(sys._MEIPASS).resolve()
-
-            return Path(sys.executable).resolve().parent
-
-        return Path(__file__).resolve().parent
+    def get_file_from_assets(file_name: str) -> Traversable:
+        return resources.files("foxyface.assets").joinpath(file_name)
 
     @staticmethod
-    def get_baballonia_face_model_path() -> Path:
-        model_filename = "faceModel.onnx"
-
-        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-            base_path = Path(sys._MEIPASS)
-
-            pyinstaller_path = base_path / "Baballonia" / "src" / "Baballonia" / model_filename
-            if pyinstaller_path.is_file():
-                return Path(pyinstaller_path)
-
+    def get_baballonia_face_model_path() -> Traversable | Path:
         try:
-            resource_path = importlib.resources.files("foxyface.assets.baballonia") / model_filename
-
-            if resource_path.is_file():
-                return Path(resource_path)
+            return resources.files("foxyface.assets.baballonia").joinpath("faceModel.onnx")
         except ModuleNotFoundError:
-            pass
+            _logger.info("Baballonia model not found in assets, trying to load from project root")
 
-        current_dir = Path(__file__).resolve()
+            current_file_path = Path(__file__).resolve()
+            project_root = current_file_path.parent.parent.parent
 
-        for parent in current_dir.parents:
-            dev_path = parent / "Baballonia" / "src" / "Baballonia" / model_filename
-            if dev_path.is_file():
-                return Path(dev_path)
-
-        raise FileNotFoundError(f"File {model_filename} not found")
+            return project_root / "Baballonia" / "src" / "Baballonia" / "faceModel.onnx"

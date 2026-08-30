@@ -2,6 +2,7 @@ import ctypes
 import logging
 from functools import cache
 
+from PySide6.QtCore import QByteArray
 from PySide6.QtGui import QPixmap
 
 from foxyface.AppConstants import AppConstants
@@ -20,29 +21,26 @@ def allow_change_windows_icon():
 
 @cache
 def get_window_icon() -> QPixmap | None:
-    try:
-        return QPixmap(AppConstants.get_application_root() / 'Assets' / 'icon.png')
-    except Exception:
-        __logger.warning("Failed to load get_window_icon", exc_info=True, stack_info=True)
-
-        return None
+    return __load_image("icon.png")
 
 
 @cache
 def get_no_image_icon() -> QPixmap | None:
-    try:
-        return QPixmap(AppConstants.get_application_root() / 'Assets' / 'no-image.jpg')
-    except Exception:
-        __logger.warning("Failed to load get_no_image_qpixmap", exc_info=True, stack_info=True)
-
-        return None
+    return __load_image("no-image.png")
 
 
 @cache
 def get_warning_icon() -> QPixmap | None:
+    return __load_image("warning.png")
+
+
+def __load_image(path: str) -> QPixmap | None:
     try:
-        return QPixmap(AppConstants.get_application_root() / 'Assets' / 'warning.png')
+        pixmap = QPixmap()
+        pixmap.loadFromData(QByteArray(AppConstants.get_file_from_assets(path).read_bytes()))
+
+        return pixmap
     except Exception:
-        __logger.warning("Failed to load get_warning_icon", exc_info=True, stack_info=True)
+        __logger.warning(f"Failed to load image {path}", exc_info=True, stack_info=True)
 
         return None
