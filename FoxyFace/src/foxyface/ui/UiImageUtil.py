@@ -1,6 +1,7 @@
 import ctypes
 import logging
 from functools import cache
+from importlib import resources
 
 from PySide6.QtCore import QByteArray
 from PySide6.QtGui import QPixmap
@@ -26,7 +27,7 @@ def get_window_icon() -> QPixmap | None:
 
 @cache
 def get_no_image_icon() -> QPixmap | None:
-    return __load_image("no-image.png")
+    return __load_image("no-image.jpg")
 
 
 @cache
@@ -36,10 +37,8 @@ def get_warning_icon() -> QPixmap | None:
 
 def __load_image(path: str) -> QPixmap | None:
     try:
-        pixmap = QPixmap()
-        pixmap.loadFromData(QByteArray(AppConstants.get_file_from_assets(path).read_bytes()))
-
-        return pixmap
+        with resources.as_file(AppConstants.get_file_from_assets(path)) as path:
+            return QPixmap(path)
     except Exception:
         __logger.warning(f"Failed to load image {path}", exc_info=True, stack_info=True)
 

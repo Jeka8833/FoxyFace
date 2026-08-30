@@ -1,5 +1,5 @@
 import logging
-from importlib import resources
+from importlib import resources, metadata
 from importlib.abc import Traversable
 from pathlib import Path
 from typing import Final
@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AppConstants:
-    VERSION: Final[Version] = Version("1.0.5.1")
+    VERSION: Final[Version] = Version(metadata.version("foxyface"))
 
     @staticmethod
     def get_file_from_assets(file_name: str) -> Traversable:

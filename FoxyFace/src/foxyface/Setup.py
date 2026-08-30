@@ -112,6 +112,7 @@ def initialize_and_run(app, splash):
     with RunMainStream(splash):
         sys.exit(app.exec())
 
+
 def main():
     multiprocessing.freeze_support()
 

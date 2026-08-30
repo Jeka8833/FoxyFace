@@ -1,6 +1,11 @@
 REM Yes-yes, you'll have to change the path to 7zip, or live without archiving at the very end of operations.
 set "zip="C:\Program Files\7-Zip\7z.exe""
 
+
+REM =====================================
+REM Convert program version
+REM =====================================
+rmdir /S /Q .venv
 python -m venv .venv
 call .venv\Scripts\activate
 
@@ -13,28 +18,75 @@ pyivf-make_version --source-format yaml --metadata-source verison.yml --outfile 
 
 call .venv\Scripts\deactivate
 
-call ..\..\.venv\Scripts\activate
 
-rmdir /s /q pyinstaller
+
+REM =====================================
+REM Download pyinstaller
+REM =====================================
+
+rmdir /S /Q pyinstaller
 git clone https://github.com/pyinstaller/pyinstaller.git
 
+
+REM =====================================
+REM Build GPU
+REM =====================================
+rmdir /S /Q .venv
+python -m venv .venv
+call .venv\Scripts\activate
+
+
 cd pyinstaller\bootloader
-
 python ./waf all --target-arch=64bit
-
+cd ..
+pip install -e .
 cd ..
 
+pip install -e ..\..\.
+
+pyinstaller --noconfirm --icon="..\..\src\foxyface\assets\icon.png" --collect-all foxyface --hide-console="hide-early" --add-data "..\..\Baballonia\src\Baballonia\faceModel.onnx;foxyface\assets\baballonia" --hidden-import=mediapipe.tasks.c --add-data=".venv/Lib/site-packages/mediapipe/tasks/c;mediapipe/tasks/c"  --clean --version-file="FoxyFace.exe.rc" --distpath=distGPU --workpath=build --name FoxyFace Run.py
+
+
+
+REM =====================================
+REM Pack GPU build
+REM =====================================
+
+copy debug_start.bat distGPU\FoxyFace\
+
+cd distGPU
+del /f FoxyFace.zip
+%zip% a -tzip -mx9 FoxyFace.zip FoxyFace
+cd ..
+
+
+REM =====================================
+REM Build CPU
+REM =====================================
+rmdir /S /Q .venv
+python -m venv .venv
+call .venv\Scripts\activate
+
+
+cd pyinstaller\bootloader
+python ./waf all --target-arch=64bit
+cd ..
 pip install -e .
+cd ..
 
-cd ..\..\..
+pip install -e ..\..\.[cpu]
 
-pyinstaller --add-data="Assets:Assets" --add-data="Baballonia\\src\\Baballonia\\faceModel.onnx:Baballonia\\src\\Baballonia\\" --noconfirm --icon="Assets\\icon.png" --hide-console="hide-early" --clean --version-file="compile\\windows\\FoxyFace.exe.rc" --distpath=compile\windows\dist --workpath=compile\windows\build --hidden-import=mediapipe.tasks.c --add-data=".venv/Lib/site-packages/mediapipe/tasks/c;mediapipe/tasks/c" --name FoxyFace Main.py
+pyinstaller --noconfirm --icon="..\..\src\foxyface\assets\icon.png" --collect-all foxyface --hide-console="hide-early" --add-data "..\..\Baballonia\src\Baballonia\faceModel.onnx;foxyface\assets\baballonia" --hidden-import=mediapipe.tasks.c --add-data=".venv/Lib/site-packages/mediapipe/tasks/c;mediapipe/tasks/c"  --clean --version-file="FoxyFace.exe.rc" --distpath=distCPU --workpath=build --name FoxyFace Run.py
 
-cd compile\windows
 
-copy debug_start.bat dist\FoxyFace\
 
-cd dist
+REM =====================================
+REM Pack CPU build
+REM =====================================
+
+copy debug_start.bat distCPU\FoxyFace\
+
+cd distCPU
 del /f FoxyFace.zip
 %zip% a -tzip -mx9 FoxyFace.zip FoxyFace
 

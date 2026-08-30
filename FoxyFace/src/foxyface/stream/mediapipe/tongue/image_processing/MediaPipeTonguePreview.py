@@ -8,7 +8,8 @@ from foxyface.stream.core.StreamReadOnly import StreamReadOnly
 from foxyface.stream.core.components.SingleBufferStream import SingleBufferStream
 from foxyface.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from foxyface.stream.mediapipe.face.core.MediaPipeStream import MediaPipeStream
-from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
+from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import \
+    MediaPipeTongueImageProcessing
 from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueProcessingOptions import \
     MediaPipeTongueProcessingOptions
 from foxyface.stream.postprocessing.frames.ImageFrame import ImageFrame

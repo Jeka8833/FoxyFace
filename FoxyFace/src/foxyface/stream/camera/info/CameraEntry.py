@@ -1,8 +1,23 @@
-from dataclasses import dataclass
+import platform
+from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Self
 
+import cv2
 from cv2_enumerate_cameras.camera_info import CameraInfo
+
+
+def _default_backend() -> int:
+    system = platform.system()
+
+    if system == 'Windows':
+        return cv2.CAP_DSHOW
+    elif system == 'Linux':
+        return cv2.CAP_V4L
+    elif system == 'Darwin':
+        return cv2.CAP_AVFOUNDATION
+    else:
+        return cv2.CAP_ANY
 
 
 @dataclass(slots=True, frozen=True)
@@ -12,7 +27,7 @@ class CameraEntry:
     path: str | None = None
     vid: int | None = None
     pid: int | None = None
-    backend: int = 700
+    backend: int = field(default_factory=_default_backend)
     manual: bool = False
 
     def compare(self, other: Self) -> float:

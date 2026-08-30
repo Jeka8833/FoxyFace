@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "foxyface"
@@ -44,7 +44,7 @@ keywords = [
 dependencies = [
     "mediapipe",
     "PySide6",
-    "opencv-contrib-python",
+    "opencv-contrib-python", # Qt conflict, but I can't do anything
     "dataclass-wizard",
     "OneEuroFilter",
     "packaging",
@@ -54,8 +54,8 @@ dependencies = [
     "sounddevice",
     "requests",
     "cv2-enumerate-cameras",
-    "onnxruntime-directml; platform_system == 'Windows'",
-    "onnxruntime-coreml; platform_system == 'Darwin'",
+    "onnxruntime-directml; platform_system == 'Windows' and extra != 'nvidia' and extra != 'rocm' and extra != 'openvino' and extra != 'cpu'",
+    "onnxruntime-coreml; platform_system == 'Darwin' and extra != 'nvidia' and extra != 'rocm' and extra != 'openvino' and extra != 'cpu'",
 ]
 
 [project.optional-dependencies]
@@ -73,6 +73,10 @@ openvino = [
 cpu = [
     "onnxruntime",
 ]
+build = [
+    "build",
+    "twine"
+]
 
 [project.scripts]
 foxyface = "foxyface.Setup:main"
@@ -84,14 +88,26 @@ Repository = "https://github.com/Jeka8833/FoxyFace"
 Issues = "https://github.com/Jeka8833/FoxyFace/issues"
 Changelog = "https://github.com/Jeka8833/FoxyFace/releases"
 
-[tool.setuptools]
-include-package-data = true
+[tool.hatch.build]
+exclude = [
+    "src/foxyface/ui/qtcreator/.qtcreator",
+]
 
-[tool.setuptools.package-dir]
-"foxyface" = "src/foxyface"
-"foxyface.assets" = "src/foxyface/assets"
-"foxyface.assets.baballonia" = "Baballonia/src/Baballonia"
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/foxyface/*.py",
+    "src/foxyface/**/*.py",
+    "src/foxyface/assets/**/*",
+    "Baballonia/src/Baballonia/faceModel.onnx",
+]
 
-[tool.setuptools.package-data]
-"foxyface.assets" = ["*"]
-"foxyface.assets.baballonia" = ["*.onnx"]
+[tool.hatch.build.targets.wheel]
+include = [
+    "src/foxyface/*.py",
+    "src/foxyface/**/*.py",
+    "src/foxyface/assets/**/*",
+]
+sources = ["src"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"Baballonia/src/Baballonia/faceModel.onnx" = "foxyface/assets/baballonia/faceModel.onnx"

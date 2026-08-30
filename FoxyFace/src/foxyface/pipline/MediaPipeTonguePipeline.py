@@ -11,7 +11,8 @@ from foxyface.stream.mediapipe.face.core.MediaPipeFrame import MediaPipeFrame
 from foxyface.stream.mediapipe.tongue.MediaPipeTongueBlendshapeEnum import MediaPipeTongueBlendshapeEnum
 from foxyface.stream.mediapipe.tongue.MediaPipeTongueProcess import Status
 from foxyface.stream.mediapipe.tongue.MediaPipeTongueStream import MediaPipeTongueStream
-from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import MediaPipeTongueImageProcessing
+from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueImageProcessing import \
+    MediaPipeTongueImageProcessing
 from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTonguePreview import MediaPipeTonguePreview
 from foxyface.stream.mediapipe.tongue.image_processing.MediaPipeTongueProcessingOptions import \
     MediaPipeTongueProcessingOptions
