@@ -12,10 +12,9 @@ except ImportError:
 try:
     import onnxruntime
 except ImportError:
-    _logger.fatal("The program is not installed correctly on Linux. ")
-    _logger.fatal("Please follow the instructions in the README.md file or visit the link:")
-    _logger.fatal(
-        "https://foxyface.jeka8833.pp.ua/docs/FoxyFace/install-update-uninstall/install/Install-FoxyFace-Linux/")
+    _logger.fatal("You installed the program incorrectly.")
+    _logger.fatal("Perform the installation using: 'pip install \"foxyface[default]\"'")
+    _logger.fatal("For more information, visit: https://pypi.org/project/foxyface/")
 
     raise
 
