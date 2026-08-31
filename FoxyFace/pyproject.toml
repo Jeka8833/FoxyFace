@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "foxyface"
-version = "1.0.5.1"
+version = "1.0.6.0"
 description = "Real-time face tracking application for VRChat using MediaPipe and Project Babble"
 readme = "README.md"
 authors = [
@@ -54,11 +54,14 @@ dependencies = [
     "sounddevice",
     "requests",
     "cv2-enumerate-cameras",
-    "onnxruntime-directml; platform_system == 'Windows' and extra != 'nvidia' and extra != 'rocm' and extra != 'openvino' and extra != 'cpu'",
-    "onnxruntime-coreml; platform_system == 'Darwin' and extra != 'nvidia' and extra != 'rocm' and extra != 'openvino' and extra != 'cpu'",
 ]
 
 [project.optional-dependencies]
+default = [
+    "onnxruntime-directml; platform_system == 'Windows'",
+    "onnxruntime-coreml; platform_system == 'Darwin'",
+    "onnxruntime; platform_system == 'Linux'",
+]
 nvidia = [
     "onnxruntime-gpu",
     "torch",
@@ -66,9 +69,6 @@ nvidia = [
 ]
 rocm = [
     "onnxruntime-rocm",
-]
-openvino = [
-    "onnxruntime-openvino",
 ]
 cpu = [
     "onnxruntime",

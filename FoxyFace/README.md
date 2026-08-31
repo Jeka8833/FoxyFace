@@ -64,8 +64,14 @@ source venv/bin/activate
 
 #### **Windows**
 ```bash
-pip install foxyface
+pip install "foxyface[default]"
 ```
+
+> **Note:** If you are running a Windows 10 version older than **10.0.19041 (20H1)**, you need to install the CPU-only version instead:
+> ```bash
+> pip install "foxyface[cpu]"
+> ```
+
 Run the application:
 ```bash
 venv\Scripts\foxyface.exe
@@ -79,17 +85,17 @@ Choose the appropriate command based on your hardware/GPU:
 
 * **NVIDIA:**
   ```bash
-  pip install foxyface[nvidia] -f https://download.pytorch.org/whl/cu126
+  pip install "foxyface[nvidia]" -f https://download.pytorch.org/whl/cu126
   ```
 
 * **AMD:**
   ```bash
-  pip install foxyface[rocm] -f https://repo.radeon.com/rocm/manylinux/rocm-rel-6.4.3/
+  pip install "foxyface[rocm]" -f https://repo.radeon.com/rocm/manylinux/rocm-rel-6.4.3/
   ```
 
 * **CPU only:**
   ```bash
-  pip install foxyface[cpu]
+  pip install "foxyface[cpu]"
   ```
 
 Run the application:
@@ -102,7 +108,7 @@ venv/bin/foxyface
 
 #### **macOS**
 ```bash
-pip install foxyface
+pip install "foxyface[default]"
 ```
 
 Run the application:
@@ -140,5 +146,5 @@ source venv/bin/activate
 
 #### 3. Install in editable mode
 ```bash
-pip install -e .
+pip install -e ".[default,build]"
 ```
