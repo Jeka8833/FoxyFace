@@ -85,12 +85,12 @@ Choose the appropriate command based on your hardware/GPU:
 
 * **NVIDIA:**
   ```bash
-  pip install "foxyface[nvidia]" -f https://download.pytorch.org/whl/cu126
+  pip install "foxyface[nvidia]" --extra-index-url https://download.pytorch.org/whl/cu126
   ```
 
 * **AMD:**
   ```bash
-  pip install "foxyface[rocm]" -f https://repo.radeon.com/rocm/manylinux/rocm-rel-6.4.3/
+  pip install "foxyface[rocm]" --extra-index-url https://repo.radeon.com/rocm/manylinux/rocm-rel-6.4.4/
   ```
 
 * **CPU only:**

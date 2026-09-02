@@ -54,9 +54,9 @@ class CameraStream:
         if self.__camera is not None:
             self.__camera.release()
 
-        self.__thread.join()
-
         self.__stream_root.close()
+
+        self.__thread.join()
 
     def __enter__(self):
         return self
