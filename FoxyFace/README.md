@@ -1,9 +1,9 @@
-<h1 style="text-align: center;">FoxyFace</h1>
-<p style="text-align: center;">
-<a href="https://pypi.org/project/foxyface">
+<div align="center">
+  <h1>FoxyFace</h1>
+  <a href="https://pypi.org/project/foxyface">
     <img src="https://img.shields.io/pypi/pyversions/foxyface" />
-</a>
-</p>
+  </a>
+</div>
 
 <br>
 
@@ -48,6 +48,7 @@ EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMand
 
   For Windows users, it is recommended to use the pre-compiled standalone executable from GitHub Releases:
   - **[Download Latest Release](https://github.com/Jeka8833/FoxyFace/releases)**
+  <br/>
 </details>
 
 <details>
@@ -84,6 +85,7 @@ venv\Scripts\foxyface.exe
 ```
 *(or just `foxyface` if the virtual environment is activated)*
 
+  <br/>
   </details>
 
   <details>
@@ -124,6 +126,7 @@ venv/bin/foxyface
 ```
 *(or just `foxyface` if the virtual environment is activated)*
 
+  <br/>
   </details>
 
   <details>
