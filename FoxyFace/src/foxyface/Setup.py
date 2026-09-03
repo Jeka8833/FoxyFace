@@ -116,9 +116,9 @@ def initialize_and_run(app, splash, close_handler):
 
 
 def init_sigint():
-    import signal
     import logging
-
+    import signal
+    import sys
     from PySide6.QtWidgets import QApplication
 
     logger = logging.getLogger(__name__)
@@ -127,22 +127,24 @@ def init_sigint():
         def __init__(self):
             self.__is_closing = False
 
-            signal.signal(signal.SIGINT, self.sigint_handler)
+            signal.signal(signal.SIGINT, self._handle_signal)
+            signal.signal(signal.SIGTERM, self._handle_signal)
 
-        def sigint_handler(self, signum, frame):
+        def _handle_signal(self, signum, frame):
             self.__is_closing = True
+            logger.info(f"Received signal {signum}, initiating shutdown...")
 
             app = QApplication.instance()
             if app is not None:
-                logger.info("Try shutting down...")
-
                 app.quit()
             else:
-                exit(0)
+                sys.exit(0)
 
         def try_close(self):
             if self.__is_closing:
-                exit(0)
+                logger.info("Shutdown already requested, exiting before exec...")
+
+                sys.exit(0)
 
     return SigintHandler()
 

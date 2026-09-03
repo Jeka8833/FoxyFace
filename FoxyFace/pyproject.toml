@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "foxyface"
-version = "1.0.6.0"
+version = "1.0.6.1"
 description = "Real-time face tracking application for VRChat using MediaPipe and Project Babble"
 readme = "README.md"
 authors = [
