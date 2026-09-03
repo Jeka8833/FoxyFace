@@ -50,7 +50,7 @@ class VrcftAutoConnect:
 
             self.stop()
 
-    def stop(self):
+    def stop(self, timeout: float | None = 15.0):
         self.__is_started.clear()
 
         try:
@@ -58,7 +58,7 @@ class VrcftAutoConnect:
                 self.__socket.close()
 
             if self.__thread is not None:
-                self.__thread.join()
+                self.__thread.join(timeout)
         except Exception:
             _logger.warning("Failed to stop VRCFT Auto Connect", exc_info=True, stack_info=True)
 

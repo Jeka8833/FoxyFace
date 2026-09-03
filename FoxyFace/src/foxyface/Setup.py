@@ -24,7 +24,7 @@ def show_splash():
     return app, splash
 
 
-def initialize_and_run(app, splash):
+def initialize_and_run(app, splash, close_handler):
     # Try to load ONNX runtime or crash
     # noinspection PyUnusedImports
     import foxyface.util.OnnxUtil
@@ -110,12 +110,50 @@ def initialize_and_run(app, splash):
             self.__steam_auto_run.close()
 
     with RunMainStream(splash):
+        close_handler.try_close()
+
         sys.exit(app.exec())
+
+
+def init_sigint():
+    import signal
+    import logging
+
+    from PySide6.QtWidgets import QApplication
+
+    logger = logging.getLogger(__name__)
+
+    class SigintHandler:
+        def __init__(self):
+            self.__is_closing = False
+
+            signal.signal(signal.SIGINT, self.sigint_handler)
+
+        def sigint_handler(self, signum, frame):
+            self.__is_closing = True
+
+            app = QApplication.instance()
+            if app is not None:
+                logger.info("Try shutting down...")
+
+                app.quit()
+            else:
+                exit(0)
+
+        def try_close(self):
+            if self.__is_closing:
+                exit(0)
+
+    return SigintHandler()
 
 
 def main():
     multiprocessing.freeze_support()
 
+    close_handler = init_sigint()
+
     app_instance, splash_instance = show_splash()  # Must be without any heavy imports, danke
 
-    initialize_and_run(app_instance, splash_instance)
+    close_handler.try_close()
+
+    initialize_and_run(app_instance, splash_instance, close_handler)

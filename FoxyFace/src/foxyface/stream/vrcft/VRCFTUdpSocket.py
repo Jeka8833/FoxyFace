@@ -37,10 +37,10 @@ class VRCFTUdpSocket:
 
         return self.__last_pps
 
-    def close(self):
+    def close(self, timeout: float | None = 15.0):
         self.__close_event.set()
 
-        self.__thread.join()
+        self.__thread.join(timeout)
 
         self.__sock.close()
 

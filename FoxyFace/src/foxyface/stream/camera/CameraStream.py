@@ -48,7 +48,7 @@ class CameraStream:
     def unregister_stream(self, stream: StreamWriteOnly[ImageFrame]) -> None:
         self.__stream_root.unregister_stream(stream)
 
-    def close(self) -> None:
+    def close(self, timeout: float = 15.0) -> None:
         self.__close_event.set()
 
         if self.__camera is not None:
@@ -56,7 +56,7 @@ class CameraStream:
 
         self.__stream_root.close()
 
-        self.__thread.join()
+        self.__thread.join(timeout)
 
     def __enter__(self):
         return self
@@ -98,6 +98,8 @@ class CameraStream:
 
                         self.__stream_root.put(packet)
                         continue
+            except InterruptedError:
+                return
             except Exception:
                 _logger.warning("Exception", exc_info=True, stack_info=True)
 

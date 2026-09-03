@@ -1,6 +1,7 @@
 import logging.handlers
 import multiprocessing
 import queue
+import signal
 import time
 from enum import IntEnum
 
@@ -23,6 +24,8 @@ class Status(IntEnum):
 
 def _onnx_worker_loop(log_queue, cmd_queue, output_queue, frame_timestamp, frame_image,
                       frame_condition, model_run_status):
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
     process_logger = logging.getLogger("MediaPipe Tongue Process")
     process_logger.setLevel(logging.INFO)
     process_logger.handlers = [logging.handlers.QueueHandler(log_queue)]

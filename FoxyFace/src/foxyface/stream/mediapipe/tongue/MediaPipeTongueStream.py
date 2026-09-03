@@ -3,6 +3,8 @@ import logging
 import logging.handlers
 import multiprocessing as mp
 import queue
+import signal
+from multiprocessing import Process
 from threading import Event, Thread
 
 import numpy as np
@@ -86,7 +88,7 @@ class MediaPipeTongueStream:
             _logger.warning(f"Failed to send command '{cmd[0]}': {e}")
 
     @staticmethod
-    def __terminate_worker(worker):
+    def __terminate_worker(worker: Process | None):
         if worker is None or not worker.is_alive():
             return
 
@@ -155,6 +157,13 @@ class MediaPipeTongueStream:
         while not self.__close_event.is_set():
             try:
                 if self.__worker is None or not self.__worker.is_alive():
+                    if self.__close_event.is_set():
+                        return
+
+                    exitcode = self.__worker.exitcode if self.__worker is not None else None
+                    if exitcode == 0 or exitcode in (-signal.SIGINT, -signal.SIGTERM, 0xC000013A, -1073741510):
+                        return
+
                     _logger.warning("MediaPipeTongueWorker died. Restarting and recovering state...")
 
                     self.__start_worker()
