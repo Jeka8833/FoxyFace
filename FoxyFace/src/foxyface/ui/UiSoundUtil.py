@@ -1,6 +1,6 @@
 import logging
 from importlib import resources
-from importlib.abc import Traversable
+from importlib.resources.abc import Traversable
 
 from foxyface.AppConstants import AppConstants
 

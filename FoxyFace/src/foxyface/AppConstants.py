@@ -1,6 +1,6 @@
 import logging
 from importlib import resources, metadata
-from importlib.abc import Traversable
+from importlib.resources.abc import Traversable
 from pathlib import Path
 from typing import Final
 

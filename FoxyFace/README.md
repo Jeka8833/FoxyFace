@@ -1,4 +1,11 @@
-# FoxyFace
+<h1 style="text-align: center;">FoxyFace</h1>
+<p style="text-align: center;">
+<a href="https://pypi.org/project/foxyface">
+    <img src="https://img.shields.io/pypi/pyversions/foxyface" />
+</a>
+</p>
+
+<br>
 
 FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/connection/Using-another-device-as-a-camera).
 
@@ -35,34 +42,33 @@ EyePupilDiameterMMLeft, EyePupilDiameterMMRight, JawBackward, JawClench, JawMand
 
 ## Installation
 
-### 1. Pre-compiled Binaries (Windows)
-For Windows users, it is recommended to use the pre-compiled standalone executable from GitHub Releases:
-- **[Download Latest Release](https://github.com/Jeka8833/FoxyFace/releases)**
+<details>
+  <summary><b>Pre-compiled Binaries (Windows)</b></summary>
+  <br/>
 
----
+  For Windows users, it is recommended to use the pre-compiled standalone executable from GitHub Releases:
+  - **[Download Latest Release](https://github.com/Jeka8833/FoxyFace/releases)**
+</details>
 
-### 2. Python Package (pip)
-If you want to install and run FoxyFace as a Python package, it is recommended to set up a virtual environment first.
+<details>
+  <summary><b>Python Package (pip)</b></summary>
+  <br/>
 
-#### Create and Activate Virtual Environment
+  If you want to install and run FoxyFace as a Python package, it is recommended to set up a virtual environment first. Select your operating system below:
 
-**Windows:**
+  <details>
+    <summary><b>Windows</b></summary>
+    <br/>
+
+#### 1. Create and Activate Virtual Environment
+
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-**Linux / macOS:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+#### 2. Install and Run
 
----
-
-#### Install and Run
-
-#### **Windows**
 ```bash
 pip install "foxyface[default]"
 ```
@@ -78,9 +84,21 @@ venv\Scripts\foxyface.exe
 ```
 *(or just `foxyface` if the virtual environment is activated)*
 
----
+  </details>
 
-#### **Linux**
+  <details>
+    <summary><b>Linux</b></summary>
+    <br/>
+
+#### 1. Create and Activate Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 2. Install
+
 Choose the appropriate command based on your hardware/GPU:
 
 * **NVIDIA:**
@@ -89,6 +107,7 @@ Choose the appropriate command based on your hardware/GPU:
   ```
 
 * **AMD:**
+  > ⚠️ You **must use Python 3.12**. All newer versions of Python will not work.
   ```bash
   pip install "foxyface[rocm]" --extra-index-url https://repo.radeon.com/rocm/manylinux/rocm-rel-6.4.4/
   ```
@@ -98,15 +117,28 @@ Choose the appropriate command based on your hardware/GPU:
   pip install "foxyface[cpu]"
   ```
 
-Run the application:
+#### 3. Run the application
+
 ```bash
 venv/bin/foxyface
 ```
 *(or just `foxyface` if the virtual environment is activated)*
 
----
+  </details>
 
-#### **macOS**
+  <details>
+    <summary><b>macOS</b></summary>
+    <br/>
+
+#### 1. Create and Activate Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### 2. Install and Run
+
 ```bash
 pip install "foxyface[default]"
 ```
@@ -117,12 +149,20 @@ venv/bin/foxyface
 ```
 *(or just `foxyface` if the virtual environment is activated)*
 
+  </details>
 
-### 3. Development / From Source
+  <br/>
 
-If you want to contribute or modify the source code:
+</details>
+
+<details>
+  <summary><b>Development / From Source</b></summary>
+  <br/>
+
+  If you want to contribute or modify the source code:
 
 #### 1. Clone the repository
+
 Make sure to include submodules during cloning:
 ```bash
 git clone --recurse-submodules https://github.com/Jeka8833/FoxyFace.git
@@ -130,6 +170,7 @@ cd FoxyFace/FoxyFace
 ```
 
 #### 2. Set up a virtual environment
+
 You can let your IDE (e.g., PyCharm, VS Code) automatically create and manage the virtual environment, or create one manually:
 
 **Windows:**
@@ -145,6 +186,9 @@ source venv/bin/activate
 ```
 
 #### 3. Install in editable mode
+
 ```bash
 pip install -e ".[default,build]"
 ```
+
+</details>
