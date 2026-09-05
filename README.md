@@ -1,4 +1,11 @@
-# FoxyFace
+<div align="center">
+  <h1>FoxyFace</h1>
+  <a href="https://pypi.org/project/foxyface">
+    <img src="https://img.shields.io/pypi/pyversions/foxyface" />
+  </a>
+</div>
+
+<br>
 
 FoxyFace allows you to use your real face to control your avatar's face in VRChat using any camera that is connected to your computer. You can also use the camera of an Android device, iOS device or another computer, but this will require you to download additional programs, [here are instructions on how to do it](https://foxyface.jeka8833.pp.ua/docs/FoxyFace/connection/Using-another-device-as-a-camera).
 
@@ -68,23 +75,10 @@ Instructions on how to update the FoxyFace app can be found [here](https://foxyf
 
 ## Build
 
-> [!NOTE]
-> Simply cloning (`git clone`) without `--recurse-submodules` or downloading a Zip archive from GitHub **won't work** because the repository uses **submodules**!
-
 ### Build FoxyFace
 
-Python version **3.12, 3.13, or 3.14** is required. Newer and older versions of Python have not been tested.
+Instructions on how to get started with development can be found on the [PyPi website](https://pypi.org/project/foxyface/).
 
-Automatically configuring the Python Virtual Environment doesn't happen in the IDE, but the basic plan consists of:
-1. Cloning the repository using:
-```
-git clone --recurse-submodules https://github.com/Jeka8833/FoxyFace.git
-```
-2. Opening FoxyFace folder in IDE (PyCharm)
-3. The PyCharm may try to create .venv on its own, but it will most likely do so with the wrong version of Python, you need to recreate .venv with Python 3.12, 3.13, or 3.14.
-4. Next, the PyCharm will prompt you to install the required libraries from the `requirements.txt` file, you agree to this.
-
-This is quite a complicated process for beginners, if you know how to automate this, feel free to offer your thoughts.
 <br/>
 
 ### Build FoxyFaceVRCFTInterface
