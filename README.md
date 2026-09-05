@@ -1,8 +1,5 @@
 <div align="center">
   <h1>FoxyFace</h1>
-  <a href="https://pypi.org/project/foxyface">
-    <img src="https://img.shields.io/pypi/pyversions/foxyface" />
-  </a>
 </div>
 
 <br>
