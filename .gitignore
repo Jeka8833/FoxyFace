@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/FoxyFaceVRCFTInterface/.vs
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/Debug/net7.0
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/Release/net7.0
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/FoxyFaceVRCFTInterface.csproj.nuget.dgspec.json
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/FoxyFaceVRCFTInterface.csproj.nuget.g.props
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/FoxyFaceVRCFTInterface.csproj.nuget.g.targets
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/project.assets.json
+/FoxyFaceVRCFTInterface/FoxyFaceVRCFTInterface/obj/project.nuget.cache
